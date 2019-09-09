@@ -10,7 +10,6 @@ from comparators import CMComparator
 def getColorMomentsFeature(colorMomentsFeatures, imagePath):
     for colorMommentsFeature in colorMomentsFeatures:
         if colorMommentsFeature[0] == imagePath:
-            # print(colorMommentsFeature[0])
             return colorMommentsFeature
 
     raise ValueError("Image not found in database")
@@ -25,7 +24,6 @@ def getModelAndTask():
 
         if modelType == "1" or modelType == "2": break
 
-
     while True:
         print("\n")
         print("-> Please the task you would like to perform")
@@ -37,11 +35,6 @@ def getModelAndTask():
         if taskType == "1" or taskType == "2" or taskType == "3": break
 
     return modelType, taskType
-
-    # if taskType == "3":
-    #     while True:
-    #         print("\n")
-    #         imagePath = input("-> Please enter the absolute image path of the query image: ")
 
 def getImageName():
     while True:
@@ -56,33 +49,22 @@ def getDistancesWithCM(imagePath):
     distances = []
     with open('colorMomentsFeatures.csv', newline='') as csvfile:
         colorMomentsFeatures = csv.reader(csvfile, delimiter=',')
-        # _, queryImageMeanString, queryImageVarianceString, queryImageSkewString = getColorMomentsFeature(
-        #     colorMomentsFeatures, imagePath)
-        # queryImageMean = np.array(queryImageMeanString.split(',')).astype(np.float)
-        # queryImageVariance = np.array(queryImageVarianceString.split(',')).astype(np.float)
-        # queryImageSkew = np.array(queryImageSkewString.split(',')).astype(np.float)
-
         dbImg = cv2.imread(imagePath, cv2.IMREAD_COLOR)
         dbImageYUV = cv2.cvtColor(dbImg, cv2.COLOR_BGR2LUV)
         dbImageColorMomments = ColorMoments.ColorMoments(dbImageYUV, 100, 100)
-        queryImageMean = dbImageColorMomments.meanFeatureVector.flatten()
-        queryImageVariance = dbImageColorMomments.varianceFeatureVector.flatten()
-        queryImageSkew = dbImageColorMomments.skewFeatureVector.flatten()
         queryImageFeatureVector = dbImageColorMomments.featureVector
 
         for index, colorMommentsFeature in enumerate(colorMomentsFeatures):
-            distance = 0
             print("Time: {} | Processing: {}".format(datetime.datetime.now(), index))
-            dbImagePath, imageMeanString, imageVarianceString, imageSkewString = colorMommentsFeature
-            imageMean = np.array(imageMeanString.split(',')).astype(np.float)
-            imageVariance = np.array(imageVarianceString.split(',')).astype(np.float)
-            imageSkew = np.array(imageSkewString.split(',')).astype(np.float)
+            dbImagePath, imageFeatureVectorString, _ = colorMommentsFeature
+            imageFeatureVectorFlat = np.array(imageFeatureVectorString.split(',')).astype(np.float)
+            imageFeatureVector = imageFeatureVectorFlat.reshape((12, 16, 9))
 
-            distance += CMComparator.CMComparator().compare(queryImageMean, imageMean)
-            distance += CMComparator.CMComparator().compare(queryImageVariance, imageVariance)
-            distance += CMComparator.CMComparator().compare(queryImageSkew, imageSkew)
+            print("Sum: {}".format(np.sum(imageFeatureVector[:,:,6:8])))
 
-            distances.append((dbImagePath, distance / 3))
+            distance = np.linalg.norm(queryImageFeatureVector - imageFeatureVector)
+
+            distances.append((dbImagePath, distance))
 
     distances.sort(key=lambda x: x[1])
     return distances
@@ -104,33 +86,3 @@ def init():
 
 if __name__ == "__main__":
     init()
-
-
-    # for index, dbImagePath in enumerate(dbImagePaths):
-    #     print("Time: {} | Processing: {}".format(datetime.datetime.now(), index))
-    #     distance = 0
-    #     dbImg = cv2.imread(dbImagePath, cv2.IMREAD_COLOR)
-    #     print("Time: {} | Processing: {} | Image read".format(datetime.datetime.now(), index))
-    #     dbImageYUV = cv2.cvtColor(dbImg, cv2.COLOR_BGR2LUV)
-    #     print("Time: {} | Processing: {} | To YUV".format(datetime.datetime.now(), index))
-    #     dbImageColorMomments = ColorMoments.ColorMoments(dbImageYUV, 100, 100)
-    #     print("Time: {} | Processing: {} | Compute color moments".format(datetime.datetime.now(), index))
-    #     distance += CMComparator.CMComparator().compare(colorMomments.meanFeatureVector, dbImageColorMomments.meanFeatureVector)
-    #     print("Time: {} | Processing: {} | Calculate Ecludian".format(datetime.datetime.now(), index))
-    #     distance += CMComparator.CMComparator().compare(colorMomments.varianceFeatureVector,
-    #                                         dbImageColorMomments.varianceFeatureVector)
-    #     print("Time: {} | Processing: {} | Calculate Ecludian".format(datetime.datetime.now(), index))
-    #     distance += CMComparator.CMComparator().compare(colorMomments.skewFeatureVector,
-    #                                         dbImageColorMomments.skewFeatureVector)
-    #     print("Time: {} | Processing: {} | Calculate Ecludian".format(datetime.datetime.now(), index))
-    #
-    #     distances.append((dbImagePath, distance/3))
-
-
-
-
-    # imageGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # sift = cv2.xfeatures2d.SIFT_create()
-    # keyPoints, descriptors = sift.detectAndCompute(imageGray, None)
-    #
-    # print("Keypoints shape: {} | Descriptors shape: {}".format(len(keyPoints), descriptors.shape))

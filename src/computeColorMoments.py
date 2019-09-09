@@ -19,8 +19,9 @@ if __name__ == "__main__":
             dbImageYUV = cv2.cvtColor(dbImg, cv2.COLOR_BGR2LUV)
             dbImageColorMomments = ColorMoments.ColorMoments(dbImageYUV, 100, 100)
 
-            spamwriter.writerow([dbImagePath,
-                                 ",".join(dbImageColorMomments.meanFeatureVector.flatten().astype(np.str)),
-                                 ",".join(dbImageColorMomments.varianceFeatureVector.flatten().astype(np.str)),
-                                 ",".join(dbImageColorMomments.skewFeatureVector.flatten().astype(np.str))]
-                                )
+            featureVector = np.concatenate((dbImageColorMomments.meanFeatureVector,
+                                          dbImageColorMomments.varianceFeatureVector,
+                                          dbImageColorMomments.skewFeatureVector), axis=2)
+
+            spamwriter.writerow([dbImagePath, ",".join(featureVector.flatten().astype(np.str)),
+                                 ",".join(np.array(featureVector.shape).astype(np.str))])
