@@ -54,7 +54,7 @@ def getImageName():
 
 def getDistancesWithCM(imagePath):
     distances = []
-    with open('colorMomentsFeatures.csv', newline='') as csvfile:
+    with open('featureVectorsStore/colorMomentsFeatures.csv', newline='') as csvfile:
         colorMomentsFeatures = csv.reader(csvfile, delimiter=',')
         # _, queryImageMeanString, queryImageVarianceString, queryImageSkewString = getColorMomentsFeature(
         #     colorMomentsFeatures, imagePath)
@@ -94,7 +94,7 @@ def getSimilarImages(imagePath, modelType = 1):
         print("ImagePath: {} , distance: {}".format(distance[0], distance[1]))
 
 def init():
-    databasePath = "/Users/yvtheja/Downloads/Hands"
+    databasePath = "/Users/yvtheja/Documents/Hands"
     modelType, taskType = getModelAndTask()
     if taskType == "1" or taskType == "3":
         imageName = getImageName()
