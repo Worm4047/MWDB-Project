@@ -7,9 +7,7 @@ from models import ColorMoments
 from comparators import CMComparator
 import csv
 
-if __name__ == "__main__":
-    databasePath = "/Users/yvtheja/Documents/Hands"
-
+def computeColorMoments(databasePath):
     dbImagePaths = glob.glob(os.path.join(databasePath, "*.jpg"))
     with open('featureVectorsStore/colorMomentsFeatures.csv', 'w', newline='') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_ALL)

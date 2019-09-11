@@ -6,6 +6,7 @@ import numpy as np
 import datetime
 from models import ColorMoments
 from comparators import CMComparator
+from computeColorMoments import computeColorMoments
 
 def getColorMomentsFeature(colorMomentsFeatures, imagePath):
     for colorMommentsFeature in colorMomentsFeatures:
@@ -16,7 +17,7 @@ def getColorMomentsFeature(colorMomentsFeatures, imagePath):
 
 def getModelAndTask():
     while True:
-        print("\n")
+        print("-----------------------------------------------------------------------------------------")
         print("-> Please the model")
         print("-> 1. Color moments")
         print("-> 2. SIFT")
@@ -25,7 +26,7 @@ def getModelAndTask():
         if modelType == "1" or modelType == "2": break
 
     while True:
-        print("\n")
+        print("-----------------------------------------------------------------------------------------")
         print("-> Please the task you would like to perform")
         print("-> 1. Describe feature vectors in human readable format")
         print("-> 2. Extract and store the feature descriptors in CSV")
@@ -38,7 +39,7 @@ def getModelAndTask():
 
 def getImageName():
     while True:
-        print("\n")
+        print("-----------------------------------------------------------------------------------------")
         imageName = input("-> Please enter the file name of the image: ")
 
         if len(imageName) > 4: break
@@ -60,8 +61,6 @@ def getDistancesWithCM(imagePath):
             imageFeatureVectorFlat = np.array(imageFeatureVectorString.split(',')).astype(np.float)
             imageFeatureVector = imageFeatureVectorFlat.reshape((12, 16, 9))
 
-            print("Sum: {}".format(np.sum(imageFeatureVector[:,:,6:8])))
-
             distance = np.linalg.norm(queryImageFeatureVector - imageFeatureVector)
 
             distances.append((dbImagePath, distance))
@@ -75,13 +74,40 @@ def getSimilarImages(imagePath, modelType = 1):
     for index, distance in enumerate(distances):
         print("ImagePath: {} , distance: {}".format(distance[0], distance[1]))
 
+def showColorMomentsFeatureVector(imagePath):
+    dbImg = cv2.imread(imagePath, cv2.IMREAD_COLOR)
+    dbImageYUV = cv2.cvtColor(dbImg, cv2.COLOR_BGR2LUV)
+    dbImageColorMomments = ColorMoments.ColorMoments(dbImageYUV, 100, 100)
+    print("Shape of the feature vector: {}".format(dbImageColorMomments.featureVector.shape))
+    print("Value of the flattened feature vector: [{}]".format(",".join(dbImageColorMomments.featureVector.flatten().astype(np.str))))
+
+def showSIFTFeatureVector(imagePath):
+    dbImg = cv2.imread(imagePath, cv2.IMREAD_COLOR)
+    imageGray = cv2.cvtColor(dbImg, cv2.COLOR_BGR2GRAY)
+    sift = cv2.xfeatures2d.SIFT_create()
+    keyPoints, descriptors = sift.detectAndCompute(imageGray, None)
+    for index, keyPoint in enumerate(keyPoints):
+        print("X: {}, Y: {}, Scale: {}, Orientation: {}, HOG: [{}]".format(
+            keyPoint.pt[1], keyPoint.pt[0], keyPoint.size, keyPoint.angle, ",".join(descriptors[index].flatten().astype(np.str))))
+
+def showFeatureVector(imagePath, modeltype):
+    if(modeltype == "1"): showColorMomentsFeatureVector(imagePath)
+    if(modeltype == "2"): showSIFTFeatureVector(imagePath)
+
+def extractAndStoreFeatures(databasePath, modelType):
+    if modelType == "1": computeColorMoments(databasePath)
+
 def init():
     databasePath = "/Users/yvtheja/Documents/Hands"
     modelType, taskType = getModelAndTask()
     if taskType == "1" or taskType == "3":
         imageName = getImageName()
         imagePath = os.path.join(databasePath, imageName)
-        getSimilarImages(imagePath, modelType)
+
+        if taskType == "3": getSimilarImages(imagePath, modelType)
+        else: showFeatureVector(imagePath, modelType)
+    else:
+        extractAndStoreFeatures(databasePath, modelType)
 
 
 if __name__ == "__main__":
