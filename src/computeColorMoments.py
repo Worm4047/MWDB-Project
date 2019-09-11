@@ -8,10 +8,10 @@ from comparators import CMComparator
 import csv
 
 if __name__ == "__main__":
-    databasePath = "/Users/yvtheja/Downloads/Hands"
+    databasePath = "/Users/yvtheja/Documents/Hands"
 
     dbImagePaths = glob.glob(os.path.join(databasePath, "*.jpg"))
-    with open('colorMomentsFeatures.csv', 'w', newline='') as csvfile:
+    with open('featureVectorsStore/colorMomentsFeatures.csv', 'w', newline='') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_ALL)
         for index, dbImagePath in enumerate(dbImagePaths):
             print("Time: {} | Processing: {}".format(datetime.datetime.now(), index))
