@@ -16,4 +16,3 @@ class CMComparator:
             distance += math.sqrt(math.pow(x, 2) - math.pow(bFlatten[index], 2))
 
         return distance/totalValues
-

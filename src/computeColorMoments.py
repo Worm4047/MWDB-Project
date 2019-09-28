@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 from models import ColorMoments
 from comparators import CMComparator
+from common.helper import getImageName
 import csv
 
 def computeColorMoments(databasePath):
@@ -21,5 +22,5 @@ def computeColorMoments(databasePath):
                                           dbImageColorMomments.varianceFeatureVector,
                                           dbImageColorMomments.skewFeatureVector), axis=2)
 
-            spamwriter.writerow([dbImagePath, ",".join(featureVector.flatten().astype(np.str)),
+            spamwriter.writerow([getImageName(dbImagePath), ",".join(featureVector.flatten().astype(np.str)),
                                  ",".join(np.array(featureVector.shape).astype(np.str))])
