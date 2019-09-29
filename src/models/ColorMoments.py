@@ -3,10 +3,14 @@ import cv2
 import math
 from common.helper import getCubeRoot
 from scipy.stats import skew
+from src.models.interfaces.Model import Model
 import time
 
-class ColorMoments:
+class ColorMoments(Model):
     def __init__(self, image, verticalWindows, horizontalWindows):
+        self.validateImage(image)
+        super(ColorMoments, self).__init__()
+        self.BLOCK_SIZE = min(verticalWindows, horizontalWindows)
         self.widowHeight = verticalWindows
         self.widowWidth = horizontalWindows
         self.imageHeight, self.imageWidth, _ = image.shape
@@ -27,6 +31,23 @@ class ColorMoments:
         # Concatinated feature vector
         self.featureVector = np.concatenate((self.meanFeatureVector, self.varianceFeatureVector, self.skewFeatureVector), axis=2)
 
+    def validateImage(self, image):
+        if image.shape is None:
+            raise ValueError("Not a np array")
+        if len(image.shape) != 3:
+            raise ValueError("Invalid Image")
+        if image.shape[2] != 3:
+            raise ValueError("Invalid Image")
+
+    def getFeatures(self):
+        return self.featureVector.flatten()
+
+    def compare(self, colorModel):
+        if not isinstance(colorModel, Model):
+            raise ValueError("Not a instance of ColorModel")
+
+        return np.linalg.norm(self.featureVector.flatten() - colorModel.getFeatures())
+
     def getSkew(self, block, mean):
         blockFlat = block.flatten()
         sumOfL3Diffs = 0
@@ -43,33 +64,34 @@ class ColorMoments:
         i, j = 0, 0
         while i < self.imageHeight:
             j = 0
+
             while j < self.imageWidth:
-                blockY = channelY[i: i + 100, j: j + 100]
-                blockU = channelU[i: i + 100, j: j + 100]
-                blockV = channelV[i: i + 100, j: j + 100]
+                blockY = channelY[i: i + self.BLOCK_SIZE, j: j + self.BLOCK_SIZE]
+                blockU = channelU[i: i + self.BLOCK_SIZE, j: j + self.BLOCK_SIZE]
+                blockV = channelV[i: i + self.BLOCK_SIZE, j: j + self.BLOCK_SIZE]
 
                 meanStart = time.time()
                 meanY = np.mean(blockY)
                 meanU = np.mean(blockU)
                 meanV = np.mean(blockV)
-                self.meanFeatureVector[math.floor(i / 100), math.floor(j / 100), 0] = meanY
-                self.meanFeatureVector[math.floor(i / 100), math.floor(j / 100), 1] = meanU
-                self.meanFeatureVector[math.floor(i / 100), math.floor(j / 100), 2] = meanV
+                self.meanFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 0] = meanY
+                self.meanFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 1] = meanU
+                self.meanFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 2] = meanV
                 # print("Mean calculation time: {} seconds".format(time.time() - meanStart))
 
                 varianceStart = time.time()
-                self.varianceFeatureVector[math.floor(i / 100), math.floor(j / 100), 0] = np.std(blockY)
-                self.varianceFeatureVector[math.floor(i / 100), math.floor(j / 100), 1] = np.std(blockU)
-                self.varianceFeatureVector[math.floor(i / 100), math.floor(j / 100), 2] = np.std(blockV)
+                self.varianceFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 0] = np.std(blockY)
+                self.varianceFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 1] = np.std(blockU)
+                self.varianceFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 2] = np.std(blockV)
                 # print("Variance calculation time: {} seconds".format(time.time() - varianceStart))
 
                 skewStart = time.time()
-                self.skewFeatureVector[math.floor(i / 100), math.floor(j / 100), 0] = skew(blockY, axis=None)
-                self.skewFeatureVector[math.floor(i / 100), math.floor(j / 100), 1] = skew(blockU, axis=None)
-                self.skewFeatureVector[math.floor(i / 100), math.floor(j / 100), 2] = skew(blockV, axis=None)
+                self.skewFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 0] = skew(blockY, axis=None)
+                self.skewFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 1] = skew(blockU, axis=None)
+                self.skewFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 2] = skew(blockV, axis=None)
                 # print("Skew calculation time: {} seconds".format(time.time() - skewStart))
 
                 self.momentsY = np.concatenate((self.meanFeatureVector[:, :, 0], self.varianceFeatureVector[:, :, 0],
                                                 self.skewFeatureVector[:, :, 0]))
-                j += 100
-            i += 100
+                j += self.BLOCK_SIZE
+            i += self.BLOCK_SIZE

@@ -4,7 +4,10 @@ import glob
 import csv
 import numpy as np
 import datetime
-from models import ColorMoments
+from src.models import ColorMoments
+from src.models import SIFT
+from src.models import LBP
+# from models import ColorMoments
 from comparators import CMComparator
 from computeColorMoments import computeColorMoments
 from siftFeatureExtractionUtil import computeSIFTFeatures, getSIFTFeatures, getSIFTDistance
@@ -149,19 +152,28 @@ def extractAndStoreFeatures(databasePath, modelType):
 def init():
     # databasePath = "/Users/yvtheja/Documents/Hands"
 
-    modelType, taskType = getModelAndTask()
-    if taskType == "1" or taskType == "3":
-        imagePath = getImagePathFromUser()
+    # modelType, taskType = getModelAndTask()
+    # if taskType == "1" or taskType == "3":
+    #     imagePath = getImagePathFromUser()
+    #
+    #     if taskType == "3":
+    #         k = getKFromUser()
+    #         userDatabasePath = getDatabasePath()
+    #         getSimilarImages(userDatabasePath, imagePath, modelType, k)
+    #     else: showFeatureVector(imagePath, modelType)
+    # else:
+    #     userDatabasePath = getDatabasePath()
+    #     extractAndStoreFeatures(userDatabasePath, modelType)
 
-        if taskType == "3":
-            k = getKFromUser()
-            userDatabasePath = getDatabasePath()
-            getSimilarImages(userDatabasePath, imagePath, modelType, k)
-        else: showFeatureVector(imagePath, modelType)
-    else:
-        userDatabasePath = getDatabasePath()
-        extractAndStoreFeatures(userDatabasePath, modelType)
-
+    # dbImg = cv2.imread("/Users/yvtheja/Documents/Hands/Hand_0000002.jpg", cv2.IMREAD_COLOR)
+    # dbImageYUV = cv2.cvtColor(dbImg, cv2.COLOR_BGR2GRAY)
+    # dbImageColorMomments = LBP.LBP(dbImageYUV, 100, 24, 3)
+    #
+    # dbImg2 = cv2.imread("/Users/yvtheja/Documents/Hands/Hand_0000002.jpg", cv2.IMREAD_COLOR)
+    # dbImageYUV2 = cv2.cvtColor(dbImg2, cv2.COLOR_BGR2GRAY)
+    # dbImageColorMomments2 = LBP.LBP(dbImageYUV2, 100,24, 3)
+    #
+    # print("Distance: {}".format(dbImageColorMomments.compare(dbImageColorMomments2)))
 
 if __name__ == "__main__":
     init()
