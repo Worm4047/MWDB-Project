@@ -1,4 +1,4 @@
-from src.models.interfaces.Model import Model
+from models.interfaces.Model import Model
 import cv2
 import numpy as np
 

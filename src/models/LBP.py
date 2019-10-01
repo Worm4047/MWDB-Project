@@ -1,4 +1,4 @@
-from src.models.interfaces.Model import Model
+from models.interfaces.Model import Model
 from skimage.feature import local_binary_pattern
 import numpy as np
 import math
