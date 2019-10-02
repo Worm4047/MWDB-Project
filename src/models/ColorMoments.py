@@ -3,7 +3,7 @@ import cv2
 import math
 from common.helper import getCubeRoot
 from scipy.stats import skew
-from models.interfaces.Model import Model
+from src.models.interfaces.Model import Model
 import time
 
 class ColorMoments(Model):

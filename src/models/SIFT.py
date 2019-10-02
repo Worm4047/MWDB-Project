@@ -1,4 +1,4 @@
-from models.interfaces.Model import Model
+from src.models.interfaces.Model import Model
 import cv2
 import numpy as np
 
@@ -11,7 +11,7 @@ class SIFT(Model):
         self.deserialiseKeyPoints()
 
     def getFeatures(self):
-        return self.descriptors
+        return self.descriptors.flatten()
 
     def validateImage(self, image):
         if image.shape is None:

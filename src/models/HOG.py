@@ -1,6 +1,8 @@
-from models.interfaces.Model import Model
+from src.models.interfaces.Model import Model
 from skimage.feature import hog
+import numpy as np
 
+#Complete comparision fuction
 class HOG(Model):
     def __init__(self, grayScale, numBins, CellSize, BlockSize):
         self.numBins = numBins
@@ -21,4 +23,4 @@ class HOG(Model):
         if not isinstance(hogModel, Model):
             raise ValueError("Not a HOG model")
 
-        return 0
+        return np.linalg.norm(self.featureVector - hogModel.getFeatures())
