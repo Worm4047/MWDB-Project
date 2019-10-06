@@ -65,19 +65,17 @@ def label_classifier(model,dimRed,dataMatrix_labels,label,ImageName):
     oc_svm_preds = oc_svm_clf.predict(X_test)
     print(oc_svm_preds)
     if oc_svm_preds == 1:
-
         if label == 1:
-            print("With accessories")
+            print(f"Class of Image {df_Hands_labels.iloc[image_row, 0]} is with accessories")
         elif label == 0:
-            print("without accessories")
+            print(f"Class of Image {df_Hands_labels.iloc[image_row, 0]} is without accessories")
         else:
-            print(label)
+            print(f"Class of Image {df_Hands_labels.iloc[image_row, 0]} is {label}")
     else:
         output = {"right": "left", "left": "right"
             , "male": "female", "female": "male"
             , 1: "without accessories"
             , 0: "with accessories"
             , "dorsal": "palmar", "palmar": "dorsal"}
-        print(output[label])
-        print(df_Hands_labels.iloc[image_row, 0])
+        print(f"Class of Image {df_Hands_labels.iloc[image_row, 0]} is {output[label]}")
 
