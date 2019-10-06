@@ -8,4 +8,5 @@ class SVD(ReductionModel):
 
     def getDecomposition(self):
         u, s, vt = np.linalg.svd(self.dataMatrix, full_matrices=False)
+        s = np.diag(s)
         return u, s, vt
