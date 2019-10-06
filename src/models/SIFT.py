@@ -1,6 +1,7 @@
 from src.models.interfaces.Model import Model
 import cv2
 import numpy as np
+import sys
 
 class SIFT(Model):
     def __init__(self, grayScaleImage):
@@ -61,6 +62,11 @@ class SIFT(Model):
         totalDistance = 0
 
         count = 0
+
+        #RATIO TEST
+        if distancesTable[0][1] * 0.75 > distancesTable[1][1]:
+            return sys.maxint
+ 
         for desDistance in distancesTable:
             if (count > 30): break
 
