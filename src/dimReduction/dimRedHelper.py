@@ -10,16 +10,30 @@ from src.constants import BLOCK_SIZE
 import numpy as np
 from src.common.imageHelper import getYUVImage, getGrayScaleImage
 
-def getDataMatrix(directoryPath, modelType):
+import pandas as pd
+from matplotlib import pyplot as plt
+from sklearn.datasets.samples_generator import make_blobs
+from sklearn.cluster import KMeans
+from collections import Counter, defaultdict
+
+def getDataMatrix(imagePaths, modelType, directoryPath=None):
     imageFomat = "jpg"
 
-    if directoryPath is None or modelType is None:
+    if modelType is None:
         raise ValueError("Arguments can not be null")
 
     if not isinstance(modelType, ModelType):
         raise ValueError("Invalid model type")
 
-    imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
+    if directoryPath is None and imagePaths is None:
+        raise ValueError("Both directory path and image paths can not be None")
+
+    if imagePaths is not None and not isinstance(imagePaths, list):
+        raise ValueError("Image paths need to be a list")
+
+    if imagePaths is None:
+        imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
+
     dataMatrix = []
     if modelType == ModelType.CM:
         getDataMatrixForCM(imagePaths, dataMatrix)
@@ -27,8 +41,8 @@ def getDataMatrix(directoryPath, modelType):
         getDataMatrixForLBP(imagePaths, dataMatrix)
     if modelType == ModelType.HOG:
         getDataMatrixForHOG(imagePaths, dataMatrix)
-    # if modelType == ModelType.SIFT:
-    #     getDataMatrixForSIFT(imagePaths, dataMatrix)
+    if modelType == ModelType.SIFT:
+        getDataMatrixForSIFT(imagePaths, dataMatrix)
 
     return np.array(dataMatrix, dtype=np.float)
 
@@ -40,11 +54,29 @@ def getDataMatrixForCM(imagePaths, dataMatrix):
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
 
+def getClusters(descriptors):
+    CLUSTERS_COUNT = 10
+    wcss = []
+    finalclusters = len(descriptors)
+    kmeans = KMeans(n_clusters=CLUSTERS_COUNT, init='k-means++', max_iter=300, n_init=10, random_state=0)
+    kmeans.fit(descriptors)
+    # wcss.append(kmeans.inertia_)
+
+    pointsCountMap = Counter(kmeans.labels_)
+    pointsCountList = []
+    for index in range(CLUSTERS_COUNT):
+        # np.insert(kmeans.cluster_centers_[index], 0, pointsCountMap[index], axis=0)
+        pointsCountList.append([pointsCountMap[index]])
+
+    #Sort clusters in decreasing intra clusters distance
+
+    return np.hstack((pointsCountList, kmeans.cluster_centers_))
+
 def getDataMatrixForSIFT(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-        dataMatrix.append(SIFT(getGrayScaleImage(imagePath)).getFeatures())
+        dataMatrix.append(getClusters(SIFT(getGrayScaleImage(imagePath)).getFeatures()).flatten())
     return dataMatrix
 
 def getDataMatrixForLBP(imagePaths, dataMatrix):

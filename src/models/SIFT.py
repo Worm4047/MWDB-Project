@@ -11,7 +11,7 @@ class SIFT(Model):
         self.deserialiseKeyPoints()
 
     def getFeatures(self):
-        return self.descriptors.flatten()
+        return self.descriptors
 
     def validateImage(self, image):
         if image.shape is None:
