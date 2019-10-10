@@ -5,6 +5,10 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from PIL import Image
 
+# sort_print_n_return takes as parameter a numpy array, which should be k*n or k*m based on if its a data or feature latent semantic.
+# The basic catch is latent vectors should be in rows
+# it sorts each row by value and creates a (index, value) tuple for each latent semantic which represent the term-weight pair
+# so term weight in each latent semantic(row) represent how much data or feature represents that latent semantic/principal axis
 def sort_print_n_return(npArray):
     ind = np.argsort(npArray, axis=1)
     rows = ind.shape[0]
@@ -15,9 +19,14 @@ def sort_print_n_return(npArray):
         for y in range(0, cols):
             l.append((ind[x, y], npArray[x,ind[x,y]]))
         twpair = np.vstack([twpair,  np.array(l, dtype='i,i')])
+    #need to delete the initialized all zero row
     twpair = np.delete(twpair, (0), axis=0)
     return twpair
 
+# visualize ec takes as input the term weight pair matrix and type(data or feature) and orgDataMatrix
+# from data perspective its straightforward and you display the image contributions(weights) to each latent space and corresponding image
+# from feature perspective you take a dot product of each image data(matrix multiplication),
+# in the original dimensions to convert to latent feature space and displays the one with the highest contribution
 def visualize_ec(twpair, type, orgDataMatrix):
     rows = twpair.shape[0]
     cols = twpair.shape[1]
@@ -41,6 +50,7 @@ def visualize_ec(twpair, type, orgDataMatrix):
             axes[x, 0].imshow(image)
         plt.show()
 
+#retrieve the projection axis back from twpair to perform matrix multiplication which is equalent to dot product
 def get_projection_axis(twpair):
     rows =  twpair.shape[0]
     columns = twpair.shape[1]
@@ -53,6 +63,7 @@ def get_projection_axis(twpair):
     res = np.delete(res, (0), axis=1)
     return res
 
+#refer https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html
 def findNMF(vspace, k, initialisation, tol, max_iter):
     model = NMF(n_components=k, init=initialisation, tol = tol, max_iter=max_iter)
     W = model.fit_transform(vspace)
