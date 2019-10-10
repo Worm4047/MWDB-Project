@@ -5,6 +5,7 @@ import cv2
 from src.models.ColorMoments import ColorMoments
 from src.models.SIFT import SIFT
 from src.models.LBP import LBP
+from src.models.HOG import HOG
 from src.constants import BLOCK_SIZE
 import numpy as np
 from src.common.imageHelper import getYUVImage, getGrayScaleImage
@@ -25,12 +26,13 @@ def getDataMatrix(directoryPath, modelType):
     if modelType == ModelType.LBP:
         getDataMatrixForLBP(imagePaths, dataMatrix)
     if modelType == ModelType.HOG:
-        getDataMatrixForCM(imagePaths, dataMatrix)
+        getDataMatrixForHOG(imagePaths, dataMatrix)
     # if modelType == ModelType.SIFT:
     #     getDataMatrixForSIFT(imagePaths, dataMatrix)
 
     return np.array(dataMatrix, dtype=np.float)
 
+# You may not need to call below methods
 def getDataMatrixForCM(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
@@ -52,4 +54,11 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
         lbp = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3)
         features = lbp.getFeatures()
         dataMatrix.append(features)
+    return dataMatrix
+
+def getDataMatrixForHOG(imagePaths, dataMatrix):
+    imagesCount = len(imagePaths)
+    for index, imagePath in enumerate(imagePaths):
+        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+        dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
     return dataMatrix

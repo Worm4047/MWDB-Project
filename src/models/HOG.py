@@ -1,6 +1,7 @@
 from src.models.interfaces.Model import Model
 from skimage.feature import hog
 import numpy as np
+from skimage.measure import block_reduce
 
 #Complete comparision fuction
 class HOG(Model):
@@ -8,6 +9,7 @@ class HOG(Model):
         self.numBins = numBins
         self.CellSize = CellSize
         self.BlockSize = BlockSize
+        grayScale = self.resizeImage(grayScale)
         self.computeFeatureVector(grayScale)
 
     def computeFeatureVector(self, grayScaleImage):
@@ -17,10 +19,13 @@ class HOG(Model):
                              block_norm='L2-Hys',feature_vector=True, multichannel=True)
 
     def getFeatures(self):
-        return self.featureVector
+        return self.featureVector.flatten()
 
     def compare(self, hogModel):
         if not isinstance(hogModel, Model):
             raise ValueError("Not a HOG model")
 
         return np.linalg.norm(self.featureVector - hogModel.getFeatures())
+
+    def resizeImage(self, grayScale):
+        return block_reduce(grayScale, block_size=(10, 10, 1), func=np.mean)

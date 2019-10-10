@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.sparse.linalg import svds
 
-
 def calcPCA(data,kv):
     cov_data = np.cov(data)
     u,s,v = svds(cov_data, k=kv, which ='LM')

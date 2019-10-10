@@ -8,7 +8,7 @@ from sklearn import svm
 
 def making_two_columns():
     df_hands_info=pd.read_csv("D:/studies/multimedia and web databases/project/HandInfo.csv",delimiter=",") ##We need to give the path to handInfo
-    new = df_hands_info["aspectOfHand"].str.split(" ", n = 1, expand = True)
+    new = df_hands_info["aspectOfHand"].str.split(" ", n=1, expand=True)
     df_hands_info["SideOfHand"]= new[0]
     df_hands_info["WhichHand"]= new[1]
     #df_hands_info.drop(columns =["aspectOfHand"], inplace = True)
