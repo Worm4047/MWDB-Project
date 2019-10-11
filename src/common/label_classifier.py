@@ -60,7 +60,6 @@ def label_classifier(model,dimRed,dataMatrix_labels,label,ImageName):
     print("Transformation for test data Done")
 
     oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)
-
     oc_svm_clf.fit(X_train) ## Training the data
     oc_svm_preds = oc_svm_clf.predict(X_test)
     print(oc_svm_preds)

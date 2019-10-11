@@ -15,6 +15,7 @@ from matplotlib import pyplot as plt
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.cluster import KMeans
 from collections import Counter, defaultdict
+from src.common.imageFeatureHelper import getImageFeatures
 
 def getDataMatrix(imagePaths, modelType, directoryPath=None):
     imageFomat = "jpg"
@@ -46,6 +47,26 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
 
     return np.array(dataMatrix, dtype=np.float)
 
+def getQueryImageRep(vTranspose, imagePath, modelType):
+    if not isinstance(modelType, ModelType):
+        raise ValueError("Not a valid model type")
+
+    if not isinstance(vTranspose, np.ndarray):
+        raise ValueError("vTranspose should be a numpy array")
+
+    imageFeatures = getImageFeatures(imagePath, modelType)
+    if modelType == ModelType.SIFT:
+        imageFeatures = getClusters(imageFeatures).flatten()
+
+    if vTranspose.shape[1] != imageFeatures.shape[0]:
+        raise ValueError("vTranspose dimensions are not matching with query image features")
+
+    kSpaceRepresentation = []
+    for row in vTranspose:
+        kSpaceRepresentation.append(np.dot(row, imageFeatures))
+
+    return np.array(kSpaceRepresentation)
+
 # You may not need to call below methods
 def getDataMatrixForCM(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -66,7 +87,7 @@ def getClusters(descriptors):
     pointsCountList = []
     for index in range(CLUSTERS_COUNT):
         # np.insert(kmeans.cluster_centers_[index], 0, pointsCountMap[index], axis=0)
-        pointsCountList.append([pointsCountMap[index]]/finalclusters)
+        pointsCountList.append([pointsCountMap[index]/finalclusters])
 
     #Sort clusters in decreasing intra clusters distance
 
