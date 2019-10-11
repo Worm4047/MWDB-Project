@@ -66,7 +66,7 @@ def getClusters(descriptors):
     pointsCountList = []
     for index in range(CLUSTERS_COUNT):
         # np.insert(kmeans.cluster_centers_[index], 0, pointsCountMap[index], axis=0)
-        pointsCountList.append([pointsCountMap[index]])
+        pointsCountList.append([pointsCountMap[index]]/finalclusters)
 
     #Sort clusters in decreasing intra clusters distance
 
