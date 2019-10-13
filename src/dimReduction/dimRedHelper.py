@@ -29,8 +29,11 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
     if directoryPath is None and imagePaths is None:
         raise ValueError("Both directory path and image paths can not be None")
 
-    if imagePaths is not None and not isinstance(imagePaths, list):
+    if imagePaths is None:
         raise ValueError("Image paths need to be a list")
+
+    if not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
+        raise ValueError("Image paths need to be a iterable")
 
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
@@ -46,6 +49,14 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
         getDataMatrixForSIFT(imagePaths, dataMatrix)
 
     return np.array(dataMatrix, dtype=np.float)
+
+def getQueryImageRepList(vTranspose, imagePaths, modelType):
+    featuresList = []
+    for imagePath in imagePaths:
+        featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
+
+    return np.array(featuresList)
+
 
 def getQueryImageRep(vTranspose, imagePath, modelType):
     if not isinstance(modelType, ModelType):

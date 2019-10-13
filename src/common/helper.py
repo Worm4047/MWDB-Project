@@ -2,6 +2,8 @@ from src.models.enums.models import ModelType
 from src.dimReduction.enums.reduction import ReductionType
 import os
 import cv2
+import pandas as pd
+import numpy as np
 
 def getTaskFromUser():
     while True:
@@ -115,3 +117,25 @@ def cleanDirectory(folder):
 def getCubeRoot(x):
     if 0<=x: return x**(1./3.)
     return -(-x)**(1./3.)
+
+def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
+    return getImagePaths(imagesDir, getImageIdsWithLabel(imageLabel, csvFilePath))
+
+def getImageIdsWithLabel(imageLabel, csvFilePath):
+    if csvFilePath is None or imageLabel is None:
+        raise ValueError("Invalid arguments")
+
+    handInfo = pd.read_csv(csvFilePath, na_filter=False)
+    return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
+
+def getImagePaths(imagesDir, imageIds):
+    if not isinstance(imageIds, list) and not isinstance(imageIds, np.ndarray):
+        raise ValueError("Image Ids need to be iterable")
+
+    imagePaths = []
+    for imageId in imageIds:
+        imagePaths.append(os.path.join(imagesDir, imageId))
+
+    return imagePaths
+
+

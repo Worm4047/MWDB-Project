@@ -5,6 +5,7 @@ from src.models.ColorMoments import ColorMoments
 from src.models.HOG import HOG
 from src.models.LBP import LBP
 import cv2
+import numpy as np
 
 def getImageFeatures(imagePath, modelType):
     if not isinstance(modelType, ModelType):

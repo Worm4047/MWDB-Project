@@ -15,7 +15,6 @@ def init():
     # Dummy with k = 17
     print(getQueryImageRep(np.ones((17, 1728)), "/Users/yvtheja/Documents/TestHands/Hand_0000002.jpg", ModelType.CM).shape)
 
-
     # Refer this for calling DimRed
     # SVD(np.array([])).getDecomposition()
 
