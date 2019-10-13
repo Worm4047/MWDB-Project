@@ -37,7 +37,7 @@ def visualize_ec(twpair, type, orgDataMatrix):
                 imageid, imagepath = "image"#get_img_path_from_index(twpair[x, y][0])
                 image = Image.open(imagepath)
                 axes[x, y].imshow(image)
-                axes[x, y].set_title("score:" + twpair[x, y][1], fontsize=7)
+                axes[x, y].set_title("score:" + twpa ir[x, y][1], fontsize=7)
         plt.show()
     else:
         fig, axes = plt.subplots(rows, 1)
@@ -65,7 +65,7 @@ def get_projection_axis(twpair):
 
 #refer https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html
 def findNMF(vspace, k, initialisation, tol, max_iter):
-    model = NMF(n_components=k, init=initialisation, tol = tol, max_iter=max_iter)
+    model = NMF(n_components=k, init=initialisation, tol=tol, max_iter=max_iter)
     W = model.fit_transform(vspace)
     H = model.components_
     return W, H
