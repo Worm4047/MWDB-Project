@@ -11,4 +11,5 @@ def task4(folderPath, imagePath):
     pass
 
 def task5(folderPath, imagePath):
+
     pass

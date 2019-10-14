@@ -1,5 +1,6 @@
 .DS_Store
 .idea/
 src/featureVectorsStore/
+src/store/
 *.pyc
 *.pdf
