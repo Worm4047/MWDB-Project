@@ -141,6 +141,34 @@ def getImageIdsWithLabel(imageLabel, csvFilePath):
     return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
 
 
+# Input: imageLabel enum inputted and the absolute path of the CSV
+# Output: The imagePaths pertaining to the input label
+def getImageIdsWithLabelInputs(imageLabel, csvFilePath):
+    if csvFilePath is None or imageLabel is None:
+        raise ValueError("Invalid arguments")
+    handInfo = pd.read_csv(csvFilePath, na_filter=False)
+
+    if imageLabel == 1:
+        return handInfo[handInfo['aspectOfHand'].str.contains('left')]['imageName'].to_numpy()
+    elif imageLabel == 2:
+        return handInfo[handInfo['aspectOfHand'].str.contains('right')]['imageName'].to_numpy()
+    elif imageLabel == 3:
+        return handInfo[handInfo['aspectOfHand'].str.contains('dorsal')]['imageName'].to_numpy()
+    elif imageLabel == 4:
+        return handInfo[handInfo['aspectOfHand'].str.contains('palmar')]['imageName'].to_numpy()
+    elif imageLabel == 5:
+        return handInfo[handInfo['accessories'] == 1]['imageName'].to_numpy()
+    elif imageLabel == 6:
+        return handInfo[handInfo['accessories'] == 0]['imageName'].to_numpy()
+    elif imageLabel == 7:
+        return handInfo[handInfo['gender'].str.contains('male')]['imageName'].to_numpy()
+    elif imageLabel == 8:
+        return handInfo[handInfo['gender'].str.contains('female')]['imageName'].to_numpy()
+    else:
+        print("imageLabel is invalid. Please try again")
+        return
+
+
 def getImagePaths(imagesDir, imageIds):
     if not isinstance(imageIds, list) and not isinstance(imageIds, np.ndarray):
         raise ValueError("Image Ids need to be iterable")
