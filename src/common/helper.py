@@ -5,6 +5,7 @@ import cv2
 import pandas as pd
 import numpy as np
 
+
 def getTaskFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
@@ -20,6 +21,7 @@ def getTaskFromUser():
 
     return taskType
 
+
 def getModelFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
@@ -32,6 +34,7 @@ def getModelFromUser():
         if modelType == "1" or modelType == "2" or modelType == "3" or modelType == "4": break
 
     return ModelType(int(modelType))
+
 
 def getDimTechniqueFromUser():
     while True:
@@ -47,6 +50,7 @@ def getDimTechniqueFromUser():
 
     return ReductionType(int(dimType))
 
+
 def getDatabasePath():
     while True:
         print("-----------------------------------------------------------------------------------------")
@@ -55,6 +59,7 @@ def getDatabasePath():
         if len(dbPath) > 4: break
 
     return dbPath
+
 
 def getKFromUser():
     while True:
@@ -67,6 +72,7 @@ def getKFromUser():
         except ValueError:
             continue
 
+
 def getMFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
@@ -77,6 +83,7 @@ def getMFromUser():
             else: continue
         except ValueError:
             continue
+
 
 def getLabelFromUser():
     while True:
@@ -95,6 +102,7 @@ def getLabelFromUser():
         if label in ['1','2','3','4','5','6','7','8']: return label
         else: print(' Incorrect value ')
 
+
 def getImagePathFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
@@ -103,6 +111,7 @@ def getImagePathFromUser():
         if os.path.exists(imagePath): return imagePath
         else:
             print("Invalid path")
+
 
 def cleanDirectory(folder):
     for the_file in os.listdir(folder):
@@ -114,12 +123,15 @@ def cleanDirectory(folder):
         except Exception as e:
             print(e)
 
+
 def getCubeRoot(x):
     if 0<=x: return x**(1./3.)
     return -(-x)**(1./3.)
 
+
 def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
     return getImagePaths(imagesDir, getImageIdsWithLabel(imageLabel, csvFilePath))
+
 
 def getImageIdsWithLabel(imageLabel, csvFilePath):
     if csvFilePath is None or imageLabel is None:
@@ -127,6 +139,35 @@ def getImageIdsWithLabel(imageLabel, csvFilePath):
 
     handInfo = pd.read_csv(csvFilePath, na_filter=False)
     return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
+
+
+# Input: imageLabel enum inputted and the absolute path of the CSV
+# Output: The imagePaths pertaining to the input label
+def getImageIdsWithLabelInputs(imageLabel, csvFilePath):
+    if csvFilePath is None or imageLabel is None:
+        raise ValueError("Invalid arguments")
+    handInfo = pd.read_csv(csvFilePath, na_filter=False)
+
+    if imageLabel == 1:
+        return handInfo[handInfo['aspectOfHand'].str.contains('left')]['imageName'].to_numpy()
+    elif imageLabel == 2:
+        return handInfo[handInfo['aspectOfHand'].str.contains('right')]['imageName'].to_numpy()
+    elif imageLabel == 3:
+        return handInfo[handInfo['aspectOfHand'].str.contains('dorsal')]['imageName'].to_numpy()
+    elif imageLabel == 4:
+        return handInfo[handInfo['aspectOfHand'].str.contains('palmar')]['imageName'].to_numpy()
+    elif imageLabel == 5:
+        return handInfo[handInfo['accessories'] == 1]['imageName'].to_numpy()
+    elif imageLabel == 6:
+        return handInfo[handInfo['accessories'] == 0]['imageName'].to_numpy()
+    elif imageLabel == 7:
+        return handInfo[handInfo['gender'].str.contains('male')]['imageName'].to_numpy()
+    elif imageLabel == 8:
+        return handInfo[handInfo['gender'].str.contains('female')]['imageName'].to_numpy()
+    else:
+        print("imageLabel is invalid. Please try again")
+        return
+
 
 def getImagePaths(imagesDir, imageIds):
     if not isinstance(imageIds, list) and not isinstance(imageIds, np.ndarray):
@@ -137,5 +178,22 @@ def getImagePaths(imagesDir, imageIds):
         imagePaths.append(os.path.join(imagesDir, imageId))
 
     return imagePaths
+
+def listFolderNames(names):
+    print("-----------------------------------------------------------------------------------------")
+    for i in range(len(names)):
+        print(i, " > ", names[i][0])
+    label = 0
+    while True:
+        label = int(input("-> Please enter the number: "))
+        if label < len(names):
+            return names[label]
+        print("Invalid input, try again")
+
+def getFolderNames(path):
+    names = []
+    for name in os.listdir(path):
+        names.append((name, os.path.abspath(name)))
+    return names
 
 

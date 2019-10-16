@@ -63,10 +63,4 @@ def get_projection_axis(twpair):
     res = np.delete(res, (0), axis=1)
     return res
 
-#refer https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html
-def findNMF(vspace, k, initialisation, tol, max_iter):
-    model = NMF(n_components=k, init=initialisation, tol=tol, max_iter=max_iter)
-    W = model.fit_transform(vspace)
-    H = model.components_
-    return W, H
 
