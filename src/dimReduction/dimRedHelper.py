@@ -29,8 +29,9 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
     if directoryPath is None and imagePaths is None:
         raise ValueError("Both directory path and image paths can not be None")
 
-    if not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
-        raise ValueError("Image paths need to be a iterable")
+    if imagePaths is not None:
+        if not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
+            raise ValueError("Image paths need to be a iterable")
 
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
