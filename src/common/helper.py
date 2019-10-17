@@ -151,6 +151,7 @@ def getImagePaths(imagesDir, imageIds):
 
     return imagePaths
 
+
 def listFolderNames(names):
     print("-----------------------------------------------------------------------------------------")
     for i in range(len(names)):
@@ -161,6 +162,7 @@ def listFolderNames(names):
         if label < len(names):
             return names[label]
         print("Invalid input, try again")
+
 
 def getFolderNames(path):
     names = []
