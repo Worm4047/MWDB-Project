@@ -1,3 +1,5 @@
+from src.dimReduction.NMF import NMF
+from src.dimReduction.SVD import SVD
 from src.models.enums.models import ModelType
 import glob
 import os
@@ -10,12 +12,15 @@ from src.constants import BLOCK_SIZE
 import numpy as np
 from src.common.imageHelper import getYUVImage, getGrayScaleImage
 
+from src.dimReduction.enums import reduction
+from src.common.dataMatrixHelper import read_data_matrix, save_data_matrix
 import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.cluster import KMeans
 from collections import Counter, defaultdict
 from src.common.imageFeatureHelper import getImageFeatures
+from src.common import latentSemanticsHelper
 
 def getDataMatrix(imagePaths, modelType, directoryPath=None):
     imageFomat = "jpg"
@@ -29,23 +34,27 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
     if directoryPath is None and imagePaths is None:
         raise ValueError("Both directory path and image paths can not be None")
 
-    if imagePaths is not None:
-        if not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
-            raise ValueError("Image paths need to be a iterable")
+    if imagePaths is None:
+        raise ValueError("Image paths need to be a list")
+
+    if not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
+        raise ValueError("Image paths need to be a iterable")
 
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
 
-    dataMatrix = []
-    if modelType == ModelType.CM:
-        getDataMatrixForCM(imagePaths, dataMatrix)
-    if modelType == ModelType.LBP:
-        getDataMatrixForLBP(imagePaths, dataMatrix)
-    if modelType == ModelType.HOG:
-        getDataMatrixForHOG(imagePaths, dataMatrix)
-    if modelType == ModelType.SIFT:
-        getDataMatrixForSIFT(imagePaths, dataMatrix)
-
+    dataMatrix = read_data_matrix(modelType, directoryPath)
+    if dataMatrix is None:
+        dataMatrix = []
+        if modelType == ModelType.CM:
+            getDataMatrixForCM(imagePaths, dataMatrix)
+        if modelType == ModelType.LBP:
+            getDataMatrixForLBP(imagePaths, dataMatrix)
+        if modelType == ModelType.HOG:
+            getDataMatrixForHOG(imagePaths, dataMatrix)
+        if modelType == ModelType.SIFT:
+            getDataMatrixForSIFT(imagePaths, dataMatrix)
+        save_data_matrix(modelType, directoryPath, dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
@@ -124,3 +133,20 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
     return dataMatrix
+
+def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName):
+    folderName = "{}_{}_{}_{}_{}".format(imageDirName, modelType.name, decompType.name, k, label)
+    latent_semantic = latentSemanticsHelper.getSemanticsFromFolder(folderName)
+    if latent_semantic is None:
+        if decompType == reduction.ReductionType.SVD:
+            u, s, v = SVD(dataMatrix, k).getDecomposition()
+            latent_semantic = u, v
+        elif decompType == reduction.ReductionType.PCA:
+            print "check later"
+        #u, s, v = PCA(dataMatrix, k).getDecomposition()
+        elif decompType == reduction.ReductionType.NMF:
+            latent_semantic = NMF(dataMatrix, k).getDecomposition()
+        else:
+            print "check later"
+        latentSemanticsHelper.saveSemantics(imageDirName, modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])
+    return latent_semantic

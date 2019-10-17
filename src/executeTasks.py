@@ -1,11 +1,25 @@
 from src.task8 import initTask8
+from dimReduction import dimRedHelper
+from common import dataMatrixHelper
+from common import util
+from common import helper
 
+#need to test
 def task1(directoryPath, modelType, k, dimRecTechnique):
     print(" EXECUTING TASK 1 ")
     print(directoryPath)
     print(modelType)
     print(k)
     print(dimRecTechnique)
+    data_matrix = dimRedHelper.getDataMatrix(None, modelType, directoryPath)
+    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None, directoryPath)
+    print "In terms of data"
+    twpairData = util.sort_print_n_return(latent_semantic[0])
+    util.visualize_ec(twpairData, "data", latent_semantic[0])
+    print "In terms of feature"
+    twpairFeat = util.sort_print_n_return(latent_semantic[1])
+    util.visualize_ec(twpairFeat, "feature", latent_semantic[1])
+
 
 def task2(foldername, folderPath, imagePath):
     # call a function to get data from folder name
@@ -13,6 +27,7 @@ def task2(foldername, folderPath, imagePath):
     print(folderPath)
     print(imagePath)
 
+#need to test
 def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(" EXECUTING TASK 3 ")
     print(directoryPath)
@@ -20,6 +35,21 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(k)
     print(dimRecTechnique)
     print(label)
+    data_matrix = dimRedHelper.getDataMatrix(None, modelType, directoryPath)
+    images_list_with_label = helper.getImageIdsWithLabelInputs(label, csv_path)
+    import os
+    all_images = []
+    for file in os.listdir(directoryPath):
+        if file.endswith('.jpg'):
+            all_images.append(file[:-4])
+    data_matrix_by_label = dataMatrixHelper.filter_by_label(data_matrix, all_images, images_list_with_label)
+    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix_by_label, modelType, label, directoryPath)
+    print "In terms of data"
+    twpairData = util.sort_print_n_return(latent_semantic[0])
+    util.visualize_ec(twpairData, "data", latent_semantic[0])
+    print "In terms of feature"
+    twpairFeat = util.sort_print_n_return(latent_semantic[1])
+    util.visualize_ec(twpairFeat, "feature", latent_semantic[1])
 
 def task4(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 4 ")
