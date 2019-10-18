@@ -27,21 +27,18 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
 
     if modelType is None:
         raise ValueError("Arguments can not be null")
-
-    if not isinstance(modelType, ModelType):
+    elif not isinstance(modelType, ModelType):
         raise ValueError("Invalid model type")
-
-    if directoryPath is None and imagePaths is None:
+    elif imagePaths is None and directoryPath is None:
         raise ValueError("Both directory path and image paths can not be None")
-
-    if imagePaths is not None:
-        if not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
-            raise ValueError("Image paths need to be a iterable")
+    elif directoryPath is None and not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
+        raise ValueError("Image paths need to be a iterable")
 
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
 
-    dataMatrix = read_data_matrix(modelType, directoryPath)
+    # dataMatrix = read_data_matrix(modelType.name, directoryPath)
+    dataMatrix = None
     if dataMatrix is None:
         dataMatrix = []
         if modelType == ModelType.CM:
@@ -52,7 +49,7 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
             getDataMatrixForHOG(imagePaths, dataMatrix)
         if modelType == ModelType.SIFT:
             getDataMatrixForSIFT(imagePaths, dataMatrix)
-        save_data_matrix(modelType, directoryPath, dataMatrix)
+        # save_data_matrix(modelType.name, directoryPath, dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
@@ -140,11 +137,11 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
             u, s, v = SVD(dataMatrix, k).getDecomposition()
             latent_semantic = u, v
         elif decompType == reduction.ReductionType.PCA:
-            print "check later"
+            print("check later")
         #u, s, v = PCA(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.NMF:
             latent_semantic = NMF(dataMatrix, k).getDecomposition()
         else:
-            print "check later"
+            print("check later")
         latentSemanticsHelper.saveSemantics(imageDirName, modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])
     return latent_semantic

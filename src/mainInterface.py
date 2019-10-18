@@ -24,10 +24,12 @@ if __name__ == '__main__':
         folders = helper.getFolderNames('/home/worm/Desktop/ASU/CSE 515/Phase#2/MWDB/src/data')
         foldername, folderpath = helper.listFolderNames(folders)
         # pass values to task 2 dummy
-        if taskType == 2:
-            executeTasks.task2(foldername, folderpath, imagePath)
-        elif taskType == 4:
-            executeTasks.task4(foldername, folderpath, imagePath)
+        if taskType == 2 or taskType == 4:
+            m = helper.getMFromUser()
+            if taskType == 2:
+                executeTasks.task2(foldername, folderpath, imagePath, m)
+            elif taskType == 4:
+                executeTasks.task4(foldername, folderpath, imagePath, m)
         else:
             executeTasks.task5(foldername, folderpath, imagePath)
 
