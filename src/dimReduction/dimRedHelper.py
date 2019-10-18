@@ -22,7 +22,7 @@ from collections import Counter, defaultdict
 from src.common.imageFeatureHelper import getImageFeatures
 from src.common import latentSemanticsHelper
 
-def getDataMatrix(imagePaths, modelType, directoryPath=None):
+def getDataMatrix(imagePaths, modelType, label=None, directoryPath=None):
     imageFomat = "jpg"
 
     if modelType is None:
@@ -41,18 +41,18 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
 
-    # dataMatrix = read_data_matrix(modelType, directoryPath)
-    # if dataMatrix is None:
-    dataMatrix = []
-    if modelType == ModelType.CM:
-        getDataMatrixForCM(imagePaths, dataMatrix)
-    if modelType == ModelType.LBP:
-        getDataMatrixForLBP(imagePaths, dataMatrix)
-    if modelType == ModelType.HOG:
-        getDataMatrixForHOG(imagePaths, dataMatrix)
-    if modelType == ModelType.SIFT:
-        getDataMatrixForSIFT(imagePaths, dataMatrix)
-        # save_data_matrix(modelType, directoryPath, dataMatrix)
+    dataMatrix = read_data_matrix(modelType, label, "./store/dataMatrix/")
+    if dataMatrix is None:
+        dataMatrix = []
+        if modelType == ModelType.CM:
+            getDataMatrixForCM(imagePaths, dataMatrix)
+        if modelType == ModelType.LBP:
+            getDataMatrixForLBP(imagePaths, dataMatrix)
+        if modelType == ModelType.HOG:
+            getDataMatrixForHOG(imagePaths, dataMatrix)
+        if modelType == ModelType.SIFT:
+            getDataMatrixForSIFT(imagePaths, dataMatrix)
+        save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
 def getQueryImageRepList(vTranspose, imagePaths, modelType):

@@ -6,6 +6,8 @@ from src.dimReduction.dimRedHelper import getQueryImageRepList
 from src.models.enums.models import ModelType
 from src.dimReduction.dimRedHelper import getDataMatrix
 from src.dimReduction.SVD import SVD
+import numpy as np
+from sklearn import preprocessing
 
 def initTask5(folderPath, csvFilePath, imagePath):
     # _, modelType, dimRedType, k, label = getParams(folderPath)
@@ -13,23 +15,39 @@ def initTask5(folderPath, csvFilePath, imagePath):
     databasePath = "/Users/yvtheja/Documents/Hands"
     # u, vt = getSemanticsFromFolder(folderPath)
     dorsalImageIds = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
-    dorsalImageIds = dorsalImageIds[0: 22]
+    dorsalImageIds = dorsalImageIds[0: 23]
 
-    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.SIFT)
+    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, "dorsal")
     u, s, vt = SVD(dmSIFT, 10).getDecomposition()
+    u = preprocessing.scale(u)
+    ucentroid = np.mean(u, axis=0)
+    distances = []
+    for row in u:
+        distances.append(np.linalg.norm(row - ucentroid))
 
-    ss = StandardScaler().fit(u)
-    uTransformed = ss.transform(u)
-
-    oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)
-    oc_svm_clf.fit(uTransformed)
-    oc_svm_preds = oc_svm_clf.predict(uTransformed)
+    print("U Dorsal | mean: {} | std: {}".format(np.mean(distances), np.std(distances)))
 
 
     palmarImagePaths = getImagePathsWithLabel("palmar", csvFilePath, databasePath)
-    palmarImagePaths = palmarImagePaths[0:26]
-    palmarKspace = getQueryImageRepList(vt, palmarImagePaths, ModelType.SIFT)
-    oc_svm_predsT = oc_svm_clf.predict(palmarKspace)
+    palmarImagePaths = palmarImagePaths[0:22]
+    palmarKspace = getQueryImageRepList(vt, palmarImagePaths, ModelType.CM)
+    palmarKspace = preprocessing.scale(palmarKspace)
+    distances = []
+    for row in palmarKspace:
+        distances.append(np.linalg.norm(row - ucentroid))
+
+    print("Q palmar | mean: {} | std: {}".format(np.mean(distances), np.std(distances)))
+
+    palmarImagePaths = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
+    palmarImagePaths = palmarImagePaths[0:22]
+    palmarKspace = getQueryImageRepList(vt, palmarImagePaths, ModelType.CM)
+    palmarKspace = preprocessing.scale(palmarKspace)
+    distances = []
+    for row in palmarKspace:
+        distances.append(np.linalg.norm(row - ucentroid))
+
+    print("Q dorsal | mean: {} | std: {}".format(np.mean(distances), np.std(distances)))
+    print("Boom")
 
 if __name__ == "__main__":
     initTask5(None, None, None)

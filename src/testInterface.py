@@ -5,6 +5,7 @@ import numpy as np
 from src.dimReduction.dimRedHelper import getQueryImageRep
 from src.common.latentSemanticsHelper import saveSemantics, getParams, getSemanticsFromFolder
 from src.dimReduction.enums.reduction import ReductionType
+from src.common.helper import getImagePathsWithLabel
 
 def init():
     # print(getDataMatrix("/Users/yvtheja/Documents/TestHands", ModelType.CM).shape)
@@ -17,12 +18,20 @@ def init():
     # # Dummy with k = 17
     # print(getQueryImageRep(np.ones((17, 1728)), "/Users/yvtheja/Documents/TestHands/Hand_0000002.jpg", ModelType.CM).shape)
 
-    saveSemantics("testfolder", ModelType.SIFT, "dorsal", ReductionType.SVD, 10, np.ones((23, 10)), np.zeros((10, 1200)))
-    u, v = getSemanticsFromFolder("/Users/yvtheja/Documents/ASU/MWDB/src/store/testfolder_SIFT_SVD_10_dorsal")
-    print(u.shape)
-    print(v.shape)
-    params = getParams("/Users/yvtheja/Documents/ASU/MWDB/src/store/testfolder_SIFT_SVD_10_dorsal")
-    print(params)
+    # saveSemantics("testfolder", ModelType.SIFT, "dorsal", ReductionType.SVD, 10, np.ones((23, 10)), np.zeros((10, 1200)))
+    # u, v = getSemanticsFromFolder("/Users/yvtheja/Documents/ASU/MWDB/src/store/testfolder_SIFT_SVD_10_dorsal")
+    # print(u.shape)
+    # print(v.shape)
+    # params = getParams("/Users/yvtheja/Documents/ASU/MWDB/src/store/testfolder_SIFT_SVD_10_dorsal")
+    # print(params)
+
+    csvFilePath = "/Users/yvtheja/Documents/HandInfo.csv"
+    databasePath = "/Users/yvtheja/Documents/Hands"
+    # u, vt = getSemanticsFromFolder(folderPath)
+    dorsalImageIds = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
+    dorsalImageIds = dorsalImageIds[0: 23]
+    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, "dorsal")
+    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, "dorsal")
 
     # Refer this for calling DimRed
     # SVD(np.array([])).getDecomposition()
