@@ -63,7 +63,7 @@ def task5(foldername, folderPath, imagePath):
     print(imagePath)
     initTask5(folderPath, imagePath)
 
-def task6(subjectid, handInfoPath):
+def task6(subjectid, handInfoPath, folderPath):
     print("Executing Task 6")
     helper.getSubjectImages(subjectid)
 
