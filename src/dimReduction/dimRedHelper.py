@@ -59,11 +59,11 @@ def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Transforming Query Image | Processed {} out of {}".format(index, imagesCount))
         featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
 
     return np.array(featuresList)
-
 
 def getQueryImageRep(vTranspose, imagePath, modelType):
     if not isinstance(modelType, ModelType):
@@ -89,6 +89,7 @@ def getQueryImageRep(vTranspose, imagePath, modelType):
 def getDataMatrixForCM(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
@@ -114,6 +115,7 @@ def getClusters(descriptors):
 def getDataMatrixForSIFT(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(getClusters(SIFT(getGrayScaleImage(imagePath)).getFeatures()).flatten())
     return dataMatrix
@@ -121,6 +123,7 @@ def getDataMatrixForSIFT(imagePaths, dataMatrix):
 def getDataMatrixForLBP(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         lbp = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3)
         features = lbp.getFeatures()
@@ -130,6 +133,7 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
 def getDataMatrixForHOG(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
     return dataMatrix
