@@ -22,7 +22,7 @@ from collections import Counter, defaultdict
 from src.common.imageFeatureHelper import getImageFeatures
 from src.common import latentSemanticsHelper
 
-def getDataMatrix(imagePaths, modelType, directoryPath=None):
+def getDataMatrix(imagePaths, modelType, label=None, directoryPath=None):
     imageFomat = "jpg"
 
     if modelType is None:
@@ -37,8 +37,7 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
 
-    # dataMatrix = read_data_matrix(modelType.name, directoryPath)
-    dataMatrix = None
+    dataMatrix = read_data_matrix(modelType, label, "./store/dataMatrix/")
     if dataMatrix is None:
         dataMatrix = []
         if modelType == ModelType.CM:
@@ -49,16 +48,18 @@ def getDataMatrix(imagePaths, modelType, directoryPath=None):
             getDataMatrixForHOG(imagePaths, dataMatrix)
         if modelType == ModelType.SIFT:
             getDataMatrixForSIFT(imagePaths, dataMatrix)
-        # save_data_matrix(modelType.name, directoryPath, dataMatrix)
+        save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
-    for imagePath in imagePaths:
+    imagesCount = len(imagePaths)
+    for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
+        print("Transforming Query Image | Processed {} out of {}".format(index, imagesCount))
         featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
 
     return np.array(featuresList)
-
 
 def getQueryImageRep(vTranspose, imagePath, modelType):
     if not isinstance(modelType, ModelType):
@@ -84,6 +85,7 @@ def getQueryImageRep(vTranspose, imagePath, modelType):
 def getDataMatrixForCM(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
@@ -109,6 +111,7 @@ def getClusters(descriptors):
 def getDataMatrixForSIFT(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(getClusters(SIFT(getGrayScaleImage(imagePath)).getFeatures()).flatten())
     return dataMatrix
@@ -116,6 +119,7 @@ def getDataMatrixForSIFT(imagePaths, dataMatrix):
 def getDataMatrixForLBP(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         lbp = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3)
         features = lbp.getFeatures()
@@ -125,6 +129,7 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
 def getDataMatrixForHOG(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
     return dataMatrix
@@ -137,11 +142,11 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
             u, s, v = SVD(dataMatrix, k).getDecomposition()
             latent_semantic = u, v
         elif decompType == reduction.ReductionType.PCA:
-            print("check later")
+            print("Check later")
         #u, s, v = PCA(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.NMF:
             latent_semantic = NMF(dataMatrix, k).getDecomposition()
         else:
-            print("check later")
+            print("Check later")
         latentSemanticsHelper.saveSemantics(imageDirName, modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])
     return latent_semantic

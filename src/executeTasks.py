@@ -9,6 +9,7 @@ from src.dimReduction import dimRedHelper
 from src.common import dataMatrixHelper, comparisonHelper
 from src.common import util
 from src.common import helper
+from src.task5 import initTask5
 
 #need to test
 def task1(directoryPath, modelType, k, dimRecTechnique):
@@ -40,7 +41,7 @@ def task2(foldername, folderPath, imagePath, m):
 
 
 #need to test
-def task3(directoryPath, modelType, k, dimRecTechnique, label):
+def task3(directoryPath, modelType, k, dimRecTechnique, label, handInfoPath):
     print(" EXECUTING TASK 3 ")
     print(directoryPath)
     print(modelType)
@@ -48,7 +49,7 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(dimRecTechnique)
     print(label)
     data_matrix = dimRedHelper.getDataMatrix(None, modelType, directoryPath)
-    images_list_with_label = helper.getImageIdsWithLabelInputs(label, csv_path)
+    images_list_with_label = helper.getImageIdsWithLabelInputs(label, handInfoPath)
     import os
     all_images = []
     for file in os.listdir(directoryPath):
@@ -74,6 +75,11 @@ def task5(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 5 ")
     print(folderPath)
     print(imagePath)
+    initTask5(folderPath, imagePath)
+
+def task6(subjectid, handInfoPath):
+    print("Executing Task 6")
+    helper.getSubjectImages(subjectid)
 
 
 def task8(imageDir, handInfoCSV, k):
