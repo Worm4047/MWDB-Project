@@ -62,7 +62,7 @@ def getQueryImageRepList(vTranspose, imagePaths, modelType):
         if not os.path.exists(imagePath): continue
         print("Transforming Query Image | Processed {} out of {}".format(index, imagesCount))
         featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
-
+    print("featuresList:",featuresList)
     return np.array(featuresList)
 
 def getQueryImageRep(vTranspose, imagePath, modelType):
@@ -80,10 +80,13 @@ def getQueryImageRep(vTranspose, imagePath, modelType):
         raise ValueError("vTranspose dimensions are not matching with query image features")
 
     kSpaceRepresentation = []
-    for row in vTranspose:
-        kSpaceRepresentation.append(np.dot(row, imageFeatures))
+    #for row in vTranspose:
+        #kSpaceRepresentation.append(np.dot(row, imageFeatures))
+    #    kSpaceRepresentation.append(np.matmul(imageFeatures,row))
 
-    return np.array(kSpaceRepresentation)
+
+
+    return np.array(np.matmul(imageFeatures,vTranspose.transpose()))
 
 # You may not need to call below methods
 def getDataMatrixForCM(imagePaths, dataMatrix):

@@ -8,6 +8,8 @@ from src.dimReduction.dimRedHelper import getDataMatrix
 from src.dimReduction.SVD import SVD
 import numpy as np
 from sklearn import preprocessing
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import roc_auc_score
 
 def initTask5(folderPath, csvFilePath, imagePath):
     # _, modelType, dimRedType, k, label = getParams(folderPath)
