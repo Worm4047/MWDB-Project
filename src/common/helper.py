@@ -15,9 +15,10 @@ def getTaskFromUser():
         print("-> 3. Task 3")
         print("-> 4. Task 4")
         print("-> 5. Task 5")
+        print("-> 6. Task 6")
         taskType = input("-> Please enter the number: ")
 
-        if taskType in ['1','2', '3', '4', '5']: break
+        if taskType in ['1','2', '3', '4', '5', '6']: break
 
     return taskType
 
@@ -111,6 +112,11 @@ def getImagePathFromUser():
         if os.path.exists(imagePath): return imagePath
         else:
             print("Invalid path")
+def getSubjectId():
+    while True:
+        print("----------------------------------------------------------------------------------------")
+        subjectId = int(input("-> Please enter the subject Id"))
+        return subjectId
 
 
 def cleanDirectory(folder):
@@ -198,4 +204,9 @@ def getFolderNames(path):
         names.append((name, os.path.abspath(name)))
     return names
 
-
+def getSubjectImages(subjectId):
+    data = pd.read_csv("/home/worm/Desktop/ASU/CSE 515/Phase#2/MWDB/src/HandInfo.csv")
+    subjectData = data[data['id'] == subjectId]
+    print(subjectData.head(3))
+    for image in subjectData['imageName']:
+        print(image)

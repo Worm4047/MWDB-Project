@@ -1,4 +1,5 @@
 from src.task8 import initTask8
+from src.common import helper
 
 def task1(directoryPath, modelType, k, dimRecTechnique):
     print(" EXECUTING TASK 1 ")
@@ -30,6 +31,10 @@ def task5(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 5 ")
     print(folderPath)
     print(imagePath)
+
+def task6(subjectid):
+    print("Executing Task 6")
+    helper.getSubjectImages(subjectid)
 
 def task8(imageDir, handInfoCSV, k):
     initTask8(imageDir, handInfoCSV, k)

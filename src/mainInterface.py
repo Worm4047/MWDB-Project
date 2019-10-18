@@ -31,6 +31,10 @@ if __name__ == '__main__':
         else:
             executeTasks.task5(foldername, folderpath, imagePath)
 
+    elif taskType == 6:
+        subjectId = helper.getSubjectId()
+        executeTasks.task6(subjectId)
+
 
 
 
