@@ -12,7 +12,8 @@ if __name__ == '__main__':
         k = helper.getKFromUser()
         if taskType == 3:
             label = helper.getLabelFromUser()
-            executeTasks.task3(directoryPath, modelType, k, dimTechnique, label)
+            handInfoPath = helper.getMetadataPath()
+            executeTasks.task3(directoryPath, modelType, k, dimTechnique, label, handInfoPath)
         else:
             executeTasks.task1(directoryPath, modelType, k, dimTechnique)
 
@@ -33,7 +34,18 @@ if __name__ == '__main__':
 
     elif taskType == 6:
         subjectId = helper.getSubjectId()
-        executeTasks.task6(subjectId)
+        handInfoPath = helper.getMetadataPath()
+        executeTasks.task6(subjectId, handInfoPath)
+
+    elif taskType == 7:
+        print("Executing task 7")
+
+    elif taskType == 8:
+        imageDir = helper.getDatabasePath()
+        handInfoPath = helper.getMetadataPath()
+        k = helper.getKFromUser()
+        executeTasks.task8(imageDir, handInfoPath, k)
+
 
 
 

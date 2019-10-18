@@ -16,9 +16,11 @@ def getTaskFromUser():
         print("-> 4. Task 4")
         print("-> 5. Task 5")
         print("-> 6. Task 6")
+        print("-> 7. Task 7")
+        print("-> 8. Task 8")
         taskType = input("-> Please enter the number: ")
 
-        if taskType in ['1','2', '3', '4', '5', '6']: break
+        if taskType in ['1','2', '3', '4', '5', '6', '7', '8']: break
 
     return taskType
 
@@ -55,12 +57,20 @@ def getDimTechniqueFromUser():
 def getDatabasePath():
     while True:
         print("-----------------------------------------------------------------------------------------")
-        dbPath = input("-> Please enter the database path: ")
+        dbPath = input("-> Please enter the image folder path: ")
 
         if len(dbPath) > 4: break
 
     return dbPath
 
+def getMetadataPath():
+    while True:
+        print("-----------------------------------------------------------------------------------------")
+        dbPath = input("-> Please enter the Metadata folder path: ")
+
+        if len(dbPath) > 4: break
+
+    return dbPath
 
 def getKFromUser():
     while True:
@@ -112,6 +122,7 @@ def getImagePathFromUser():
         if os.path.exists(imagePath): return imagePath
         else:
             print("Invalid path")
+
 def getSubjectId():
     while True:
         print("----------------------------------------------------------------------------------------")
@@ -137,7 +148,6 @@ def getCubeRoot(x):
 
 def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
     return getImagePaths(imagesDir, getImageIdsWithLabel(imageLabel, csvFilePath))
-
 
 def getImageIdsWithLabel(imageLabel, csvFilePath):
     if csvFilePath is None or imageLabel is None:
@@ -204,7 +214,7 @@ def getFolderNames(path):
         names.append((name, os.path.abspath(name)))
     return names
 
-def getSubjectImages(subjectId):
+def getSubjectImages(subjectId, handInfoPath):
     data = pd.read_csv("/home/worm/Desktop/ASU/CSE 515/Phase#2/MWDB/src/HandInfo.csv")
     subjectData = data[data['id'] == subjectId]
     print(subjectData.head(3))
