@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     elif taskType == 2 or taskType == 4 or taskType == 5:
         # folderpath and #imagepath
-        #folderpath would be folder path inside data folder
+        # folderpath would be folder path inside data folder
         # each of which will list folder names in the form of
         imagePath = helper.getImagePathFromUser()
         folders = helper.getFolderNames('/home/worm/Desktop/ASU/CSE 515/Phase#2/MWDB/src/data')

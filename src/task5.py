@@ -15,7 +15,6 @@ def initTask5(folderPath, csvFilePath, imagePath):
     databasePath = "/Users/yvtheja/Documents/Hands"
     # u, vt = getSemanticsFromFolder(folderPath)
     dorsalImageIds = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
-    dorsalImageIds = dorsalImageIds[0: 23]
 
     dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, "dorsal")
     u, s, vt = SVD(dmSIFT, 10).getDecomposition()
@@ -26,7 +25,6 @@ def initTask5(folderPath, csvFilePath, imagePath):
         distances.append(np.linalg.norm(row - ucentroid))
 
     print("U Dorsal | mean: {} | std: {}".format(np.mean(distances), np.std(distances)))
-
 
     palmarImagePaths = getImagePathsWithLabel("palmar", csvFilePath, databasePath)
     palmarImagePaths = palmarImagePaths[0:22]
