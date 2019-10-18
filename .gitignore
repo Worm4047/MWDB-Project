@@ -4,3 +4,5 @@ src/featureVectorsStore/
 src/store/
 *.pyc
 *.pdf
+*.jpg
+*.csv
