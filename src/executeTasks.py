@@ -29,7 +29,7 @@ def task2(foldername, folderPath, imagePath):
     print(imagePath)
 
 #need to test
-def task3(directoryPath, modelType, k, dimRecTechnique, label):
+def task3(directoryPath, modelType, k, dimRecTechnique, label, handInfoPath):
     print(" EXECUTING TASK 3 ")
     print(directoryPath)
     print(modelType)
@@ -37,7 +37,7 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(dimRecTechnique)
     print(label)
     data_matrix = dimRedHelper.getDataMatrix(None, modelType, directoryPath)
-    images_list_with_label = helper.getImageIdsWithLabelInputs(label, csv_path)
+    images_list_with_label = helper.getImageIdsWithLabelInputs(label, handInfoPath)
     import os
     all_images = []
     for file in os.listdir(directoryPath):
@@ -62,6 +62,10 @@ def task5(foldername, folderPath, imagePath):
     print(folderPath)
     print(imagePath)
     initTask5(folderPath, imagePath)
+
+def task6(subjectid, handInfoPath):
+    print("Executing Task 6")
+    helper.getSubjectImages(subjectid)
 
 def task8(imageDir, handInfoCSV, k):
     initTask8(imageDir, handInfoCSV, k)
