@@ -51,6 +51,7 @@ def getDataMatrix(imagePaths, modelType, label=None, directoryPath=None):
         save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
+
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
     imagesCount = len(imagePaths)
@@ -60,6 +61,7 @@ def getQueryImageRepList(vTranspose, imagePaths, modelType):
         featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
 
     return np.array(featuresList)
+
 
 def getQueryImageRep(vTranspose, imagePath, modelType):
     if not isinstance(modelType, ModelType):
@@ -81,6 +83,7 @@ def getQueryImageRep(vTranspose, imagePath, modelType):
 
     return np.array(kSpaceRepresentation)
 
+
 # You may not need to call below methods
 def getDataMatrixForCM(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -89,6 +92,7 @@ def getDataMatrixForCM(imagePaths, dataMatrix):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
+
 
 def getClusters(descriptors):
     CLUSTERS_COUNT = 10
@@ -102,11 +106,12 @@ def getClusters(descriptors):
     pointsCountList = []
     for index in range(CLUSTERS_COUNT):
         # np.insert(kmeans.cluster_centers_[index], 0, pointsCountMap[index], axis=0)
-        pointsCountList.append([pointsCountMap[index]/finalclusters])
+        pointsCountList.append([pointsCountMap[index] / finalclusters])
 
-    #Sort clusters in decreasing intra clusters distance
+    # Sort clusters in decreasing intra clusters distance
 
     return np.hstack((pointsCountList, kmeans.cluster_centers_))
+
 
 def getDataMatrixForSIFT(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -115,6 +120,7 @@ def getDataMatrixForSIFT(imagePaths, dataMatrix):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(getClusters(SIFT(getGrayScaleImage(imagePath)).getFeatures()).flatten())
     return dataMatrix
+
 
 def getDataMatrixForLBP(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -126,6 +132,7 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
         dataMatrix.append(features)
     return dataMatrix
 
+
 def getDataMatrixForHOG(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
@@ -133,6 +140,7 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
     return dataMatrix
+
 
 def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName):
     folderName = "{}_{}_{}_{}_{}".format(imageDirName, modelType.name, decompType.name, k, label)
@@ -143,7 +151,7 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
             latent_semantic = u, v
         elif decompType == reduction.ReductionType.PCA:
             print("Check later")
-        #u, s, v = PCA(dataMatrix, k).getDecomposition()
+        # u, s, v = PCA(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.NMF:
             latent_semantic = NMF(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.LDA:
@@ -151,5 +159,6 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
             latent_semantic = LDA(dataMatrix, k).getDecomposition()
         else:
             print("Check later")
-        latentSemanticsHelper.saveSemantics(imageDirName, modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])
+        latentSemanticsHelper.saveSemantics(imageDirName, modelType, label, decompType, k, latent_semantic[0],
+                                            latent_semantic[1])
     return latent_semantic

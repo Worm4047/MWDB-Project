@@ -1,6 +1,3 @@
-from src.common.latentSemanticsHelper import getParams, getSemanticsFromFolder
-from sklearn import svm
-from sklearn.preprocessing import StandardScaler
 from src.common.helper import getImagePathsWithLabel
 from src.dimReduction.dimRedHelper import getQueryImageRepList
 from src.models.enums.models import ModelType
@@ -8,6 +5,15 @@ from src.dimReduction.dimRedHelper import getDataMatrix
 from src.dimReduction.SVD import SVD
 import numpy as np
 from sklearn import preprocessing
+import numpy as np
+from sklearn import preprocessing
+
+from src.common.helper import getImagePathsWithLabel
+from src.dimReduction.SVD import SVD
+from src.dimReduction.dimRedHelper import getDataMatrix
+from src.dimReduction.dimRedHelper import getQueryImageRepList
+from src.models.enums.models import ModelType
+
 
 def initTask5(folderPath, csvFilePath, imagePath):
     # _, modelType, dimRedType, k, label = getParams(folderPath)

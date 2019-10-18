@@ -1,15 +1,13 @@
-import cv2
-
-from src.common.imageFeatureHelper import getImageFeatures
-from src.common.latentSemanticsHelper import getSemanticsFromFolder, getParams
-from src.dimReduction.dimRedHelper import getQueryImageRep
-from src.models.enums.models import ModelType
-from src.task8 import initTask8
-from src.dimReduction import dimRedHelper
 from src.common import dataMatrixHelper, comparisonHelper
-from src.common import util
 from src.common import helper
+from src.common import util
+from src.common.latentSemanticsHelper import getSemanticsFromFolder, getParams
+from src.common.plotHelper import plotFigures
+from src.dimReduction import dimRedHelper
+from src.dimReduction.dimRedHelper import getQueryImageRep
 from src.task5 import initTask5
+from src.task8 import initTask8
+
 
 #need to test
 def task1(directoryPath, modelType, k, dimRecTechnique):
@@ -28,7 +26,6 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
     util.visualize_ec(twpairFeat, "feature", latent_semantic[1])
 
 
-
 def task2(foldername, folderPath, imagePath, m):
     # call a function to get data from folder name
     print(" EXECUTING TASK 2 ")
@@ -38,6 +35,7 @@ def task2(foldername, folderPath, imagePath, m):
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     query_image_features = getQueryImageRep(V, imagePath, modelType)
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)
+    plotFigures(list)
 
 
 #need to test
@@ -69,6 +67,11 @@ def task4(foldername, folderPath, imagePath, m):
     print(" EXECUTING TASK 4 ")
     print(folderPath)
     print(imagePath)
+    U, V = getSemanticsFromFolder(folderPath)
+    dir, modelType, dimRidTechnique, K, label = getParams(foldername)
+    query_image_features = getQueryImageRep(V, imagePath, modelType)
+    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)
+    plotFigures(list)
 
 
 def task5(foldername, folderPath, imagePath):
