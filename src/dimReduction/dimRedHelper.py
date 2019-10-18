@@ -1,26 +1,26 @@
-from src.dimReduction.NMF import NMF
-from src.dimReduction.SVD import SVD
-from src.models.enums.models import ModelType
 import glob
 import os
-import cv2
-from src.models.ColorMoments import ColorMoments
-from src.models.SIFT import SIFT
-from src.models.LBP import LBP
-from src.models.HOG import HOG
-from src.constants import BLOCK_SIZE
-import numpy as np
-from src.common.imageHelper import getYUVImage, getGrayScaleImage
+from collections import Counter
 
-from src.dimReduction.enums import reduction
-from src.common.dataMatrixHelper import read_data_matrix, save_data_matrix
-import pandas as pd
-from matplotlib import pyplot as plt
-from sklearn.datasets.samples_generator import make_blobs
+import cv2
+import numpy as np
 from sklearn.cluster import KMeans
-from collections import Counter, defaultdict
-from src.common.imageFeatureHelper import getImageFeatures
+
 from src.common import latentSemanticsHelper
+from src.common.dataMatrixHelper import read_data_matrix, save_data_matrix
+from src.common.imageFeatureHelper import getImageFeatures
+from src.common.imageHelper import getYUVImage, getGrayScaleImage
+from src.constants import BLOCK_SIZE
+from src.dimReduction.LDA import LDA
+from src.dimReduction.NMF import NMF
+from src.dimReduction.SVD import SVD
+from src.dimReduction.enums import reduction
+from src.models.ColorMoments import ColorMoments
+from src.models.HOG import HOG
+from src.models.LBP import LBP
+from src.models.SIFT import SIFT
+from src.models.enums.models import ModelType
+
 
 def getDataMatrix(imagePaths, modelType, label=None, directoryPath=None):
     imageFomat = "jpg"
@@ -146,6 +146,9 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
         #u, s, v = PCA(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.NMF:
             latent_semantic = NMF(dataMatrix, k).getDecomposition()
+        elif decompType == reduction.ReductionType.LDA:
+            print("LDA Not Tested")
+            latent_semantic = LDA(dataMatrix, k).getDecomposition()
         else:
             print("Check later")
         latentSemanticsHelper.saveSemantics(imageDirName, modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])

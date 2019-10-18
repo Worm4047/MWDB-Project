@@ -20,7 +20,7 @@ def computeWithEucledian(val1, val2):
 # We are using a minHeap to store the values after comparing.
 # If the value of the min heap is more than k, we are removing the last element from the min heap
 # This function then returns the final K vectors and the
-def getKSimilarImages(dataMatrix, k, query_image_features, imageNames):
+def getMSimilarImages(dataMatrix, m, query_image_features, imageNames):
     h = []
     for row in range(0, dataMatrix.shape[0]-1):
         image_name = imageNames[row]
@@ -29,9 +29,9 @@ def getKSimilarImages(dataMatrix, k, query_image_features, imageNames):
         # we are taking the negative value of the distance as there is no min-heap in python
         distance = -compareWithCosine(image_vector, query_image_features)
         heapq.heappush(h, (distance, image_name))
-        if len(h) > k:
+        if len(h) > m:
             heapq.heappop(h)
-    res = heapq.nlargest(k, h)
+    res = heapq.nlargest(m, h)
     finalRes = []
     for item in res:
         finalRes.append((-item[0], item[1]))
