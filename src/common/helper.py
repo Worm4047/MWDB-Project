@@ -132,7 +132,6 @@ def getCubeRoot(x):
 def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
     return getImagePaths(imagesDir, getImageIdsWithLabel(imageLabel, csvFilePath))
 
-
 def getImageIdsWithLabel(imageLabel, csvFilePath):
     if csvFilePath is None or imageLabel is None:
         raise ValueError("Invalid arguments")
