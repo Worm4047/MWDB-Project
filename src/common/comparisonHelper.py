@@ -37,5 +37,10 @@ def getMSimilarImages(dataMatrix, query_image_features, m, imageNames):
     finalRes = {}
     for item in res:
         # finalRes[item[1][0]] = -item[0]
-        finalRes[str(-item[0])] = cv2.cvtColor(cv2.imread(item[1][0].decode("utf-8"), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+        # print(item[1], str(item[1]), item[1].decode("utf-8"))
+        title = -item[0]
+        title = float(title)
+        title = round(title, 5)
+        title = str(title)
+        finalRes[title] = cv2.cvtColor(cv2.imread(item[1].decode("utf-8"), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
     return finalRes

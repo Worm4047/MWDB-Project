@@ -39,7 +39,7 @@ def getSemanticsFromFolder(folderPath):
     imagePathsFilePath = os.path.join(folderPath, "imagenames.csv")
     if not os.path.exists(uFilePath) or not os.path.exists(vFilePath):
         return None
-    return np.genfromtxt(uFilePath, delimiter=','), np.genfromtxt(vFilePath, delimiter=','), np.genfromtxt(imagePathsFilePath, names=True,dtype=None)
+    return np.genfromtxt(uFilePath, delimiter=','), np.genfromtxt(vFilePath, delimiter=','), np.genfromtxt(imagePathsFilePath,dtype=None, delimiter="\n")
 
 def getParams(folderPath):
     # "{ImageDirName}_{modelType}_{dimRedTechnique}_{K}_{label}.csv"

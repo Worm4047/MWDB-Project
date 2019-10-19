@@ -167,5 +167,6 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName,
         else:
             print("Check later")
             return None
+        print("Image path example ", imagePaths[0])
         latentSemanticsHelper.saveSemantics(os.path.basename(imageDirName), modelType, label, decompType, k, latent_semantic[0], latent_semantic[1], imagePaths=imagePaths)
     return latent_semantic

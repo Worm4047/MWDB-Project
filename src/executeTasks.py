@@ -41,7 +41,7 @@ def task2(foldername, folderPath, imagePath, m):
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     query_image_features = getQueryImageRep(V, imagePath, modelType)
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths)
-    plotFigures(list)
+    plotFigures(list, 3)
 
 def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(" EXECUTING TASK 3 ")

@@ -85,15 +85,10 @@ def getKFromUser():
 
 
 def getMFromUser():
-    while True:
         print("-----------------------------------------------------------------------------------------")
         m = input("-> Please enter the number of similar images (m) ")
-        try:
-            val = int(m)
-            if(val > 0): return val
-            else: continue
-        except ValueError:
-            continue
+        val = int(m)
+        if(val > 0): return val
 
 
 def getLabelFromUser():

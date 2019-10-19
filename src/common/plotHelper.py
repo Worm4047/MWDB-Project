@@ -11,6 +11,8 @@ def plotFigures(figures, ncols=5):
         axeslist.ravel()[index].set_axis_off()
 
     for ind, title in zip(range(len(figures)), figures):
+        print(title)
+
         axeslist.ravel()[ind].imshow(figures[title], cmap=plt.jet())
         axeslist.ravel()[ind].set_title(title)
 
