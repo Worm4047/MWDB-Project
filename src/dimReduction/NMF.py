@@ -9,7 +9,6 @@ class NMF(ReductionModel):
         self.tol = tol
         self.max_iter = max_iter
 
-
     def getDecomposition(self):
         # refer https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html
         model = NMF_SKLEARN(n_components=self.k, init=self.init, tol=self.tol, max_iter=self.max_iter)

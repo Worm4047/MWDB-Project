@@ -2,7 +2,7 @@ from src.common.latentSemanticsHelper import getParams, getSemanticsFromFolder
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler
 from src.common.helper import getImagePathsWithLabel
-from src.dimReduction.dimRedHelper import getQueryImageRepList
+from src.dimReduction.dimRedHelper import getQueryImageRepList, getQueryImageRep
 from src.models.enums.models import ModelType
 from src.dimReduction.dimRedHelper import getDataMatrix
 from src.dimReduction.SVD import SVD
@@ -12,42 +12,32 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import roc_auc_score
 
 def initTask5(folderPath, csvFilePath, imagePath):
-    # _, modelType, dimRedType, k, label = getParams(folderPath)
-    csvFilePath = "/Users/yvtheja/Documents/HandInfo.csv"
-    databasePath = "/Users/yvtheja/Documents/Hands"
-    # u, vt = getSemanticsFromFolder(folderPath)
-    dorsalImageIds = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
+    classificatonMeta = {
+        "dorsal" : "palmar",
+        "left" : "right",
+        "accessories": "without-accessories",
+        "male": "female",
+        "palmar": "dorsal",
+        "right": "left",
+        "without-accessories": "accessories",
+        "female": "male"
+    }
 
-    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, "dorsal")
-    u, s, vt = SVD(dmSIFT, 10).getDecomposition()
-    u = preprocessing.scale(u)
-    ucentroid = np.mean(u, axis=0)
-    distances = []
-    for row in u:
-        distances.append(np.linalg.norm(row - ucentroid))
+    _, modelType, dimRedType, k, label = getParams(folderPath)
+    u, vt = getSemanticsFromFolder(folderPath)
+    uNomalised = preprocessing.scale(u)
 
-    print("U Dorsal | mean: {} | std: {}".format(np.mean(distances), np.std(distances)))
+    oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)
+    oc_svm_clf.fit(uNomalised)
 
-    palmarImagePaths = getImagePathsWithLabel("palmar", csvFilePath, databasePath)
-    palmarImagePaths = palmarImagePaths[0:22]
-    palmarKspace = getQueryImageRepList(vt, palmarImagePaths, ModelType.CM)
-    palmarKspace = preprocessing.scale(palmarKspace)
-    distances = []
-    for row in palmarKspace:
-        distances.append(np.linalg.norm(row - ucentroid))
+    queryImage = getQueryImageRep(vt, imagePath, modelType)
+    queryImageNormalised = preprocessing.scale(queryImage)
+    queryPrediction = oc_svm_clf.predict(queryImageNormalised)
 
-    print("Q palmar | mean: {} | std: {}".format(np.mean(distances), np.std(distances)))
+    if len(queryPrediction) < 1:
+        raise ValueError("Query prediction not available")
 
-    palmarImagePaths = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
-    palmarImagePaths = palmarImagePaths[0:22]
-    palmarKspace = getQueryImageRepList(vt, palmarImagePaths, ModelType.CM)
-    palmarKspace = preprocessing.scale(palmarKspace)
-    distances = []
-    for row in palmarKspace:
-        distances.append(np.linalg.norm(row - ucentroid))
-
-    print("Q dorsal | mean: {} | std: {}".format(np.mean(distances), np.std(distances)))
-    print("Boom")
-
-if __name__ == "__main__":
-    initTask5(None, None, None)
+    if queryPrediction[0] == 1:
+        print("Predicted the image as '{}'".format(label))
+    else:
+        print("Predicted the image as '{}'".format(classificatonMeta[label]))

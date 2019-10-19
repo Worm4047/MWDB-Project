@@ -17,7 +17,7 @@ def init():
     print(len(dorsalImageIds))
 
     dmSIFT = getDataMatrix(dorsalImageIds, ModelType.HOG, "dorsal")
-    u, s, vt = SVD(dmSIFT, 10).getDecomposition()
+    u, vt = SVD(dmSIFT, 10).getDecomposition()
 
     oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)
     oc_svm_clf.fit(u)

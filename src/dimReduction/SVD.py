@@ -25,4 +25,4 @@ class SVD(ReductionModel):
         #vt = np.matmul(s, vt)
         #vt = vt[~np.all(vt == 0, axis=1)]
 
-        return u, s, vt
+        return u, vt

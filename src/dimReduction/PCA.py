@@ -1,8 +1,18 @@
 import numpy as np
 from scipy.sparse.linalg import svds
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA as PCA_SKLEARN
+from src.dimReduction.interfaces.ReductionModel import ReductionModel
 
+class PCA(ReductionModel):
+    def __init__(self, dataMatrix, k=None):
+        super(PCA, self).__init__(dataMatrix)
+        self.k = k
 
+    def getDecomposition(self):
+        pca = PCA_SKLEARN(n_components=self.k)
+        u = pca.fit_transform(self.dataMatrix)
+        v = pca.components_
+        return u, v
 
 def calcPCA(data,kv):
     """print("data = ", data.shape)

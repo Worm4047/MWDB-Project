@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import shutil
 from src.dimReduction.dimRedHelper import getDataMatrix
-from src.dimReduction.PCA import calcPCA
+from src.dimReduction.PCA import PCA
 from src.models.enums.models import ModelType
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -44,7 +44,7 @@ def task6(id, csvFilePath, databasePath):
             shutil.copy(os.path.join(databasePath, imageName), destpath)
         mat = (getDataMatrix(None, ModelType.CM, directoryPath ="/Users/user/Documents/Task6"))
 
-        u,vt =calcPCA(mat, minu)
+        u,vt = PCA(mat, minu).getDecomposition()
         print("k :",k,"vt shape:",vt.shape)
         if(k==id):
             queryrep = vt

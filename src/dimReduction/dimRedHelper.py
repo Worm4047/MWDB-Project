@@ -146,7 +146,7 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
     latent_semantic = latentSemanticsHelper.getSemanticsFromFolder(folderName)
     if latent_semantic is None:
         if decompType == reduction.ReductionType.SVD:
-            u, s, v = SVD(dataMatrix, k).getDecomposition()
+            u, v = SVD(dataMatrix, k).getDecomposition()
             latent_semantic = u, v
         elif decompType == reduction.ReductionType.PCA:
             print("Check later")
