@@ -59,7 +59,7 @@ def getQueryImageRepList(vTranspose, imagePaths, modelType):
         if not os.path.exists(imagePath): continue
         print("Transforming Query Image | Processed {} out of {}".format(index, imagesCount))
         featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
-
+    print("featuresList:",featuresList)
     return np.array(featuresList)
 
 
@@ -78,10 +78,13 @@ def getQueryImageRep(vTranspose, imagePath, modelType):
         raise ValueError("vTranspose dimensions are not matching with query image features")
 
     kSpaceRepresentation = []
-    for row in vTranspose:
-        kSpaceRepresentation.append(np.dot(row, imageFeatures))
+    #for row in vTranspose:
+        #kSpaceRepresentation.append(np.dot(row, imageFeatures))
+    #    kSpaceRepresentation.append(np.matmul(imageFeatures,row))
 
-    return np.array(kSpaceRepresentation)
+
+
+    return np.array(np.matmul(imageFeatures,vTranspose.transpose()))
 
 
 # You may not need to call below methods
@@ -147,7 +150,7 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
     latent_semantic = latentSemanticsHelper.getSemanticsFromFolder(folderName)
     if latent_semantic is None:
         if decompType == reduction.ReductionType.SVD:
-            u, s, v = SVD(dataMatrix, k).getDecomposition()
+            u, v = SVD(dataMatrix, k).getDecomposition()
             latent_semantic = u, v
         elif decompType == reduction.ReductionType.PCA:
             print("Check later")

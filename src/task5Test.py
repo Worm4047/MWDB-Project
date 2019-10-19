@@ -9,14 +9,15 @@ import os
 from sklearn import svm
 import numpy as np
 
-def init():
-    csvFilePath = "/Users/yvtheja/Documents/HandInfo.csv"
-    databasePath = "/Users/yvtheja/Documents/TestHands"
-    dorsalImageIds = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
-    dorsalImageIds = dorsalImageIds[0: 50]
 
-    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.SIFT, "dorsal")
-    u, s, vt = SVD(dmSIFT, 10).getDecomposition()
+def init():
+    csvFilePath = "D:/studies/multimedia and web databases/project/HandInfo.csv"
+    databasePath = "D:/studies/multimedia and web databases/project/CSE 515 Fall19 - Smaller Dataset\CSE 515 Fall19 - Smaller Dataset/"
+    dorsalImageIds = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
+    print(len(dorsalImageIds))
+
+    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.HOG, "dorsal")
+    u, vt = SVD(dmSIFT, 10).getDecomposition()
 
     oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)
     oc_svm_clf.fit(u)
@@ -24,10 +25,8 @@ def init():
 
     palmarImagePaths = getImagePathsWithLabel("palmar", csvFilePath, databasePath)
     palmarImagePaths = palmarImagePaths[0:500]
-    palmarKspace = getQueryImageRepList(vt, palmarImagePaths, ModelType.SIFT)
+    palmarKspace = getQueryImageRepList(vt, palmarImagePaths, ModelType.HOG)
     oc_svm_predsT = oc_svm_clf.predict(palmarKspace)
-
-    print("Boom")
 
 if __name__ == "__main__":
     init()

@@ -19,10 +19,10 @@ if __name__ == '__main__':
 
     elif taskType == 2 or taskType == 4 or taskType == 5:
         # folderpath and #imagepath
-        #folderpath would be folder path inside data folder
+        # folderpath would be folder path inside data folder
         # each of which will list folder names in the form of
         imagePath = helper.getImagePathFromUser()
-        folders = helper.getFolderNames('/home/worm/Desktop/ASU/CSE 515/Phase#2/MWDB/src/data')
+        folders = helper.getFolderNames('store/latentSemantics')
         foldername, folderpath = helper.listFolderNames(folders)
         # pass values to task 2 dummy
         if taskType == 2 or taskType == 4:
@@ -31,6 +31,12 @@ if __name__ == '__main__':
                 executeTasks.task2(foldername, folderpath, imagePath, m)
             elif taskType == 4:
                 executeTasks.task4(foldername, folderpath, imagePath, m)
+        if taskType == 2:
+            m = helper.getMFromUser()
+            executeTasks.task2(foldername, folderpath, imagePath, m)
+        elif taskType == 4:
+            m = helper.getMFromUser()
+            executeTasks.task4(foldername, folderpath, imagePath, m)
         else:
             executeTasks.task5(foldername, folderpath, imagePath)
 

@@ -37,7 +37,6 @@ def task2(foldername, folderPath, imagePath, m):
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)
     plotFigures(list)
 
-
 #need to test
 def task3(directoryPath, modelType, k, dimRecTechnique, label, handInfoPath):
     print(" EXECUTING TASK 3 ")
@@ -80,7 +79,8 @@ def task5(foldername, folderPath, imagePath):
     print(imagePath)
     initTask5(folderPath, imagePath)
 
-def task6(subjectid, handInfoPath):
+
+def task6(subjectid, handInfoPath, folderPath):
     print("Executing Task 6")
     helper.getSubjectImages(subjectid)
 
