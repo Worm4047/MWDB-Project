@@ -50,14 +50,14 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(k)
     print(dimRecTechnique)
     print(label)
-    images_list_with_label = ["{}.jpg".format(imagename) for imagename in helper.getImageIdsWithLabelInputs(label, "./store/HandInfo.csv")]
+    images_list_with_label = ["{}".format(imagename) for imagename in helper.getImageIdsWithLabelInputs(label, "./store/HandInfo.csv")]
     image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in images_list_with_label]
     data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, label, directoryPath)
-    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None, os.path.basename(directoryPath),
+    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, label, os.path.basename(directoryPath),
                                    image_paths)
     print("In terms of data")
     twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
-    util.visualize_ec(twpairData, "data", data_matrix, directoryPath, images_list_with_label)
+    # util.visualize_ec(twpairData, "data", data_matrix, directoryPath, images_list_with_label)
     print("In terms of feature")
     twpairFeat = util.sort_print_n_return(latent_semantic[1])
     util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, images_list_with_label)

@@ -151,7 +151,7 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
 
 def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName, imagePaths):
     folderName = "{}_{}_{}_{}_{}".format(imageDirName, modelType.name, decompType.name, k, label)
-    lsPath = getLatentSemanticPath(os.path.basename(imageDirName), modelType, decompType, k, None)
+    lsPath = getLatentSemanticPath(os.path.basename(imageDirName), modelType, decompType, k, label)
     latent_semantic = latentSemanticsHelper.getSemanticsFromFolder(lsPath)
     if latent_semantic is None:
         if decompType == reduction.ReductionType.SVD:

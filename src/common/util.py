@@ -30,6 +30,15 @@ def sort_print_n_return(npArray):
 # from feature perspective you take a dot product of each image data(matrix multiplication),
 # in the original dimensions to convert to latent feature space and displays the one with the highest contribution
 def visualize_ec(twpair, type, orgDataMatrix, image_dir, all_images):
+    fil_all_images = []
+    for image in all_images:
+        imagepath = os.path.join(image_dir, "{}".format(image))
+        if not os.path.exists(imagepath):
+            continue
+
+        fil_all_images.append(image)
+
+    all_images = fil_all_images
     rows = twpair.shape[0]
     cols = twpair.shape[1]
     if type == 'data':
