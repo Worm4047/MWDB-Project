@@ -10,7 +10,7 @@ from src.task8 import initTask8
 
 import os
 from src.common.latentSemanticsHelper import getLatentSemanticPath
-from src.task5 import initTask5_2
+from src.task5 import initTask5
 
 def task1(directoryPath, modelType, k, dimRecTechnique):
     print(" EXECUTING TASK 1 ")
@@ -40,7 +40,7 @@ def task2(foldername, folderPath, imagePath, m):
     U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     query_image_features = getQueryImageRep(V, imagePath, modelType)
-    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)
+    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths)
     plotFigures(list)
 
 def task3(directoryPath, modelType, k, dimRecTechnique, label):
@@ -70,7 +70,7 @@ def task4(foldername, folderPath, imagePath, m):
     U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     query_image_features = getQueryImageRep(V, imagePath, modelType)
-    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)
+    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths)
     plotFigures(list)
 
 
