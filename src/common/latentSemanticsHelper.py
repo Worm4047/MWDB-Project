@@ -3,7 +3,7 @@ import os
 from src.models.enums.models import ModelType
 from src.dimReduction.enums.reduction import ReductionType
 
-def saveSemantics(imageDirName, modelType, label, dimRedTech, k, U, V, dirPath="store"):
+def saveSemantics(imageDirName, modelType, label, dimRedTech, k, U, V, dirPath="store/latentSemantics"):
     if not isinstance(modelType, ModelType):
         raise ValueError("Invalid model type")
 
