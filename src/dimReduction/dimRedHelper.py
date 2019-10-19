@@ -22,9 +22,9 @@ from src.models.SIFT import SIFT
 from src.models.enums.models import ModelType
 
 
-def getDataMatrix(imagePaths, modelType, label=None, directoryPath=None):
+def getDataMatrix(imagePaths, modelType, label, directoryPath):
     imageFomat = "jpg"
-
+    print(directoryPath)
     if modelType is None:
         raise ValueError("Arguments can not be null")
     elif not isinstance(modelType, ModelType):

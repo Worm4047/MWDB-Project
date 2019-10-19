@@ -18,8 +18,11 @@ def save_data_matrix(model, label, folder, data_matrix):
 
     np.savetxt(get_path(model, label, folder), data_matrix, delimiter=",")
 
-# def filter_by_label(data_matrix, all_images, images_with_label):
-#     indexes = [all_images.index(i) for i in images_with_label]
-#     indexes.sort()
-#     return data_matrix[indexes, :]
+def filter_by_label(data_matrix, all_images, images_with_label):
+    indexes = []
+    for i in images_with_label:
+        if i in all_images:
+            indexes.append(all_images.index(i))
+    indexes.sort()
+    return data_matrix[indexes, :]
 

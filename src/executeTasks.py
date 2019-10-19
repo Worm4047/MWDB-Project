@@ -8,23 +8,28 @@ from src.dimReduction.dimRedHelper import getQueryImageRep
 from src.task5 import initTask5
 from src.task8 import initTask8
 
+import os
+from src.task5 import initTask5_2
 
-#need to test
 def task1(directoryPath, modelType, k, dimRecTechnique):
     print(" EXECUTING TASK 1 ")
     print(directoryPath)
     print(modelType)
     print(k)
     print(dimRecTechnique)
-    data_matrix = dimRedHelper.getDataMatrix(None, modelType, directoryPath)
+    all_images = []
+    for file in os.listdir(directoryPath):
+        if file.endswith(".jpg"):
+            all_images.append(file)
+    image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in all_images]
+    data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, None, directoryPath)
     latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None, directoryPath)
     print("In terms of data")
-    twpairData = util.sort_print_n_return(latent_semantic[0])
-    util.visualize_ec(twpairData, "data", latent_semantic[0])
+    twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
+    # util.visualize_ec(twpairData, "data", None, directoryPath, all_images)
     print("In terms of feature")
     twpairFeat = util.sort_print_n_return(latent_semantic[1])
-    util.visualize_ec(twpairFeat, "feature", latent_semantic[1])
-
+    # util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, all_images)
 
 def task2(foldername, folderPath, imagePath, m):
     # call a function to get data from folder name
@@ -37,29 +42,23 @@ def task2(foldername, folderPath, imagePath, m):
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)
     plotFigures(list)
 
-#need to test
-def task3(directoryPath, modelType, k, dimRecTechnique, label, handInfoPath):
+def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(" EXECUTING TASK 3 ")
     print(directoryPath)
     print(modelType)
     print(k)
     print(dimRecTechnique)
     print(label)
-    data_matrix = dimRedHelper.getDataMatrix(None, modelType, directoryPath)
-    images_list_with_label = helper.getImageIdsWithLabelInputs(label, handInfoPath)
-    import os
-    all_images = []
-    for file in os.listdir(directoryPath):
-        if file.endswith('.jpg'):
-            all_images.append(file[:-4])
-    data_matrix_by_label = dataMatrixHelper.filter_by_label(data_matrix, all_images, images_list_with_label)
-    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix_by_label, modelType, label, directoryPath)
+    images_list_with_label = ["{}.jpg".format(imagename) for imagename in helper.getImageIdsWithLabelInputs(label, "/Users/eldojacob.mathews/PycharmProjects/MWDBChanges/src/HandInfo.csv")]
+    image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in images_list_with_label]
+    data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, label, directoryPath)
+    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, label, directoryPath)
     print("In terms of data")
-    twpairData = util.sort_print_n_return(latent_semantic[0])
-    util.visualize_ec(twpairData, "data", latent_semantic[0])
+    twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
+    util.visualize_ec(twpairData, "data", data_matrix, directoryPath, images_list_with_label)
     print("In terms of feature")
     twpairFeat = util.sort_print_n_return(latent_semantic[1])
-    util.visualize_ec(twpairFeat, "feature", latent_semantic[1])
+    util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, images_list_with_label)
 
 
 def task4(foldername, folderPath, imagePath, m):
@@ -75,8 +74,8 @@ def task4(foldername, folderPath, imagePath, m):
 
 def task5(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 5 ")
-    print(folderPath)
-    print(imagePath)
+    # print(folderPath)
+    # print(imagePath)
     initTask5(folderPath, imagePath)
 
 
