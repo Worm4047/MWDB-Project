@@ -1,7 +1,8 @@
 .DS_Store
 .idea/
 src/featureVectorsStore/
-src/store/
+src/store/dataMatrix
+src/store/latentSemantics
 src/Hands
 *.pyc
 *.pdf

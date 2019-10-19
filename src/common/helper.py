@@ -99,7 +99,7 @@ def getMFromUser():
 def getLabelFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
-        # print()
+
         print("-> 1. Left-Handed")
         print("-> 2. Right-Handed")
         print("-> 3. Dorsal")
@@ -147,14 +147,14 @@ def getCubeRoot(x):
 
 
 def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
-    return getImagePaths(imagesDir, getImageIdsWithLabel(imageLabel, csvFilePath))
+    return getImagePaths(imagesDir, getImageIdsWithLabelInputs(imageLabel, csvFilePath))
 
-def getImageIdsWithLabel(imageLabel, csvFilePath):
-    if csvFilePath is None or imageLabel is None:
-        raise ValueError("Invalid arguments")
-
-    handInfo = pd.read_csv(csvFilePath, na_filter=False)
-    return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
+# def getImageIdsWithLabel(imageLabel, csvFilePath):
+#     if csvFilePath is None or imageLabel is None:
+#         raise ValueError("Invalid arguments")
+#
+#     handInfo = pd.read_csv(csvFilePath, na_filter=False)
+#     return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
 
 
 # Input: imageLabel enum inputted and the absolute path of the CSV
