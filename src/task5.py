@@ -1,3 +1,7 @@
+from sklearn import preprocessing, svm
+
+from src.common.latentSemanticsHelper import getSemanticsFromFolder, getParams
+from src.dimReduction.dimRedHelper import getQueryImageRep
 from src.common.latentSemanticsHelper import getParams, getSemanticsFromFolder
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler
@@ -10,8 +14,8 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import roc_auc_score
-
-def initTask5(folderPath, csvFilePath, imagePath):
+import sys
+def initTask5_2(folderPath,  imagePath):
     classificatonMeta = {
         "dorsal" : "palmar",
         "left" : "right",
@@ -24,7 +28,37 @@ def initTask5(folderPath, csvFilePath, imagePath):
     }
 
     _, modelType, dimRedType, k, label = getParams(folderPath)
-    u, vt = getSemanticsFromFolder(folderPath)
+    # print(folderPath)
+    u, vt, imagePaths = getSemanticsFromFolder(folderPath)
+    u = preprocessing.scale(u)
+    uMean = np.mean(u, axis=0)
+    maxdis, mindis = -10000000, 10000000
+    for item in u:
+        d = np.linalg.norm(item-uMean)
+        mindis = min(mindis, d)
+        maxdis = max(maxdis, d)
+    print(mindis, maxdis, label)
+
+    queryImage = getQueryImageRep(vt, imagePath, modelType)
+    queryImageNormalised = preprocessing.scale(queryImage)
+    qdis = np.linalg.norm(queryImageNormalised - uMean)
+    print(qdis)
+
+
+def initTask5(folderPath, imagePath):
+    classificatonMeta = {
+        "dorsal" : "palmar",
+        "left" : "right",
+        "accessories": "without-accessories",
+        "male": "female",
+        "palmar": "dorsal",
+        "right": "left",
+        "without-accessories": "accessories",
+        "female": "male"
+    }
+
+    _, modelType, dimRedType, k, label = getParams(folderPath)
+    u, vt, imagePaths = getSemanticsFromFolder(folderPath)
     uNomalised = preprocessing.scale(u)
 
     oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)

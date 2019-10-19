@@ -99,7 +99,6 @@ def getMFromUser():
 def getLabelFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
-        label = input("-> Please enter the label for the image")
         print("-> 1. Left-Handed")
         print("-> 2. Right-Handed")
         print("-> 3. Dorsal")
@@ -108,9 +107,9 @@ def getLabelFromUser():
         print("-> 6. Without-Accessories")
         print("-> 7. Male")
         print("-> 8. Female")
-        label = input("-> Please enter the number: ")
+        label = input("-> Please enter the label for the image")
 
-        if label in ['1','2','3','4','5','6','7','8']: return label
+        if label in ['1','2','3','4','5','6','7','8']: return int(label)
         else: print(' Incorrect value ')
 
 
@@ -147,14 +146,14 @@ def getCubeRoot(x):
 
 
 def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
-    return getImagePaths(imagesDir, getImageIdsWithLabel(imageLabel, csvFilePath))
+    return getImagePaths(imagesDir, getImageIdsWithLabelInputs(imageLabel, csvFilePath))
 
-def getImageIdsWithLabel(imageLabel, csvFilePath):
-    if csvFilePath is None or imageLabel is None:
-        raise ValueError("Invalid arguments")
-
-    handInfo = pd.read_csv(csvFilePath, na_filter=False)
-    return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
+# def getImageIdsWithLabel(imageLabel, csvFilePath):
+#     if csvFilePath is None or imageLabel is None:
+#         raise ValueError("Invalid arguments")
+#
+#     handInfo = pd.read_csv(csvFilePath, na_filter=False)
+#     return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
 
 
 # Input: imageLabel enum inputted and the absolute path of the CSV
@@ -163,7 +162,7 @@ def getImageIdsWithLabelInputs(imageLabel, csvFilePath):
     if csvFilePath is None or imageLabel is None:
         raise ValueError("Invalid arguments")
     handInfo = pd.read_csv(csvFilePath, na_filter=False)
-
+    print(imageLabel, type(imageLabel), csvFilePath)
     if imageLabel == 1:
         return handInfo[handInfo['aspectOfHand'].str.contains('left')]['imageName'].to_numpy()
     elif imageLabel == 2:
@@ -211,7 +210,8 @@ def listFolderNames(names):
 def getFolderNames(path):
     names = []
     for name in os.listdir(path):
-        names.append((name, os.path.abspath(name)))
+        # print(name, os.path.abspath(name))
+        names.append((name, os.path.abspath(path+name)))
     return names
 
 def getSubjectImages(subjectId, handInfoPath):

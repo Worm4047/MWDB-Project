@@ -15,10 +15,10 @@ class LDA(ReductionModel):
 
         # cluster images into a dictionary
         # number has to be finalised after testing
-        dictionary_size = 4
+        dictionary_size = 25
         h, w = self.dataMatrix.shape
-        print(w)
-        print(h)
+        # print(w)
+        # print(h)
 
         kmeans = MiniBatchKMeans(n_clusters=dictionary_size, init='k-means++', batch_size=250, random_state=0,
                                  verbose=0)
@@ -29,8 +29,9 @@ class LDA(ReductionModel):
 
         # histogram of labels for each image = term-document matrix
         num_train_images = h
+        self.dataMatrix
         #num_kps needs to be calculated dynamically
-        num_kps = int(w/128)
+        num_kps = 192
         A = np.zeros((dictionary_size, num_train_images))
         ii = 0
         jj = 0
@@ -44,18 +45,18 @@ class LDA(ReductionModel):
                 A[:, img_idx], bins = np.histogram(labels[ii:jj], bins=range(dictionary_size + 1))
                 # print str(ii) + ':' + str(jj)
         # end for
-        plt.figure()
-        plt.spy(A.T, cmap='gray')
-        plt.gca().set_aspect('auto')
-        plt.title('AP tf-idf corpus')
-        plt.xlabel('dictionary')
-        plt.ylabel('documents')
-        plt.show()
+        # plt.figure()
+        # plt.spy(A.T, cmap='gray')
+        # plt.gca().set_aspect('auto')
+        # plt.title('AP tf-idf corpus')
+        # plt.xlabel('dictionary')
+        # plt.ylabel('documents')
+        # plt.show()
 
-        print(self.dataMatrix)
+        # print(self.dataMatrix)
 
         # Needs to be finalised
-        num_topics = 50
+        num_topics = 25
 
         lda_vb = LatentDirichletAllocation(n_components=num_topics, max_iter=10, learning_method='online',
                                            batch_size=512,
@@ -66,7 +67,7 @@ class LDA(ReductionModel):
         topics = lda_vb.components_
         H = lda_vb.transform(self.dataMatrix.T)
 
-        print(topics)
-        print(H.T)
+        # print(topics)
+        # print(H.T)
 
         return topics, H.T
