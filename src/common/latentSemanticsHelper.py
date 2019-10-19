@@ -3,7 +3,7 @@ import os
 from src.models.enums.models import ModelType
 from src.dimReduction.enums.reduction import ReductionType
 
-def saveSemantics(imageDirName, modelType, label, dimRedTech, k, U, V, dirPath="store/latentSemantics"):
+def saveSemantics(imageDirName, modelType, label, dimRedTech, k, U, V, imagePaths, dirPath="store/latentSemantics"):
     if not isinstance(modelType, ModelType):
         raise ValueError("Invalid model type")
 
@@ -21,8 +21,13 @@ def saveSemantics(imageDirName, modelType, label, dimRedTech, k, U, V, dirPath="
 
     uFilePath = os.path.join(folderPath, "U.csv")
     vFilePath = os.path.join(folderPath, "V.csv")
+    imagePathsFilePath = os.path.join(folderPath, "imagenames.csv")
     np.savetxt(uFilePath, U, delimiter=",")
     np.savetxt(vFilePath, V, delimiter=",")
+    np.savetxt(imagePathsFilePath, imagePaths, fmt="%s")
+
+def getLatentSemanticPath(imageDirName, modelType, dimRedTech, k, label):
+    return "store/latentSemantics/{}_{}_{}_{}_{}".format(imageDirName, modelType.name, dimRedTech.name, k, label)
 
 def getSemanticsFromFolder(folderPath):
     if not os.path.isdir(folderPath):
@@ -30,10 +35,11 @@ def getSemanticsFromFolder(folderPath):
 
     uFilePath = os.path.join(folderPath, "U.csv")
     vFilePath = os.path.join(folderPath, "V.csv")
+    imagePathsFilePath = os.path.join(folderPath, "imagenames.csv")
     if not os.path.exists(uFilePath) or not os.path.exists(vFilePath):
         return None
     print(uFilePath, vFilePath)
-    return np.genfromtxt(uFilePath, delimiter=','), np.genfromtxt(vFilePath, delimiter=',')
+    return np.genfromtxt(uFilePath, delimiter=','), np.genfromtxt(vFilePath, delimiter=','), np.genfromtxt(imagePathsFilePath, defaultfmt="%s")
 
 def getParams(folderPath):
     # "{ImageDirName}_{modelType}_{dimRedTechnique}_{K}_{label}.csv"

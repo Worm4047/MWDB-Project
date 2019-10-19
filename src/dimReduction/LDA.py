@@ -17,8 +17,8 @@ class LDA(ReductionModel):
         # number has to be finalised after testing
         dictionary_size = 25
         h, w = self.dataMatrix.shape
-        print(w)
-        print(h)
+        # print(w)
+        # print(h)
 
         kmeans = MiniBatchKMeans(n_clusters=dictionary_size, init='k-means++', batch_size=250, random_state=0,
                                  verbose=0)
@@ -45,15 +45,15 @@ class LDA(ReductionModel):
                 A[:, img_idx], bins = np.histogram(labels[ii:jj], bins=range(dictionary_size + 1))
                 # print str(ii) + ':' + str(jj)
         # end for
-        plt.figure()
-        plt.spy(A.T, cmap='gray')
-        plt.gca().set_aspect('auto')
-        plt.title('AP tf-idf corpus')
-        plt.xlabel('dictionary')
-        plt.ylabel('documents')
-        plt.show()
+        # plt.figure()
+        # plt.spy(A.T, cmap='gray')
+        # plt.gca().set_aspect('auto')
+        # plt.title('AP tf-idf corpus')
+        # plt.xlabel('dictionary')
+        # plt.ylabel('documents')
+        # plt.show()
 
-        print(self.dataMatrix)
+        # print(self.dataMatrix)
 
         # Needs to be finalised
         num_topics = 25
@@ -67,7 +67,7 @@ class LDA(ReductionModel):
         topics = lda_vb.components_
         H = lda_vb.transform(self.dataMatrix.T)
 
-        print(topics)
-        print(H.T)
+        # print(topics)
+        # print(H.T)
 
         return topics, H.T

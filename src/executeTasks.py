@@ -9,6 +9,7 @@ from src.task5 import initTask5
 from src.task8 import initTask8
 
 import os
+from src.common.latentSemanticsHelper import getLatentSemanticPath
 from src.task5 import initTask5_2
 
 def task1(directoryPath, modelType, k, dimRecTechnique):
@@ -23,20 +24,20 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
             all_images.append(file)
     image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in all_images]
     data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, None, directoryPath)
-    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None, directoryPath)
+    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None, os.path.basename(directoryPath), image_paths)
     print("In terms of data")
     twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
     # util.visualize_ec(twpairData, "data", None, directoryPath, all_images)
     print("In terms of feature")
     twpairFeat = util.sort_print_n_return(latent_semantic[1])
-    # util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, all_images)
+    util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, all_images)
 
 def task2(foldername, folderPath, imagePath, m):
     # call a function to get data from folder name
     print(" EXECUTING TASK 2 ")
     print(folderPath)
     print(imagePath)
-    U, V = getSemanticsFromFolder(folderPath)
+    U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     query_image_features = getQueryImageRep(V, imagePath, modelType)
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)
@@ -49,10 +50,11 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label):
     print(k)
     print(dimRecTechnique)
     print(label)
-    images_list_with_label = ["{}.jpg".format(imagename) for imagename in helper.getImageIdsWithLabelInputs(label, "/Users/eldojacob.mathews/PycharmProjects/MWDBChanges/src/HandInfo.csv")]
+    images_list_with_label = ["{}.jpg".format(imagename) for imagename in helper.getImageIdsWithLabelInputs(label, "./store/HandInfo.csv")]
     image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in images_list_with_label]
     data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, label, directoryPath)
-    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, label, directoryPath)
+    latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None, os.path.basename(directoryPath),
+                                   image_paths)
     print("In terms of data")
     twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
     util.visualize_ec(twpairData, "data", data_matrix, directoryPath, images_list_with_label)
@@ -65,7 +67,7 @@ def task4(foldername, folderPath, imagePath, m):
     print(" EXECUTING TASK 4 ")
     print(folderPath)
     print(imagePath)
-    U, V = getSemanticsFromFolder(folderPath)
+    U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     query_image_features = getQueryImageRep(V, imagePath, modelType)
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, modelType)

@@ -29,7 +29,7 @@ def initTask5_2(folderPath,  imagePath):
 
     _, modelType, dimRedType, k, label = getParams(folderPath)
     # print(folderPath)
-    u, vt = getSemanticsFromFolder(folderPath)
+    u, vt, imagePaths = getSemanticsFromFolder(folderPath)
     u = preprocessing.scale(u)
     uMean = np.mean(u, axis=0)
     maxdis, mindis = -10000000, 10000000
@@ -58,7 +58,7 @@ def initTask5(folderPath, imagePath):
     }
 
     _, modelType, dimRedType, k, label = getParams(folderPath)
-    u, vt = getSemanticsFromFolder(folderPath)
+    u, vt, imagePaths = getSemanticsFromFolder(folderPath)
     uNomalised = preprocessing.scale(u)
 
     oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)
