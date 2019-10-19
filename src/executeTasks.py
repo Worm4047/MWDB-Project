@@ -65,7 +65,7 @@ def task5(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 5 ")
     # print(folderPath)
     # print(imagePath)
-    initTask5_2(folderPath, imagePath)
+    initTask5(folderPath, imagePath)
 
 def task6(subjectid, handInfoPath, folderPath):
     print("Executing Task 6")

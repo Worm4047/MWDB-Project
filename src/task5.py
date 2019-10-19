@@ -41,7 +41,7 @@ def initTask5_2(folderPath,  imagePath):
     print(qdis)
 
 
-def initTask5(folderPath, csvFilePath, imagePath):
+def initTask5(folderPath, imagePath):
     classificatonMeta = {
         "dorsal" : "palmar",
         "left" : "right",
