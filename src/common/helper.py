@@ -110,7 +110,7 @@ def getLabelFromUser():
         print("-> 8. Female")
         label = input("-> Please enter the number: ")
 
-        if label in ['1','2','3','4','5','6','7','8']: return label
+        if label in ['1','2','3','4','5','6','7','8']: return int(label)
         else: print(' Incorrect value ')
 
 
@@ -163,7 +163,7 @@ def getImageIdsWithLabelInputs(imageLabel, csvFilePath):
     if csvFilePath is None or imageLabel is None:
         raise ValueError("Invalid arguments")
     handInfo = pd.read_csv(csvFilePath, na_filter=False)
-
+    print(imageLabel, type(imageLabel), csvFilePath)
     if imageLabel == 1:
         return handInfo[handInfo['aspectOfHand'].str.contains('left')]['imageName'].to_numpy()
     elif imageLabel == 2:
@@ -211,7 +211,8 @@ def listFolderNames(names):
 def getFolderNames(path):
     names = []
     for name in os.listdir(path):
-        names.append((name, os.path.abspath(name)))
+        # print(name, os.path.abspath(name))
+        names.append((name, os.path.abspath(path+name)))
     return names
 
 def getSubjectImages(subjectId, handInfoPath):

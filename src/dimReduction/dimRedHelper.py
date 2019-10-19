@@ -22,9 +22,9 @@ from collections import Counter, defaultdict
 from src.common.imageFeatureHelper import getImageFeatures
 from src.common import latentSemanticsHelper
 
-def getDataMatrix(imagePaths, modelType, label=None, directoryPath=None):
+def getDataMatrix(imagePaths, modelType, label, directoryPath):
     imageFomat = "jpg"
-
+    print(directoryPath)
     if modelType is None:
         raise ValueError("Arguments can not be null")
 

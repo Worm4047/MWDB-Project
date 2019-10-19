@@ -2,6 +2,7 @@
 .idea/
 src/featureVectorsStore/
 src/store/
+src/Hands
 *.pyc
 *.pdf
 *.jpg

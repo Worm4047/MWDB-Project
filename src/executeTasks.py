@@ -5,6 +5,7 @@ from src.common import util
 from src.common import helper
 from src.task5 import initTask5
 import os
+from src.task5 import initTask5_2
 
 def task1(directoryPath, modelType, k, dimRecTechnique):
     print(" EXECUTING TASK 1 ")
@@ -50,15 +51,16 @@ def task2(foldername, folderPath, imagePath):
     print(folderPath)
     print(imagePath)
 
-def task4(foldername, folderPath, imagePath):
+def task4(foldername, folderPath, imagePath, m):
     print(" EXECUTING TASK 4 ")
     print(folderPath)
     print(imagePath)
+    print(m)
 
 def task5(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 5 ")
-    print(folderPath)
-    print(imagePath)
+    # print(folderPath)
+    # print(imagePath)
     initTask5(folderPath, imagePath)
 
 def task6(subjectid, handInfoPath, folderPath):

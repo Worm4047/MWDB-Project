@@ -32,7 +32,7 @@ def getSemanticsFromFolder(folderPath):
     vFilePath = os.path.join(folderPath, "V.csv")
     if not os.path.exists(uFilePath) or not os.path.exists(vFilePath):
         return None
-
+    print(uFilePath, vFilePath)
     return np.genfromtxt(uFilePath, delimiter=','), np.genfromtxt(vFilePath, delimiter=',')
 
 def getParams(folderPath):
