@@ -99,7 +99,7 @@ def getMFromUser():
 def getLabelFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
-        label = input("-> Please enter the label for the image")
+        # print()
         print("-> 1. Left-Handed")
         print("-> 2. Right-Handed")
         print("-> 3. Dorsal")
@@ -108,7 +108,7 @@ def getLabelFromUser():
         print("-> 6. Without-Accessories")
         print("-> 7. Male")
         print("-> 8. Female")
-        label = input("-> Please enter the number: ")
+        label = input("-> Please enter the label for the image")
 
         if label in ['1','2','3','4','5','6','7','8']: return int(label)
         else: print(' Incorrect value ')

@@ -24,6 +24,7 @@ def saveSemantics(imageDirName, modelType, label, dimRedTech, k, U, V, dirPath="
     np.savetxt(uFilePath, U, delimiter=",")
     np.savetxt(vFilePath, V, delimiter=",")
 
+
 def getSemanticsFromFolder(folderPath):
     if not os.path.isdir(folderPath):
         return None
