@@ -22,11 +22,12 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
     util.visualize_ec(twpairFeat, "feature", latent_semantic[1])
 
 
-def task2(foldername, folderPath, imagePath):
+def task2(foldername, folderPath, imagePath, m):
     # call a function to get data from folder name
     print(" EXECUTING TASK 2 ")
     print(folderPath)
     print(imagePath)
+    rpint(m)
 
 #need to test
 def task3(directoryPath, modelType, k, dimRecTechnique, label, handInfoPath):
@@ -52,10 +53,11 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label, handInfoPath):
     twpairFeat = util.sort_print_n_return(latent_semantic[1])
     util.visualize_ec(twpairFeat, "feature", latent_semantic[1])
 
-def task4(foldername, folderPath, imagePath):
+def task4(foldername, folderPath, imagePath, m):
     print(" EXECUTING TASK 4 ")
     print(folderPath)
     print(imagePath)
+    print(m)
 
 def task5(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 5 ")

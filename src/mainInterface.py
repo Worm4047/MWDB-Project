@@ -26,9 +26,11 @@ if __name__ == '__main__':
         foldername, folderpath = helper.listFolderNames(folders)
         # pass values to task 2 dummy
         if taskType == 2:
-            executeTasks.task2(foldername, folderpath, imagePath)
+            m = helper.getMFromUser()
+            executeTasks.task2(foldername, folderpath, imagePath, m)
         elif taskType == 4:
-            executeTasks.task4(foldername, folderpath, imagePath)
+            m = helper.getMFromUser()
+            executeTasks.task4(foldername, folderpath, imagePath, m)
         else:
             executeTasks.task5(foldername, folderpath, imagePath)
 
