@@ -56,7 +56,6 @@ def getDataMatrix(imagePaths, modelType, label, directoryPath):
         save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
-
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
     imagesCount = len(imagePaths)
@@ -150,7 +149,7 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
     return dataMatrix
 
 
-def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName):
+def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName, imagePaths):
     folderName = "{}_{}_{}_{}_{}".format(imageDirName, modelType.name, decompType.name, k, label)
     lsPath = getLatentSemanticPath(os.path.basename(imageDirName), modelType, decompType, k, None)
     latent_semantic = latentSemanticsHelper.getSemanticsFromFolder(lsPath)
@@ -168,5 +167,5 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
         else:
             print("Check later")
             return None
-        latentSemanticsHelper.saveSemantics(os.path.basename(imageDirName), modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])
+        latentSemanticsHelper.saveSemantics(os.path.basename(imageDirName), modelType, label, decompType, k, latent_semantic[0], latent_semantic[1], imagePaths=imagePaths)
     return latent_semantic
