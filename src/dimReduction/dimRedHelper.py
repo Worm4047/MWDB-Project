@@ -1,44 +1,43 @@
-from src.dimReduction.NMF import NMF
-from src.dimReduction.SVD import SVD
-from src.models.enums.models import ModelType
 import glob
 import os
-import cv2
-from src.models.ColorMoments import ColorMoments
-from src.models.SIFT import SIFT
-from src.models.LBP import LBP
-from src.models.HOG import HOG
-from src.constants import BLOCK_SIZE
-import numpy as np
-from src.common.imageHelper import getYUVImage, getGrayScaleImage
+from collections import Counter
 
-from src.dimReduction.enums import reduction
-from src.common.dataMatrixHelper import read_data_matrix, save_data_matrix
-import pandas as pd
-from matplotlib import pyplot as plt
-from sklearn.datasets.samples_generator import make_blobs
+import cv2
+import numpy as np
 from sklearn.cluster import KMeans
-from collections import Counter, defaultdict
+
+from src.common import latentSemanticsHelper
+from src.common.dataMatrixHelper import read_data_matrix, save_data_matrix
 from src.common.imageFeatureHelper import getImageFeatures
+
 from src.common import latentSemanticsHelper
 from src.dimReduction.LDA import LDA
 from src.common.latentSemanticsHelper import getLatentSemanticPath
+
+from src.common.imageHelper import getYUVImage, getGrayScaleImage
+from src.constants import BLOCK_SIZE
+from src.dimReduction.LDA import LDA
+from src.dimReduction.NMF import NMF
+from src.dimReduction.SVD import SVD
+from src.dimReduction.enums import reduction
+from src.models.ColorMoments import ColorMoments
+from src.models.HOG import HOG
+from src.models.LBP import LBP
+from src.models.SIFT import SIFT
+from src.models.enums.models import ModelType
+
 
 def getDataMatrix(imagePaths, modelType, label, directoryPath):
     imageFomat = "jpg"
     print(directoryPath)
     if modelType is None:
         raise ValueError("Arguments can not be null")
-
-    if not isinstance(modelType, ModelType):
+    elif not isinstance(modelType, ModelType):
         raise ValueError("Invalid model type")
-
-    if directoryPath is None and imagePaths is None:
+    elif imagePaths is None and directoryPath is None:
         raise ValueError("Both directory path and image paths can not be None")
-
-    if imagePaths is not None:
-        if not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
-            raise ValueError("Image paths need to be a iterable")
+    elif directoryPath is None and not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
+        raise ValueError("Image paths need to be a iterable")
 
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
@@ -57,6 +56,7 @@ def getDataMatrix(imagePaths, modelType, label, directoryPath):
         save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
+
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
     imagesCount = len(imagePaths)
@@ -66,6 +66,7 @@ def getQueryImageRepList(vTranspose, imagePaths, modelType):
         featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
     print("featuresList:",featuresList)
     return np.array(featuresList)
+
 
 def getQueryImageRep(vTranspose, imagePath, modelType):
     if not isinstance(modelType, ModelType):
@@ -90,6 +91,7 @@ def getQueryImageRep(vTranspose, imagePath, modelType):
 
     return np.array(np.matmul(imageFeatures,vTranspose.transpose()))
 
+
 # You may not need to call below methods
 def getDataMatrixForCM(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -98,6 +100,7 @@ def getDataMatrixForCM(imagePaths, dataMatrix):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
+
 
 def getClusters(descriptors):
     CLUSTERS_COUNT = 10
@@ -111,11 +114,12 @@ def getClusters(descriptors):
     pointsCountList = []
     for index in range(CLUSTERS_COUNT):
         # np.insert(kmeans.cluster_centers_[index], 0, pointsCountMap[index], axis=0)
-        pointsCountList.append([pointsCountMap[index]/finalclusters])
+        pointsCountList.append([pointsCountMap[index] / finalclusters])
 
-    #Sort clusters in decreasing intra clusters distance
+    # Sort clusters in decreasing intra clusters distance
 
     return np.hstack((pointsCountList, kmeans.cluster_centers_))
+
 
 def getDataMatrixForSIFT(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -124,6 +128,7 @@ def getDataMatrixForSIFT(imagePaths, dataMatrix):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(getClusters(SIFT(getGrayScaleImage(imagePath)).getFeatures()).flatten())
     return dataMatrix
+
 
 def getDataMatrixForLBP(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -135,6 +140,7 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
         dataMatrix.append(features)
     return dataMatrix
 
+
 def getDataMatrixForHOG(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
@@ -142,6 +148,7 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
     return dataMatrix
+
 
 def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName):
     folderName = "{}_{}_{}_{}_{}".format(imageDirName, modelType.name, decompType.name, k, label)
@@ -153,7 +160,7 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
             latent_semantic = u, v
         elif decompType == reduction.ReductionType.PCA:
             print("Check later")
-        #u, s, v = PCA(dataMatrix, k).getDecomposition()
+        # u, s, v = PCA(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.NMF:
             latent_semantic = NMF(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.LDA:

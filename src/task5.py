@@ -1,3 +1,7 @@
+from sklearn import preprocessing, svm
+
+from src.common.latentSemanticsHelper import getSemanticsFromFolder, getParams
+from src.dimReduction.dimRedHelper import getQueryImageRep
 from src.common.latentSemanticsHelper import getParams, getSemanticsFromFolder
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler

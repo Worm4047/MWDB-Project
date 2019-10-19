@@ -15,7 +15,7 @@ class LDA(ReductionModel):
 
         # cluster images into a dictionary
         # number has to be finalised after testing
-        dictionary_size = 4
+        dictionary_size = 25
         h, w = self.dataMatrix.shape
         # print(w)
         # print(h)
@@ -29,8 +29,9 @@ class LDA(ReductionModel):
 
         # histogram of labels for each image = term-document matrix
         num_train_images = h
+        self.dataMatrix
         #num_kps needs to be calculated dynamically
-        num_kps = int(w/128)
+        num_kps = 192
         A = np.zeros((dictionary_size, num_train_images))
         ii = 0
         jj = 0
@@ -55,7 +56,7 @@ class LDA(ReductionModel):
         # print(self.dataMatrix)
 
         # Needs to be finalised
-        num_topics = 50
+        num_topics = 25
 
         lda_vb = LatentDirichletAllocation(n_components=num_topics, max_iter=10, learning_method='online',
                                            batch_size=512,
