@@ -21,6 +21,8 @@ from sklearn.cluster import KMeans
 from collections import Counter, defaultdict
 from src.common.imageFeatureHelper import getImageFeatures
 from src.common import latentSemanticsHelper
+from src.dimReduction.LDA import LDA
+from src.common.latentSemanticsHelper import getLatentSemanticPath
 
 def getDataMatrix(imagePaths, modelType, label, directoryPath):
     imageFomat = "jpg"
@@ -143,7 +145,8 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
 
 def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName):
     folderName = "{}_{}_{}_{}_{}".format(imageDirName, modelType.name, decompType.name, k, label)
-    latent_semantic = latentSemanticsHelper.getSemanticsFromFolder(folderName)
+    lsPath = getLatentSemanticPath(os.path.basename(imageDirName), modelType, decompType, k, None)
+    latent_semantic = latentSemanticsHelper.getSemanticsFromFolder(lsPath)
     if latent_semantic is None:
         if decompType == reduction.ReductionType.SVD:
             u, v = SVD(dataMatrix, k).getDecomposition()
@@ -153,7 +156,10 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName)
         #u, s, v = PCA(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.NMF:
             latent_semantic = NMF(dataMatrix, k).getDecomposition()
+        elif decompType == reduction.ReductionType.LDA:
+            latent_semantic = LDA(dataMatrix, k).getDecomposition()
         else:
             print("Check later")
-        latentSemanticsHelper.saveSemantics(imageDirName, modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])
+            return None
+        latentSemanticsHelper.saveSemantics(os.path.basename(imageDirName), modelType, label, decompType, k, latent_semantic[0], latent_semantic[1])
     return latent_semantic
