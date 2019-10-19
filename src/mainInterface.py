@@ -22,7 +22,7 @@ if __name__ == '__main__':
         # folderpath would be folder path inside data folder
         # each of which will list folder names in the form of
         imagePath = helper.getImagePathFromUser()
-        folders = helper.getFolderNames('store/latentSemantics')
+        folders = helper.getFolderNames('store/latentSemantics/')
         foldername, folderpath = helper.listFolderNames(folders)
         # pass values to task 2 dummy
         if taskType == 2:
