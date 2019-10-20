@@ -79,5 +79,8 @@ def initTask8(imageDir, handInfoCSV, k):
         twpair_metadata=sort_print_n_return(H)
         twpair_image=sort_print_n_return(W.transpose())
 
-        return twpair_metadata, twpair_image
+        print("Term weight pair data for image:", twpair_image)
+        print("Shape of Term weight pair data for image:", twpair_image.shape)
+        print("Term weight pair for metadata:", twpair_metadata)
+        print("Shape of Term weight pair for metadata:", twpair_metadata.shape)
 
