@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import shutil
-from dimReduction.dimRedHelper import getDataMatrix
+from dimReduction.dimRedHelper1 import getDataMatrix
 from dimReduction.PCA import calcPCA
 from models.enums.models import ModelType
 import numpy as np
