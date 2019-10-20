@@ -128,5 +128,5 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
             break
         f+=1
 
-task6(1200000, "/Users/user/Documents/HandInfo.csv","/Users/user/Documents/Hands", "/Users/user/Documents/Hands2", "/Users/user/Documents/Task6", "/Users/user/Documents")
+#task6(1200000, "/Users/user/Documents/HandInfo.csv","/Users/user/Documents/Hands", "/Users/user/Documents/Hands2", "/Users/user/Documents/Task6", "/Users/user/Documents")
 print("Execution Time :",( time.time()-start_time))
