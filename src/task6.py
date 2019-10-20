@@ -28,6 +28,8 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
     onlyfiles = [f for f in listdir(databasePath) ]
     if not os.path.exists(filepath):
         os.makedirs(filepath)
+    if not os.path.exists(destpath):
+        os.makedirs(destpath)
     task7_file = os.path.join(filepath,"Task7_input.txt")
     if not os.path.exists(task7_file):
         open(task7_file, 'w').close()
