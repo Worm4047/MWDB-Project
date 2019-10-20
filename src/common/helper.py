@@ -142,7 +142,7 @@ def getCubeRoot(x):
 
 
 def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
-    return getImagePaths(imagesDir, getImageIdsWithLabelInputs(imageLabel, csvFilePath))
+    return getImagePaths(imagesDir, getImageIdsWithLabelInputs(imageLabel, csvFilePath, imagesDir))
 
 # def getImageIdsWithLabel(imageLabel, csvFilePath):
 #     if csvFilePath is None or imageLabel is None:
@@ -154,27 +154,28 @@ def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
 
 # Input: imageLabel enum inputted and the absolute path of the CSV
 # Output: The imagePaths pertaining to the input label
-def getImageIdsWithLabelInputs(imageLabel, csvFilePath):
+def getImageIdsWithLabelInputs(imageLabel, csvFilePath, directoryPath):
     if csvFilePath is None or imageLabel is None:
         raise ValueError("Invalid arguments")
     handInfo = pd.read_csv(csvFilePath, na_filter=False)
     print(imageLabel, type(imageLabel), csvFilePath)
+    filelist = [file for file in os.listdir(directoryPath) if file.endswith('.jpg')]
     if imageLabel == 1:
-        return handInfo[handInfo['aspectOfHand'].str.contains('left')]['imageName'].to_numpy()
+        return handInfo[handInfo['aspectOfHand'].str.contains('left') & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     elif imageLabel == 2:
-        return handInfo[handInfo['aspectOfHand'].str.contains('right')]['imageName'].to_numpy()
+        return handInfo[handInfo['aspectOfHand'].str.contains('right') & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     elif imageLabel == 3:
-        return handInfo[handInfo['aspectOfHand'].str.contains('dorsal')]['imageName'].to_numpy()
+        return handInfo[handInfo['aspectOfHand'].str.contains('dorsal') & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     elif imageLabel == 4:
-        return handInfo[handInfo['aspectOfHand'].str.contains('palmar')]['imageName'].to_numpy()
+        return handInfo[handInfo['aspectOfHand'].str.contains('palmar') & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     elif imageLabel == 5:
-        return handInfo[handInfo['accessories'] == 1]['imageName'].to_numpy()
+        return handInfo[handInfo['accessories'] == 1 & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     elif imageLabel == 6:
-        return handInfo[handInfo['accessories'] == 0]['imageName'].to_numpy()
+        return handInfo[handInfo['accessories'] == 0 & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     elif imageLabel == 7:
-        return handInfo[handInfo['gender'].str.contains('male')]['imageName'].to_numpy()
+        return handInfo[handInfo['gender'].str.contains('male') & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     elif imageLabel == 8:
-        return handInfo[handInfo['gender'].str.contains('female')]['imageName'].to_numpy()
+        return handInfo[handInfo['gender'].str.contains('female') & handInfo['imageName'].isin(filelist)]['imageName'].to_numpy()
     else:
         print("imageLabel is invalid. Please try again")
         return
