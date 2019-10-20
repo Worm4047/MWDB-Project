@@ -4,7 +4,10 @@ import glob
 import os
 import csv
 from src.dimReduction.NMF import NMF
-from src.common.sort_print_n_return_desc import sort_print_n_return
+#from src.common.sort_print_n_return_desc import sort_print_n_return
+from src.common.util import sort_print_n_return
+import fnmatch
+
 
 
 def making_two_columns(file_HandInfo):
@@ -64,10 +67,14 @@ def initTask8(imageDir, handInfoCSV, k):
     df_Hands_Image_MetaData.insert(8, column='Left', value=new_col)
 
     # Call NMF on binary image data matrix
+    print("Binary Image Metadata Matrix:")
     print(df_Hands_Image_MetaData.iloc[:, 1:9].to_numpy())
+    print("Shape of binary image metadata matrix is:",df_Hands_Image_MetaData.iloc[:, 1:9].shape)
     W, H = NMF(df_Hands_Image_MetaData.iloc[:, 1:9].to_numpy(), k, None, 0.0001, 200).getDecomposition()
     print('W:', W)
+    print("Shape of W:",W.shape)
     print('H:', H)
+    print("Shape of H:",H.shape)
 
     # Call To return term weight pairs
     twpair_metadata=sort_print_n_return(H)
@@ -78,7 +85,14 @@ def initTask8(imageDir, handInfoCSV, k):
 if __name__ == "__main__":
     imageDir="D:/studies/multimedia and web databases/project/CSE 515 Fall19 - Smaller Dataset\CSE 515 Fall19 - Smaller Dataset/"
     handInfoCSV="D:/studies/multimedia and web databases/project/"
-    k=5
-    twpair_metadata, twpair_image= initTask8(imageDir, handInfoCSV, k)
-    print( "Term weight pair data for image:",twpair_image)
-    print("Term weight pair for metadata:",twpair_metadata)
+    k=4
+    num_images = len(fnmatch.filter(os.listdir(imageDir), '*.jpg'))
+    print(num_images)
+    if num_images < k:
+        print("Please make sure that number of images in the folder is greater than value of k")
+    else:
+        twpair_metadata, twpair_image= initTask8(imageDir, handInfoCSV, k)
+        print( "Term weight pair data for image:",twpair_image)
+        print("Shape of Term weight pair data for image:", twpair_image.shape)
+        print("Term weight pair for metadata:",twpair_metadata)
+        print("Shape of Term weight pair for metadata:", twpair_metadata.shape)
