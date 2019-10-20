@@ -1,13 +1,13 @@
 import pandas as pd
 import os
 import shutil
-from dimReduction.dimRedHelper1 import getDataMatrix
-from dimReduction.PCA import PCA
-from models.enums.models import ModelType
+from src.dimReduction.dimRedHelper1 import getDataMatrix
+from src.dimReduction.PCA import PCA
+from src.models.enums.models import ModelType
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import glob
-from dimReduction.SVD import SVD
+from src.dimReduction.SVD import SVD
 import time
 from operator import itemgetter  
 import json
