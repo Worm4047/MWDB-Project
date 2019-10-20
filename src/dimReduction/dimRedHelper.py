@@ -29,7 +29,7 @@ from src.models.enums.models import ModelType
 from src.dimReduction.PCA import PCA
 
 
-def getDataMatrix(imagePaths, modelType, label, directoryPath):
+def getDataMatrix(imagePaths, modelType, label, directoryPath=None):
     imageFomat = "jpg"
     print(directoryPath)
     if modelType is None:
