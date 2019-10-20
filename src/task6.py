@@ -12,7 +12,7 @@ from operator import itemgetter
 import json
 from os import listdir
 from src.common import plotHelper
-
+import cv2
 
 
 start_time = time.time()
@@ -113,7 +113,7 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
     lis = dic[id]
     for l in lis:
         if l not in dic2:
-            dic2[l]= databasePathid+"/"+l
+            dic2[l] = cv2.cvtColor(cv2.imread(databasePathid+"/"+l, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
     plotHelper.plotFigures(dic2)
     print ("Most related 3 subjects for Subject ",id," are :")
     f = 1
@@ -123,7 +123,7 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
         lis = dic[k]
         for l in lis:
             if l not in dic2:
-                dic2[l]= databasePath+"/"+l
+                dic2[l]= cv2.cvtColor(cv2.imread(databasePath+"/"+l, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
         plotHelper.plotFigures(dic2)
         if(f==3):
             break

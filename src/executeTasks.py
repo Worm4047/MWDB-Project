@@ -90,8 +90,7 @@ def task5(foldername, folderPath, imagePath):
 
 def task6(subjectId, originalDataset, testDataset):
     print("Executing Task 6")
-    initTask6(subjectId, "./store/HandInfo.csv", originalDataset, testDataset, "./store/task6/temp",
-          "./store/subjectFeatureVectors")
+    initTask6(subjectId, "./store/HandInfo.csv", originalDataset, testDataset, "./store/task6/temp", "./store/subjectFeatureVectors")
 
 def task7(k, testDataset):
     print("Executing Task 7")
