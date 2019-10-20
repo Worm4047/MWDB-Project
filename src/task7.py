@@ -1,18 +1,18 @@
 import pandas as pd
 import os
 import shutil
-from src.dimReduction.dimRedHelper1 import getDataMatrix
-from src.dimReduction.PCA import calcPCA
-from src.models.enums.models import ModelType
+from dimReduction.dimRedHelper1 import getDataMatrix
+from dimReduction.PCA import calcPCA
+from models.enums.models import ModelType
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 import glob
-from src.dimReduction.NMF import NMF
+from dimReduction.NMF import NMF
 import time
 import json
 
-from src.common import util
+from common import util
 
 start_time = time.time()
 
@@ -111,10 +111,10 @@ def task7(k, csvFilePath, databasePath, destpath, filepath):
     print("Subject Subject Similarity Matrix:")
     print(df)
     m_np = np.array(m_out)
-    #u,v = NMF(m_np, k).getDecomposition()
-    #util.sort_print_n_return(v)
+    u,v = NMF(m_np, k).getDecomposition()
+    util.sort_print_n_return(v)
 
-task7(10, "/Users/user/Documents/HandInfo.csv", "/Users/user/Documents/Hands2", "/Users/user/Documents/Task6", "/Users/user/Documents")
+#task7(10, "/Users/user/Documents/HandInfo.csv", "/Users/user/Documents/Hands2", "/Users/user/Documents/Task6", "/Users/user/Documents")
 print("Execution Time :",( time.time()-start_time))
 
     
