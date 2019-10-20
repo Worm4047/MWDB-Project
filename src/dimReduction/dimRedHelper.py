@@ -58,6 +58,34 @@ def getDataMatrix(imagePaths, modelType, label, directoryPath=None):
         save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
+def getDataMatrixForLDA(imagePaths, modelType, label, directoryPath=None):
+    imageFomat = "jpg"
+    print(directoryPath)
+    if modelType is None:
+        raise ValueError("Arguments can not be null")
+    elif not isinstance(modelType, ModelType):
+        raise ValueError("Invalid model type")
+    elif imagePaths is None and directoryPath is None:
+        raise ValueError("Both directory path and image paths can not be None")
+    elif directoryPath is None and not isinstance(imagePaths, list) and not isinstance(imagePaths, np.ndarray):
+        raise ValueError("Image paths need to be a iterable")
+
+    if imagePaths is None:
+        imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
+
+    dataMatrix = read_data_matrix(modelType, label, "./store/dataMatrix/")
+    if dataMatrix is None:
+        dataMatrix = []
+        if modelType == ModelType.CM:
+            getDataMatrixForCMForLDA(imagePaths, dataMatrix)
+        if modelType == ModelType.LBP:
+            getDataMatrixForLBPForLDA(imagePaths, dataMatrix)
+        if modelType == ModelType.HOG:
+            getDataMatrixForHOGForLDA(imagePaths, dataMatrix)
+        if modelType == ModelType.SIFT:
+            raise ValueError("SIFT can not be called with LDA")
+        save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
+    return np.array(dataMatrix, dtype=np.float)
 
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
@@ -100,6 +128,13 @@ def getDataMatrixForCM(imagePaths, dataMatrix):
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
 
+def getDataMatrixForCMForLDA(imagePaths, dataMatrix):
+    imagesCount = len(imagePaths)
+    for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
+        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+        dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeaturesWithDim())
+    return dataMatrix
 
 def getClusters(descriptors):
     CLUSTERS_COUNT = 10
@@ -128,7 +163,6 @@ def getDataMatrixForSIFT(imagePaths, dataMatrix):
         dataMatrix.append(getClusters(SIFT(getGrayScaleImage(imagePath)).getFeatures()).flatten())
     return dataMatrix
 
-
 def getDataMatrixForLBP(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
@@ -139,6 +173,15 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
         dataMatrix.append(features)
     return dataMatrix
 
+def getDataMatrixForLBPForLDA(imagePaths, dataMatrix):
+    imagesCount = len(imagePaths)
+    for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
+        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+        lbp = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3)
+        features = lbp.getFeatureWithDim()
+        dataMatrix.append(features)
+    return dataMatrix
 
 def getDataMatrixForHOG(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -146,6 +189,14 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
         if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
+    return dataMatrix
+
+def getDataMatrixForHOGForLDA(imagePaths, dataMatrix):
+    imagesCount = len(imagePaths)
+    for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
+        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+        dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeaturesWithDim())
     return dataMatrix
 
 

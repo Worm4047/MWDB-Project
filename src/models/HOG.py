@@ -21,6 +21,9 @@ class HOG(Model):
     def getFeatures(self):
         return self.featureVector.flatten()
 
+    def getFeaturesWithDim(self):
+        return self.featureVector
+
     def compare(self, hogModel):
         if not isinstance(hogModel, Model):
             raise ValueError("Not a HOG model")

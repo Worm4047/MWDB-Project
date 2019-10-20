@@ -17,6 +17,9 @@ class LBP(Model):
     def getFeatures(self):
         return self.featureVector.flatten()
 
+    def getFeatureWithDim(self):
+        return self.featureVector
+
     def computeFeatures(self, img):
         feature_vector = []
         height = img.shape[0]

@@ -41,6 +41,9 @@ class ColorMoments(Model):
     def getFeatures(self):
         return self.featureVector.flatten()
 
+    def getFeaturesWithDim(self):
+        return self.featureVector
+
     def compare(self, colorModel):
         if not isinstance(colorModel, Model):
             raise ValueError("Not a instance of ColorModel")
