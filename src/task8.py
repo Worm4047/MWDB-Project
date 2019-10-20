@@ -41,7 +41,7 @@ def initTask8(imageDir, handInfoCSV, k):
 
     num_images = len(fnmatch.filter(os.listdir(imageDir), '*.jpg'))
     if num_images < k:
-        print("Please make sure that number of images in the folder is greater than value of k")
+        print("Please make sure that number of images in the folder is greater than value of k"
     else:
 
         df_Hand_names=csv_hand_names(handInfoCSV,imageDir)
