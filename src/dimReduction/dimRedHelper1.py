@@ -6,25 +6,25 @@ import cv2
 import numpy as np
 from sklearn.cluster import KMeans
 
-from common import latentSemanticsHelper
-from common.dataMatrixHelper import read_data_matrix, save_data_matrix
-from common.imageFeatureHelper import getImageFeatures
+from src.common import latentSemanticsHelper
+from src.common.dataMatrixHelper import read_data_matrix, save_data_matrix
+from src.common.imageFeatureHelper import getImageFeatures
 
-from common import latentSemanticsHelper
-from dimReduction.LDA import LDA
-from common.latentSemanticsHelper import getLatentSemanticPath
+from src.common import latentSemanticsHelper
+from src.dimReduction.LDA import LDA
+from src.common.latentSemanticsHelper import getLatentSemanticPath
 
-from common.imageHelper import getYUVImage, getGrayScaleImage
-from constants import BLOCK_SIZE
-from dimReduction.LDA import LDA
-from dimReduction.NMF import NMF
-from dimReduction.SVD import SVD
-from dimReduction.enums import reduction
-from models.ColorMoments import ColorMoments
-from models.HOG import HOG
-from models.LBP import LBP
-from models.SIFT import SIFT
-from models.enums.models import ModelType
+from src.common.imageHelper import getYUVImage, getGrayScaleImage
+from src.constants import BLOCK_SIZE
+from src.dimReduction.LDA import LDA
+from src.dimReduction.NMF import NMF
+from src.dimReduction.SVD import SVD
+from src.dimReduction.enums import reduction
+from src.models.ColorMoments import ColorMoments
+from src.models.HOG import HOG
+from src.models.LBP import LBP
+from src.models.SIFT import SIFT
+from src.models.enums.models import ModelType
 
 
 def getDataMatrix(imagePaths, modelType, label, directoryPath):
