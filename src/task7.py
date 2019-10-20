@@ -1,18 +1,18 @@
 import pandas as pd
 import os
 import shutil
-from dimReduction.dimRedHelper1 import getDataMatrix
-from dimReduction.PCA import calcPCA
-from models.enums.models import ModelType
+from src.dimReduction.dimRedHelper1 import getDataMatrix
+from src.dimReduction.PCA import calcPCA
+from src.models.enums.models import ModelType
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 import glob
-from dimReduction.NMF import NMF
+from src.dimReduction.NMF import NMF
 import time
 import json
 
-from common import util
+from src.common import util
 
 start_time = time.time()
 
@@ -85,6 +85,8 @@ def cos(a,b):
 def task7(k, csvFilePath, databasePath, destpath, filepath):
     if not os.path.exists(filepath):
         os.makedirs(filepath)
+    if not os.path.exists(destpath):
+        os.makedirs(destpath)
     filename = os.path.join(filepath,"ssmatrix.xls")
     if not os.path.exists(filename):
         open(filename, 'w').close()
