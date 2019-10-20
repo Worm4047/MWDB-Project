@@ -6,19 +6,18 @@ import cv2
 from scipy import spatial
 
 
-def compareWithCosine(queryImageVector, imageVector):
-    # return np.linalg.norm(imageVector - queryImageVector)
-    return 1 - spatial.distance.cosine(imageVector, queryImageVector)
+def compareWithCosine(val1, val2):
+    return 1 - spatial.distance.cosine(val1, val2)
 
 
 # Eucledian distance is calculated for 2 values val1 and val2
 def computeWithEucledian(val1, val2):
     return np.linalg.norm(val1 - val2)
 
-#
+
 # # Eucledian distance is calculated for 2 values val1 and val2
-# def computeWithManhattan(val1, val2):
-#     return np.linalg.norm(val1 - val2)
+def computeWithManhattan(val1, val2):
+    return sum(abs(a - b) for a, b in zip(val1, val2))
 
 
 # This function takes as input an image and a value K
