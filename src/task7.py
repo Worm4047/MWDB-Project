@@ -114,7 +114,4 @@ def task7(k, csvFilePath, databasePath, destpath, filepath):
     u,v = NMF(m_np, k).getDecomposition()
     util.sort_print_n_return(v)
 
-#task7(10, "/Users/user/Documents/HandInfo.csv", "/Users/user/Documents/Hands2", "/Users/user/Documents/Task6", "/Users/user/Documents")
 print("Execution Time :",( time.time()-start_time))
-
-    

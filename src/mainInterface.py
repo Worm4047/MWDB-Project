@@ -1,7 +1,6 @@
 from src.common import helper
 from src import executeTasks
 
-
 if __name__ == '__main__':
     taskType = int(helper.getTaskFromUser())
 
@@ -36,11 +35,17 @@ if __name__ == '__main__':
 
     elif taskType == 6:
         subjectId = helper.getSubjectId()
+        directoryPath = helper.getDatabasePath()
+        originalDatasetPath = helper.getDatabasePathFor11k()
+
         # handInfoPath = helper.getMetadataPath()
-        executeTasks.task6(subjectId)
+        executeTasks.task6(subjectId, originalDatasetPath, directoryPath)
 
     elif taskType == 7:
         print("Executing task 7")
+        directoryPath = helper.getDatabasePath()
+        k = helper.getKFromUser()
+        executeTasks.task7(k, directoryPath)
 
     elif taskType == 8:
         imageDir = helper.getDatabasePath()
