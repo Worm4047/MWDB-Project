@@ -28,10 +28,10 @@ def init():
     csvFilePath = "/Users/yvtheja/Documents/HandInfo.csv"
     databasePath = "/Users/yvtheja/Documents/Hands"
     # u, vt = getSemanticsFromFolder(folderPath)
-    dorsalImageIds = getImagePathsWithLabel("dorsal", csvFilePath, databasePath)
+    dorsalImageIds = getImagePathsWithLabel(3, csvFilePath, databasePath)
     dorsalImageIds = dorsalImageIds[0: 23]
-    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, "dorsal")
-    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, "dorsal")
+    dmSIFT = getDataMatrix(dorsalImageIds, ModelType.CM, 3)
+    SVD(dmSIFT, 10).getDecomposition()
 
     # Refer this for calling DimRed
     # SVD(np.array([])).getDecomposition()
