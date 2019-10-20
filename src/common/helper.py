@@ -85,20 +85,16 @@ def getKFromUser():
 
 
 def getMFromUser():
-    while True:
         print("-----------------------------------------------------------------------------------------")
         m = input("-> Please enter the number of similar images (m) ")
-        try:
-            val = int(m)
-            if(val > 0): return val
-            else: continue
-        except ValueError:
-            continue
+        val = int(m)
+        if(val > 0): return val
 
 
 def getLabelFromUser():
     while True:
         print("-----------------------------------------------------------------------------------------")
+
         print("-> 1. Left-Handed")
         print("-> 2. Right-Handed")
         print("-> 3. Dorsal")
@@ -146,14 +142,14 @@ def getCubeRoot(x):
 
 
 def getImagePathsWithLabel(imageLabel, csvFilePath, imagesDir):
-    return getImagePaths(imagesDir, getImageIdsWithLabel(imageLabel, csvFilePath))
+    return getImagePaths(imagesDir, getImageIdsWithLabelInputs(imageLabel, csvFilePath))
 
-def getImageIdsWithLabel(imageLabel, csvFilePath):
-    if csvFilePath is None or imageLabel is None:
-        raise ValueError("Invalid arguments")
-
-    handInfo = pd.read_csv(csvFilePath, na_filter=False)
-    return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
+# def getImageIdsWithLabel(imageLabel, csvFilePath):
+#     if csvFilePath is None or imageLabel is None:
+#         raise ValueError("Invalid arguments")
+#
+#     handInfo = pd.read_csv(csvFilePath, na_filter=False)
+#     return handInfo[handInfo['aspectOfHand'].str.contains(imageLabel)]['imageName'].to_numpy()
 
 
 # Input: imageLabel enum inputted and the absolute path of the CSV

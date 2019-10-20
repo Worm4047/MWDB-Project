@@ -29,6 +29,7 @@ def saveSemantics(imageDirName, modelType, label, dimRedTech, k, U, V, imagePath
 def getLatentSemanticPath(imageDirName, modelType, dimRedTech, k, label):
     return "store/latentSemantics/{}_{}_{}_{}_{}".format(imageDirName, modelType.name, dimRedTech.name, k, label)
 
+
 def getSemanticsFromFolder(folderPath):
     if not os.path.isdir(folderPath):
         return None
@@ -38,8 +39,7 @@ def getSemanticsFromFolder(folderPath):
     imagePathsFilePath = os.path.join(folderPath, "imagenames.csv")
     if not os.path.exists(uFilePath) or not os.path.exists(vFilePath):
         return None
-    print(uFilePath, vFilePath)
-    return np.genfromtxt(uFilePath, delimiter=','), np.genfromtxt(vFilePath, delimiter=','), np.genfromtxt(imagePathsFilePath, defaultfmt="%s")
+    return np.genfromtxt(uFilePath, delimiter=','), np.genfromtxt(vFilePath, delimiter=','), np.genfromtxt(imagePathsFilePath,dtype=None, delimiter="\n")
 
 def getParams(folderPath):
     # "{ImageDirName}_{modelType}_{dimRedTechnique}_{K}_{label}.csv"

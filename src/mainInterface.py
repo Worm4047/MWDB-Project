@@ -31,12 +31,6 @@ if __name__ == '__main__':
                 executeTasks.task2(foldername, folderpath, imagePath, m)
             elif taskType == 4:
                 executeTasks.task4(foldername, folderpath, imagePath, m)
-        if taskType == 2:
-            m = helper.getMFromUser()
-            executeTasks.task2(foldername, folderpath, imagePath, m)
-        elif taskType == 4:
-            m = helper.getMFromUser()
-            executeTasks.task4(foldername, folderpath, imagePath, m)
         else:
             executeTasks.task5(foldername, folderpath, imagePath)
 
