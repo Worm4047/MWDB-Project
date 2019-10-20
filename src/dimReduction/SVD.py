@@ -1,5 +1,6 @@
 from src.dimReduction.interfaces.ReductionModel import ReductionModel
 import numpy as np
+from sklearn import preprocessing
 
 class SVD(ReductionModel):
     def __init__(self, dataMatrix, k=None):
@@ -7,6 +8,7 @@ class SVD(ReductionModel):
         self.k = k
 
     def getDecomposition(self):
+        self.dataMatrix = preprocessing.scale(self.dataMatrix)
         u, s, vt = np.linalg.svd(self.dataMatrix, full_matrices=False)
         s = np.diag(s)
         if self.k is None:
