@@ -56,6 +56,7 @@ def getDataMatrix(imagePaths, modelType, label, directoryPath):
         save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
 
+
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
     imagesCount = len(imagePaths)
@@ -85,9 +86,6 @@ def getQueryImageRep(vTranspose, imagePath, modelType):
     #for row in vTranspose:
         #kSpaceRepresentation.append(np.dot(row, imageFeatures))
     #    kSpaceRepresentation.append(np.matmul(imageFeatures,row))
-
-
-
     return np.array(np.matmul(imageFeatures,vTranspose.transpose()))
 
 
@@ -167,5 +165,6 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName,
         else:
             print("Check later")
             return None
+        print("Image path example ", imagePaths[0])
         latentSemanticsHelper.saveSemantics(os.path.basename(imageDirName), modelType, label, decompType, k, latent_semantic[0], latent_semantic[1], imagePaths=imagePaths)
     return latent_semantic
