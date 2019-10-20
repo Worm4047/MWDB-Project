@@ -17,13 +17,13 @@ from sklearn.metrics import roc_auc_score
 import sys
 def initTask5_2(folderPath,  imagePath):
     classificatonMeta = {
-        "dorsal" : "palmar",
-        "left" : "right",
-        "accessories": "without-accessories",
+        "Dorsal" : "palmar",
+        "left" : "Right-Handed",
+        "With-Accessories": "Without-Accessories",
         "male": "female",
-        "palmar": "dorsal",
-        "right": "left",
-        "without-accessories": "accessories",
+        "palmar": "Dorsal",
+        "Right-Handed": "left",
+        "Without-Accessories": "With-Accessories",
         "female": "male"
     }
 
@@ -47,15 +47,27 @@ def initTask5_2(folderPath,  imagePath):
 
 def initTask5(folderPath, imagePath):
     classificatonMeta = {
-        "dorsal" : "palmar",
-        "left" : "right",
-        "accessories": "without-accessories",
-        "male": "female",
-        "palmar": "dorsal",
-        "right": "left",
-        "without-accessories": "accessories",
-        "female": "male"
+        "Dorsal" : "Palmer",
+        "Left-Handed" : "Right-Handed",
+        "With-Accessories": "Without-Accessories",
+        "Male": "Female",
+        "Palmer": "Dorsal",
+        "Right-Handed": "Left-Handed",
+        "Without-Accessories": "With-Accessories",
+        "Female": "Male"
     }
+
+    labelInfo = {
+        "1": "Left-Handed",
+        "2": "Right-Handed",
+        "3": "Dorsal",
+        "4": "Palmer",
+        "5": "With-Accessories",
+        "6": "Without-Accessories",
+        "7": "Male",
+        "8": "Female"
+    }
+
 
     _, modelType, dimRedType, k, label = getParams(folderPath)
     u, vt, imagePaths = getSemanticsFromFolder(folderPath)
@@ -66,12 +78,12 @@ def initTask5(folderPath, imagePath):
 
     queryImage = getQueryImageRep(vt, imagePath, modelType)
     queryImageNormalised = preprocessing.scale(queryImage)
-    queryPrediction = oc_svm_clf.predict(queryImageNormalised)
+    queryPrediction = oc_svm_clf.predict(queryImageNormalised.reshape((1, queryImageNormalised.shape[0])))
 
     if len(queryPrediction) < 1:
         raise ValueError("Query prediction not available")
 
     if queryPrediction[0] == 1:
-        print("Predicted the image as '{}'".format(label))
+        print("Predicted the image as '{}'".format(labelInfo[label]))
     else:
-        print("Predicted the image as '{}'".format(classificatonMeta[label]))
+        print("Predicted the image as '{}'".format(classificatonMeta[labelInfo[label]]))
