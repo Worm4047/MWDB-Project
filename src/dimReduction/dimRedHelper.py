@@ -26,6 +26,8 @@ from src.models.LBP import LBP
 from src.models.SIFT import SIFT
 from src.models.enums.models import ModelType
 
+from src.dimReduction.PCA import PCA
+
 
 def getDataMatrix(imagePaths, modelType, label, directoryPath):
     imageFomat = "jpg"
@@ -156,8 +158,7 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName,
             u, v = SVD(dataMatrix, k).getDecomposition()
             latent_semantic = u, v
         elif decompType == reduction.ReductionType.PCA:
-            print("Check later")
-        # u, s, v = PCA(dataMatrix, k).getDecomposition()
+            latent_semantic = PCA(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.NMF:
             latent_semantic = NMF(dataMatrix, k).getDecomposition()
         elif decompType == reduction.ReductionType.LDA:
