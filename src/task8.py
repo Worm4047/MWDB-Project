@@ -72,8 +72,8 @@ def initTask8(imageDir, handInfoCSV, k):
 
         # Call NMF on binary image data matrix
         W, H = NMF(df_Hands_Image_MetaData.iloc[:, 1:9].to_numpy(), k, None, 0.0001, 200)
-        print('W:', W)
-        print('H:', H)
+        #print('W:', W)
+        #print('H:', H)
 
         # Call To return term weight pairs
         twpair_metadata=sort_print_n_return(H)
