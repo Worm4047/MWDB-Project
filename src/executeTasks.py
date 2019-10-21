@@ -28,7 +28,6 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
         if file.endswith(".jpg"):
             all_images.append(file)
     image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in all_images]
-    image_paths = image_paths[0:27]
     if dimRecTechnique == ReductionType.LDA:
         data_matrix = dimRedHelper.getDataMatrixForLDA(image_paths, modelType, None, directoryPath)
     else:
