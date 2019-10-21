@@ -15,35 +15,35 @@ from sklearn import preprocessing
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import roc_auc_score
 import sys
-def initTask5_2(folderPath,  imagePath):
-    classificatonMeta = {
-        "Dorsal" : "palmar",
-        "left" : "Right-Handed",
-        "With-Accessories": "Without-Accessories",
-        "male": "female",
-        "palmar": "Dorsal",
-        "Right-Handed": "left",
-        "Without-Accessories": "With-Accessories",
-        "female": "male"
-    }
-
-    _, modelType, dimRedType, k, label = getParams(folderPath)
-    # print(folderPath)
-    u, vt, imagePaths = getSemanticsFromFolder(folderPath)
-    u = preprocessing.scale(u)
-    uMean = np.mean(u, axis=0)
-    maxdis, mindis = -10000000, 10000000
-    for item in u:
-        d = np.linalg.norm(item-uMean)
-        mindis = min(mindis, d)
-        maxdis = max(maxdis, d)
-    print(mindis, maxdis, label)
-
-    queryImage = getQueryImageRep(vt, imagePath, modelType)
-    queryImageNormalised = preprocessing.scale(queryImage)
-    qdis = np.linalg.norm(queryImageNormalised - uMean)
-    print(qdis)
-
+# def initTask5_2(folderPath,  imagePath):
+#     classificatonMeta = {
+#         "Dorsal" : "palmar",
+#         "left" : "Right-Handed",
+#         "With-Accessories": "Without-Accessories",
+#         "male": "female",
+#         "palmar": "Dorsal",
+#         "Right-Handed": "left",
+#         "Without-Accessories": "With-Accessories",
+#         "female": "male"
+#     }
+#
+#     _, modelType, dimRedType, k, label = getParams(folderPath)
+#     # print(folderPath)
+#     u, vt, imagePaths = getSemanticsFromFolder(folderPath)
+#     u = preprocessing.scale(u)
+#     uMean = np.mean(u, axis=0)
+#     maxdis, mindis = -10000000, 10000000
+#     for item in u:
+#         d = np.linalg.norm(item-uMean)
+#         mindis = min(mindis, d)
+#         maxdis = max(maxdis, d)
+#     print(mindis, maxdis, label)
+#
+#     queryImage = getQueryImageRep(vt, imagePath, modelType)
+#     queryImageNormalised = preprocessing.scale(queryImage)
+#     qdis = np.linalg.norm(queryImageNormalised - uMean)
+#     print(qdis)
+#
 
 def initTask5(folderPath, imagePath):
     classificatonMeta = {

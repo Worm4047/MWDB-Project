@@ -64,9 +64,12 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label):
     # print(label)
     images_list_with_label = ["{}".format(imagename) for imagename in
                               helper.getImageIdsWithLabelInputs(label, "./store/HandInfo.csv", directoryPath)]
-    print(images_list_with_label)
+    # print(images_list_with_label)
     image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in images_list_with_label]
-    data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, label, directoryPath)
+    if dimRecTechnique == ReductionType.LDA:
+        data_matrix = dimRedHelper.getDataMatrixForLDA(image_paths, modelType, label, directoryPath)
+    else:
+        data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, label, directoryPath)
     latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, label,
                                                      os.path.basename(directoryPath),
                                                      image_paths)

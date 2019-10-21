@@ -31,7 +31,7 @@ from sklearn.cluster import MiniBatchKMeans
 
 def getDataMatrix(imagePaths, modelType, label, directoryPath=None):
     imageFomat = "jpg"
-    print(directoryPath)
+    # print(directoryPath)
     if modelType is None:
         raise ValueError("Arguments can not be null")
     elif not isinstance(modelType, ModelType):
