@@ -13,6 +13,8 @@ from src.dimReduction.enums.reduction import ReductionType
 from src.task5 import initTask5
 from src.task8 import initTask8
 from src.models.enums.models import ModelType
+from src.task6 import task6 as initTask6
+from src.task7 import task7 as initTask7
 
 
 def task1(directoryPath, modelType, k, dimRecTechnique):
@@ -94,9 +96,13 @@ def task5(foldername, folderPath, imagePath):
     initTask5(folderPath, imagePath)
 
 
-def task6(subjectid, handInfoPath, folderPath):
+def task6(subjectId, originalDataset, testDataset):
     print("Executing Task 6")
-    helper.getSubjectImages(subjectid)
+    initTask6(subjectId, "./store/HandInfo.csv", originalDataset, testDataset, "./store/task6/temp", "./store/subjectFeatureVectors")
+
+def task7(k, testDataset):
+    print("Executing Task 7")
+    initTask7(k, "./store/HandInfo.csv", testDataset, "./store/task6/temp", "./store/subjectFeatureVectors")
 
 
 def task8(imageDir, handInfoCSV, k):

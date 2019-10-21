@@ -13,7 +13,6 @@ class NMF(ReductionModel):
     def getDecomposition(self):
         # refer https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html
         model = NMF_SKLEARN(n_components=self.k, init=self.init, tol=self.tol, max_iter=self.max_iter)
-        self.dataMatrix = preprocessing.scale(self.dataMatrix)
         W = model.fit_transform(self.dataMatrix)
         H = model.components_
         return W, H

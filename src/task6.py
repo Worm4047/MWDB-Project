@@ -1,20 +1,18 @@
 import pandas as pd
 import os
 import shutil
-from dimReduction.dimRedHelper1 import getDataMatrix
-from dimReduction.PCA import PCA
-from dimReduction.SVD import SVD
-from models.enums.models import ModelType
+from src.dimReduction.dimRedHelper1 import getDataMatrix
+from src.dimReduction.PCA import PCA
+from src.dimReduction.SVD import SVD
+from src.models.enums.models import ModelType
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-import glob
-from dimReduction.NMF import NMF
 import time
 from operator import itemgetter  
 import json
 from os import listdir
-from common import plotHelper
-
+from src.common import plotHelper
+import cv2
 
 
 start_time = time.time()
@@ -23,12 +21,15 @@ def cos(a,b):
     cos_lib = cosine_similarity(a, b)
     cos_l = np.mean(cos_lib)
     return cos_l
+
 def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
     #destpath = "/Users/user/Documents/Task6"
     df = pd.read_csv(csvFilePath, usecols = ['id','imageName'])
     onlyfiles = [f for f in listdir(databasePath) ]
     if not os.path.exists(filepath):
         os.makedirs(filepath)
+    if not os.path.exists(destpath):
+        os.makedirs(destpath)
     task7_file = os.path.join(filepath,"Task7_input.txt")
     if not os.path.exists(task7_file):
         open(task7_file, 'w').close()
@@ -112,7 +113,7 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
     lis = dic[id]
     for l in lis:
         if l not in dic2:
-            dic2[l]= databasePathid+"/"+l
+            dic2[l] = cv2.cvtColor(cv2.imread(databasePathid+"/"+l, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
     plotHelper.plotFigures(dic2)
     print ("Most related 3 subjects for Subject ",id," are :")
     f = 1
@@ -122,11 +123,8 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
         lis = dic[k]
         for l in lis:
             if l not in dic2:
-                dic2[l]= databasePath+"/"+l
+                dic2[l]= cv2.cvtColor(cv2.imread(databasePath+"/"+l, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
         plotHelper.plotFigures(dic2)
         if(f==3):
             break
         f+=1
-
-#task6(1200000, "/Users/user/Documents/HandInfo.csv","/Users/user/Documents/Hands", "/Users/user/Documents/Hands2", "/Users/user/Documents/Task6", "/Users/user/Documents")
-print("Execution Time :",( time.time()-start_time))

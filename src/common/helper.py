@@ -63,6 +63,15 @@ def getDatabasePath():
 
     return dbPath
 
+def getDatabasePathFor11k():
+    while True:
+        print("-----------------------------------------------------------------------------------------")
+        dbPath = input("-> Please enter the image folder path for 11K images: ")
+
+        if len(dbPath) > 4: break
+
+    return dbPath
+
 def getMetadataPath():
     while True:
         print("-----------------------------------------------------------------------------------------")
