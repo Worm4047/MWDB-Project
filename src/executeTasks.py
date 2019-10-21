@@ -1,5 +1,7 @@
 import os
 
+import numpy
+
 from src.common import comparisonHelper
 from src.common import helper
 from src.common import util
@@ -7,8 +9,10 @@ from src.common.latentSemanticsHelper import getSemanticsFromFolder, getParams
 from src.common.plotHelper import plotFigures
 from src.dimReduction import dimRedHelper
 from src.dimReduction.dimRedHelper import getQueryImageRep
+from src.dimReduction.enums.reduction import ReductionType
 from src.task5 import initTask5
 from src.task8 import initTask8
+from src.models.enums.models import ModelType
 
 
 def task1(directoryPath, modelType, k, dimRecTechnique):
@@ -22,7 +26,10 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
         if file.endswith(".jpg"):
             all_images.append(file)
     image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in all_images]
-    data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, None, directoryPath)
+    if dimRecTechnique == ReductionType.LDA:
+        data_matrix = dimRedHelper.getDataMatrixForLDA(image_paths, modelType, None, directoryPath)
+    else:
+        data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, None, directoryPath)
     latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None,
                                                      os.path.basename(directoryPath), image_paths)
     print("In terms of data")
@@ -30,6 +37,7 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
     # util.visualize_ec(twpairData, "data", None, directoryPath, all_images)
     print("In terms of feature")
     twpairFeat = util.sort_print_n_return(latent_semantic[1])
+    print(numpy.asarray(data_matrix).shape)
     util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, all_images)
 
 
@@ -94,3 +102,7 @@ def task6(subjectid, handInfoPath, folderPath):
 def task8(imageDir, handInfoCSV, k):
     initTask8(imageDir, handInfoCSV, k)
     print(" EXECUTING TASK 8 ")
+
+task1("/Users/studentworker/PycharmProjects/mwdb/Phase_1/test/Hands", ModelType.CM,10,ReductionType.LDA)
+task1("/Users/studentworker/PycharmProjects/mwdb/Phase_1/test/Hands", ModelType.HOG,10,ReductionType.LDA)
+task1("/Users/studentworker/PycharmProjects/mwdb/Phase_1/test/Hands", ModelType.LBP,10,ReductionType.LDA)

@@ -15,8 +15,11 @@ class LDA(ReductionModel):
 
         # cluster images into a dictionary
         # number has to be finalised after testing
-        dictionary_size = 25
-        h, w = self.dataMatrix.shape
+        dictionary_size = 10
+        # h, w = self.dataMatrix.shape
+        print(self.dataMatrix)
+        for image
+
         # print(w)
         # print(h)
 
@@ -28,7 +31,7 @@ class LDA(ReductionModel):
         labels = kmeans.labels_
 
         # histogram of labels for each image = term-document matrix
-        num_train_images = h
+        num_train_images = 18
         self.dataMatrix
         #num_kps needs to be calculated dynamically
         num_kps = 192
@@ -62,10 +65,10 @@ class LDA(ReductionModel):
                                            batch_size=512,
                                            random_state=0, n_jobs=1)
 
-        lda_vb.fit(self.dataMatrix.T)
+        lda_vb.fit(A.T)
         lda_vb.get_params()
         topics = lda_vb.components_
-        H = lda_vb.transform(self.dataMatrix.T)
+        H = lda_vb.transform(A.T)
 
         # print(topics)
         # print(H.T)

@@ -73,19 +73,20 @@ def getDataMatrixForLDA(imagePaths, modelType, label, directoryPath=None):
     if imagePaths is None:
         imagePaths = glob.glob(os.path.join(directoryPath, "*.{}".format(imageFomat)))
 
-    dataMatrix = read_data_matrix(modelType, label, "./store/dataMatrix/")
+    # dataMatrix = read_data_matrix(modelType, label, "./store/dataMatrix/")
+    dataMatrix = None
     if dataMatrix is None:
         dataMatrix = []
         if modelType == ModelType.CM:
-            getDataMatrixForCMForLDA(imagePaths, dataMatrix)
+            dataMatrix = getDataMatrixForCMForLDA(imagePaths, dataMatrix)
         if modelType == ModelType.LBP:
-            getDataMatrixForLBPForLDA(imagePaths, dataMatrix)
+            dataMatrix = getDataMatrixForLBPForLDA(imagePaths, dataMatrix)
         if modelType == ModelType.HOG:
-            getDataMatrixForHOGForLDA(imagePaths, dataMatrix)
+            dataMatrix = getDataMatrixForHOGForLDA(imagePaths, dataMatrix)
         if modelType == ModelType.SIFT:
-            raise ValueError("SIFT can not be called with LDA")
-        save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
-    return np.array(dataMatrix, dtype=np.float)
+            dataMatrix = getDataMatrixForSIFTForLDA(imagePaths)
+        # save_data_matrix_as_pickle(modelType, label, "./store/dataMatrix/", dataMatrix)
+    return np.array(dataMatrix, np.float)
 
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
@@ -128,13 +129,41 @@ def getDataMatrixForCM(imagePaths, dataMatrix):
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
 
+def getDataMatrixForLBPForLDA(imagePaths, dataMatrix):
+    imagesCount = len(imagePaths)
+    for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
+        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+        dim = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3).getFeatureWithDim()
+        dataMatrix.append(dim)
+
+    return dataMatrix
+
 def getDataMatrixForCMForLDA(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
         if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-        dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeaturesWithDim())
+        dim = ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeaturesWithDim()
+        dim = dim.reshape((dim.shape[0] * dim.shape[1], dim.shape[2]))
+        dataMatrix.append(dim)
+
     return dataMatrix
+
+# def getDataMatrixForCMForLDA(imagePaths):
+#     imagesCount = len(imagePaths)
+#     rows = 0
+#     for index, imagePath in enumerate(imagePaths):
+#         if not os.path.exists(imagePath): continue
+#         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+#         features = ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeaturesWithDim()
+#         # stack descriptors for all training images
+#         if rows == 0:
+#             matrix = features
+#             rows += 1
+#         else:
+#             matrix = np.vstack((matrix, features))
+#     return matrix
 
 def getClusters(descriptors):
     CLUSTERS_COUNT = 10
@@ -173,15 +202,20 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
         dataMatrix.append(features)
     return dataMatrix
 
-def getDataMatrixForLBPForLDA(imagePaths, dataMatrix):
-    imagesCount = len(imagePaths)
-    for index, imagePath in enumerate(imagePaths):
-        if not os.path.exists(imagePath): continue
-        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-        lbp = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3)
-        features = lbp.getFeatureWithDim()
-        dataMatrix.append(features)
-    return dataMatrix
+# def getDataMatrixForLBPForLDA(imagePaths):
+#     imagesCount = len(imagePaths)
+#     rows = 0
+#     for index, imagePath in enumerate(imagePaths):
+#         if not os.path.exists(imagePath): continue
+#         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+#         features = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3).getFeatures()
+#         # stack descriptors for all training images
+#         if rows == 0:
+#             matrix = features
+#             rows += 1
+#         else:
+#             matrix = np.vstack((matrix, features))
+#     return matrix
 
 def getDataMatrixForHOG(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -196,8 +230,41 @@ def getDataMatrixForHOGForLDA(imagePaths, dataMatrix):
     for index, imagePath in enumerate(imagePaths):
         if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-        dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeaturesWithDim())
+        features = HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeaturesWithDim()
+        features = features.reshape((features.shape[0] * features.shape[1] * features.shape[2] * features.shape[3], features.shape[4]))
+        dataMatrix.append(features)
     return dataMatrix
+
+
+# def getDataMatrixForHOGForLDA(imagePaths):
+#     imagesCount = len(imagePaths)
+#     rows = 0
+#     for index, imagePath in enumerate(imagePaths):
+#         if not os.path.exists(imagePath): continue
+#         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+#         features = HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeaturesWithDim()
+#         # stack descriptors for all training images
+#         if rows == 0:
+#             matrix = features
+#             rows += 1
+#         else:
+#             matrix = np.vstack((matrix, features))
+#     return matrix
+
+def getDataMatrixForSIFTForLDA(imagePaths):
+    imagesCount = len(imagePaths)
+    rows = 0
+    for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
+        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+        features = SIFT(getGrayScaleImage(imagePath)).getFeatures()
+        # stack descriptors for all training images
+        if rows == 0:
+            matrix = features
+            rows += 1
+        else:
+            matrix = np.vstack((matrix, features))
+    return matrix
 
 
 def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName, imagePaths):
