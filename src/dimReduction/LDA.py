@@ -15,38 +15,40 @@ class LDA(ReductionModel):
 
         # cluster images into a dictionary
         # number has to be finalised after testing
-        dictionary_size = 10
-        # h, w = self.dataMatrix.shape
-        print(self.dataMatrix)
-        for image
-
-        # print(w)
-        # print(h)
-
-        kmeans = MiniBatchKMeans(n_clusters=dictionary_size, init='k-means++', batch_size=250, random_state=0,
-                                 verbose=0)
-        kmeans.fit(self.dataMatrix)
-        kmeans.get_params()
-        kmeans.cluster_centers_
-        labels = kmeans.labels_
+        # TOPICS_SIZE = 50
+        # # h, w = self.dataMatrix.shape
+        # print(self.dataMatrix)
+        # imageFvs = self.dataMatrix.reshape((self.dataMatrix.shape[0] * self.dataMatrix.shape[1], self.dataMatrix.shape[2]))
+        # kmeans = MiniBatchKMeans(n_clusters=TOPICS_SIZE, init='k-means++', batch_size=250, random_state=0,
+        #                          verbose=0)
+        # kmeans.fit(imageFvs)
+        # kmeans.cluster_centers_
+        # labels = kmeans.labels_
+        # ldaDataMatrix = np.zeros((self.dataMatrix.shape[0], TOPICS_SIZE))
+        # for imageIndex in range(self.dataMatrix.shape[0]):
+        #     imageLabels = labels[imageIndex*self.dataMatrix.shape[1]: imageIndex*self.dataMatrix.shape[1] + self.dataMatrix.shape[1]]
+        #     for label in imageLabels:
+        #         ldaDataMatrix[imageIndex][label] += 1;
+        #
+        # print("Boom boom")
 
         # histogram of labels for each image = term-document matrix
         num_train_images = 18
-        self.dataMatrix
-        #num_kps needs to be calculated dynamically
-        num_kps = 192
-        A = np.zeros((dictionary_size, num_train_images))
-        ii = 0
-        jj = 0
-        for img_idx in range(num_train_images):
-            if img_idx == 0:
-                A[:, img_idx], bins = np.histogram(labels[0:num_kps],
-                                                   bins=range(dictionary_size + 1))
-            else:
-                ii = np.int(ii + num_kps)
-                jj = np.int(ii + num_kps)
-                A[:, img_idx], bins = np.histogram(labels[ii:jj], bins=range(dictionary_size + 1))
-                # print str(ii) + ':' + str(jj)
+
+
+
+        # A = np.zeros((TOPICS_SIZE, num_train_images))
+        # ii = 0
+        # jj = 0
+        # for img_idx in range(num_train_images):
+        #     if img_idx == 0:
+        #         A[:, img_idx], bins = np.histogram(labels[0:num_kps],
+        #                                            bins=range(TOPICS_SIZE + 1))
+        #     else:
+        #         ii = np.int(ii + num_kps)
+        #         jj = np.int(ii + num_kps)
+        #         A[:, img_idx], bins = np.histogram(labels[ii:jj], bins=range(TOPICS_SIZE + 1))
+        #         # print str(ii) + ':' + str(jj)
         # end for
         # plt.figure()
         # plt.spy(A.T, cmap='gray')
@@ -57,20 +59,12 @@ class LDA(ReductionModel):
         # plt.show()
 
         # print(self.dataMatrix)
-
-        # Needs to be finalised
-        num_topics = 25
-
-        lda_vb = LatentDirichletAllocation(n_components=num_topics, max_iter=10, learning_method='online',
+        lda_vb = LatentDirichletAllocation(n_components=self.k, max_iter=100, learning_method='online',
                                            batch_size=512,
                                            random_state=0, n_jobs=1)
-
-        lda_vb.fit(A.T)
+        lda_vb.fit(self.dataMatrix)
         lda_vb.get_params()
         topics = lda_vb.components_
-        H = lda_vb.transform(A.T)
+        H = lda_vb.transform(self.dataMatrix)
 
-        # print(topics)
-        # print(H.T)
-
-        return topics, H.T
+        return H, topics

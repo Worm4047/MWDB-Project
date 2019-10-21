@@ -27,7 +27,7 @@ from src.models.SIFT import SIFT
 from src.models.enums.models import ModelType
 
 from src.dimReduction.PCA import PCA
-
+from sklearn.cluster import MiniBatchKMeans
 
 def getDataMatrix(imagePaths, modelType, label, directoryPath=None):
     imageFomat = "jpg"
@@ -84,7 +84,7 @@ def getDataMatrixForLDA(imagePaths, modelType, label, directoryPath=None):
         if modelType == ModelType.HOG:
             dataMatrix = getDataMatrixForHOGForLDA(imagePaths, dataMatrix)
         if modelType == ModelType.SIFT:
-            dataMatrix = getDataMatrixForSIFTForLDA(imagePaths)
+            dataMatrix = getDataMatrixForSIFTForLDA(imagePaths, dataMatrix)
         # save_data_matrix_as_pickle(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, np.float)
 
@@ -137,7 +137,7 @@ def getDataMatrixForLBPForLDA(imagePaths, dataMatrix):
         dim = LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3).getFeatureWithDim()
         dataMatrix.append(dim)
 
-    return dataMatrix
+    return tranformToLDAMatrix(np.array(dataMatrix))
 
 def getDataMatrixForCMForLDA(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -148,7 +148,26 @@ def getDataMatrixForCMForLDA(imagePaths, dataMatrix):
         dim = dim.reshape((dim.shape[0] * dim.shape[1], dim.shape[2]))
         dataMatrix.append(dim)
 
-    return dataMatrix
+    return tranformToLDAMatrix(np.array(dataMatrix))
+
+def tranformToLDAMatrix(dataMatrix):
+    TOPICS_SIZE = 50
+    # h, w = self.dataMatrix.shape
+    print(dataMatrix)
+    imageFvs = dataMatrix.reshape((dataMatrix.shape[0] * dataMatrix.shape[1], dataMatrix.shape[2]))
+    kmeans = MiniBatchKMeans(n_clusters=TOPICS_SIZE, init='k-means++', batch_size=250, random_state=0,
+                             verbose=0)
+    kmeans.fit(imageFvs)
+    kmeans.cluster_centers_
+    labels = kmeans.labels_
+    ldaDataMatrix = np.zeros((dataMatrix.shape[0], TOPICS_SIZE))
+    for imageIndex in range(dataMatrix.shape[0]):
+        imageLabels = labels[imageIndex * dataMatrix.shape[1]: imageIndex * dataMatrix.shape[1] +
+                                                               dataMatrix.shape[1]]
+        for label in imageLabels:
+            ldaDataMatrix[imageIndex][label] += 1
+
+    return ldaDataMatrix
 
 # def getDataMatrixForCMForLDA(imagePaths):
 #     imagesCount = len(imagePaths)
@@ -202,6 +221,40 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
         dataMatrix.append(features)
     return dataMatrix
 
+def getDataMatrixForSIFTForLDA(imagePaths, dataMatrix):
+    imagesCount = len(imagePaths)
+    imageFeaturesCounts = []
+    imageFeaturesStacked = []
+    isFirst = True
+    for index, imagePath in enumerate(imagePaths):
+        if not os.path.exists(imagePath): continue
+        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+        imageDes = SIFT(getGrayScaleImage(imagePath)).getFeatures()
+        imageFeaturesCounts.append(len(imageDes))
+        if isFirst:
+            imageFeaturesStacked = imageDes
+            isFirst = False
+        else:
+            imageFeaturesStacked = np.vstack((imageFeaturesStacked, imageDes))
+
+    TOPICS_SIZE = 50
+    # h, w = self.dataMatrix.shape
+    kmeans = MiniBatchKMeans(n_clusters=TOPICS_SIZE, init='k-means++', batch_size=250, random_state=0,
+                             verbose=0)
+    kmeans.fit(imageFeaturesStacked)
+    kmeans.cluster_centers_
+    labels = kmeans.labels_
+    ldaDataMatrix = np.zeros((imagesCount, TOPICS_SIZE))
+
+    labelStartPointer = 0;
+    for imageIndex, imageFeatureCount in enumerate(imageFeaturesCounts):
+        for labelIndex in labels[labelStartPointer : labelStartPointer + imageFeatureCount]:
+            ldaDataMatrix[imageIndex][labelIndex] += 1
+
+        labelStartPointer += imageFeatureCount
+
+    return ldaDataMatrix
+
 # def getDataMatrixForLBPForLDA(imagePaths):
 #     imagesCount = len(imagePaths)
 #     rows = 0
@@ -233,7 +286,8 @@ def getDataMatrixForHOGForLDA(imagePaths, dataMatrix):
         features = HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeaturesWithDim()
         features = features.reshape((features.shape[0] * features.shape[1] * features.shape[2] * features.shape[3], features.shape[4]))
         dataMatrix.append(features)
-    return dataMatrix
+
+    return tranformToLDAMatrix(np.array(dataMatrix))
 
 
 # def getDataMatrixForHOGForLDA(imagePaths):
@@ -251,20 +305,20 @@ def getDataMatrixForHOGForLDA(imagePaths, dataMatrix):
 #             matrix = np.vstack((matrix, features))
 #     return matrix
 
-def getDataMatrixForSIFTForLDA(imagePaths):
-    imagesCount = len(imagePaths)
-    rows = 0
-    for index, imagePath in enumerate(imagePaths):
-        if not os.path.exists(imagePath): continue
-        print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-        features = SIFT(getGrayScaleImage(imagePath)).getFeatures()
-        # stack descriptors for all training images
-        if rows == 0:
-            matrix = features
-            rows += 1
-        else:
-            matrix = np.vstack((matrix, features))
-    return matrix
+# def getDataMatrixForSIFTForLDA(imagePaths):
+#     imagesCount = len(imagePaths)
+#     rows = 0
+#     for index, imagePath in enumerate(imagePaths):
+#         if not os.path.exists(imagePath): continue
+#         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+#         features = SIFT(getGrayScaleImage(imagePath)).getFeatures()
+#         # stack descriptors for all training images
+#         if rows == 0:
+#             matrix = features
+#             rows += 1
+#         else:
+#             matrix = np.vstack((matrix, features))
+#     return matrix
 
 
 def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName, imagePaths):

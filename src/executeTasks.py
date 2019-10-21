@@ -28,19 +28,20 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
         if file.endswith(".jpg"):
             all_images.append(file)
     image_paths = [os.path.join(directoryPath, "{}".format(imagename)) for imagename in all_images]
+    image_paths = image_paths[0:27]
     if dimRecTechnique == ReductionType.LDA:
         data_matrix = dimRedHelper.getDataMatrixForLDA(image_paths, modelType, None, directoryPath)
     else:
         data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, None, directoryPath)
     latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None,
                                                      os.path.basename(directoryPath), image_paths)
-    print("In terms of data")
-    twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
-    # util.visualize_ec(twpairData, "data", None, directoryPath, all_images)
-    print("In terms of feature")
-    twpairFeat = util.sort_print_n_return(latent_semantic[1])
-    print(numpy.asarray(data_matrix).shape)
-    util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, all_images)
+    # print("In terms of data")
+    # twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
+    # # util.visualize_ec(twpairData, "data", None, directoryPath, all_images)
+    # print("In terms of feature")
+    # twpairFeat = util.sort_print_n_return(latent_semantic[1])
+    # print(numpy.asarray(data_matrix).shape)
+    # util.visualize_ec(twpairFeat, "feature", data_matrix, directoryPath, all_images)
 
 
 def task2(foldername, folderPath, imagePath, m):
@@ -109,6 +110,7 @@ def task8(imageDir, handInfoCSV, k):
     initTask8(imageDir, handInfoCSV, k)
     print(" EXECUTING TASK 8 ")
 
-task1("/Users/studentworker/PycharmProjects/mwdb/Phase_1/test/Hands", ModelType.CM,10,ReductionType.LDA)
-task1("/Users/studentworker/PycharmProjects/mwdb/Phase_1/test/Hands", ModelType.HOG,10,ReductionType.LDA)
-task1("/Users/studentworker/PycharmProjects/mwdb/Phase_1/test/Hands", ModelType.LBP,10,ReductionType.LDA)
+# task1("/Users/yvtheja/Downloads/Hands2", ModelType.CM,10,ReductionType.LDA)
+# task1("/Users/yvtheja/Downloads/Hands2", ModelType.HOG,10,ReductionType.LDA)
+# task1("/Users/yvtheja/Downloads/Hands2", ModelType.LBP,10,ReductionType.LDA)
+task1("/Users/yvtheja/Downloads/Hands2", ModelType.SIFT,20,ReductionType.LDA)
