@@ -9,17 +9,28 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 import glob
 from src.dimReduction.NMF import NMF
+from src.dimReduction.SVD import SVD
 import time
 import json
 
 from src.common import util
 
 start_time = time.time()
+def sort_print_n_return(npArray):
+    ind = np.flip(np.argsort(npArray, axis=1), 1)
+    rows = ind.shape[0]
+    cols = ind.shape[1]
+    twpair = np.zeros((cols,), dtype = 'i,f')
+    for x in range(0, rows):
+        l = []
+        for y in range(0, cols):
+            l.append((ind[x, y], npArray[x,ind[x,y]]))
+        twpair = np.vstack([twpair,  np.array(l, dtype='i,f')])
+    #need to delete the initialized all zero row
+    twpair = np.delete(twpair, (0), axis=0)
+    return twpair
 
 def prepros(csvFilePath, databasePath, destpath):
-    #csvFilePath = "/Users/user/Documents/HandInfo.csv"
-    #databasePath = "/Users/user/Documents/Hands"
-    #destpath = "/Users/user/Documents/Task6"
     df = pd.read_csv(csvFilePath, usecols = ['id','imageName'])
     onlyfiles = [f for f in listdir(databasePath) ]
     dic = dict()
@@ -27,7 +38,6 @@ def prepros(csvFilePath, databasePath, destpath):
     flag=0
     minu=0
     for r, i in df.iterrows():
-        #print(type(i[1]))
         j = i[0]
         l = i[1]
         if l in onlyfiles:
@@ -40,7 +50,6 @@ def prepros(csvFilePath, databasePath, destpath):
                 min_d[j]=1
         
 
-    #print(dic)
     for k,v in min_d.items():
         print(k)
         print("no. of image:", v)
@@ -60,13 +69,11 @@ def prepros(csvFilePath, databasePath, destpath):
         for imageName in v:
             shutil.copy(os.path.join(databasePath, imageName), destpath)
         print("just:",k)
-        mat = (getDataMatrix(None, ModelType.CM, label=None, directoryPath = destpath))
-        #print("Got matrix for ",k)
-        #print(mat)
-        #print("-------------------------------------------------------------------------------------------")
+        mat = (getDataMatrix(None, ModelType.LBP, label=None, directoryPath = destpath))
+    
 
-        u,vt = PCA(mat, minu).getDecomposition()
-        #vt = vt.tolist()
+        u,vt = SVD(mat, minu).getDecomposition()
+        vt = vt.tolist()
 
         print("Got decomp for :",k)
         dic1[k]=vt
@@ -114,6 +121,12 @@ def task7(k, csvFilePath, databasePath, destpath, filepath):
     print(df)
     m_np = np.array(m_out)
     u,v = NMF(m_np, k).getDecomposition()
-    util.sort_print_n_return(v)
+    t = sort_print_n_return(v)
+    for i in range(len(t)):
+        print("Latent Semantic ",i+1,":")
+        for j in range(len(t[i])):
+            k = t[i][j][0]
+            print("Subject Id:",key[k],"\t Weight:",t[i][j][1])
+
 
 print("Execution Time :",( time.time()-start_time))
