@@ -39,6 +39,8 @@ def csv_hand_names(HandInfoCSV,imageDir):
 
 def initTask8(imageDir, handInfoCSV, k):
 
+    print("handInfoCSV:",handInfoCSV)
+    print("imageDir:", imageDir)
     num_images = len(fnmatch.filter(os.listdir(imageDir), '*.jpg'))
     if num_images < k:
         print("Please make sure that number of images in the folder is greater than value of k")
@@ -71,7 +73,8 @@ def initTask8(imageDir, handInfoCSV, k):
         df_Hands_Image_MetaData.insert(8, column='Left', value=new_col)
 
         # Call NMF on binary image data matrix
-        W, H = NMF(df_Hands_Image_MetaData.iloc[:, 1:9].to_numpy(), k, None, 0.0001, 200)
+        print(df_Hands_Image_MetaData.iloc[:, 1:9].to_numpy())
+        W, H = NMF(df_Hands_Image_MetaData.iloc[:, 1:9].to_numpy(), k, None, 0.0001, 200).getDecomposition()
         #print('W:', W)
         #print('H:', H)
 
