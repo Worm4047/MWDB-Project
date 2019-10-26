@@ -15,7 +15,7 @@ def making_two_columns(file_HandInfo):
     df_hands_info["SideOfHand"] = new[0]
     df_hands_info["WhichHand"] = new[1]
     #df_hands_info.drop(columns =["aspectOfHand"], inplace = True)
-    return df_hands_inf
+    return df_hands_info
 
 def coding(col, codedict):
     colcoded = pd.Series(col, copy=True)
