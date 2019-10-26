@@ -6,7 +6,7 @@ from src.dimReduction.PCA import PCA
 from src.dimReduction.SVD import SVD
 from src.models.enums.models import ModelType
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import euclidean_distances
 import time
 from operator import itemgetter  
 import json
@@ -18,7 +18,7 @@ import cv2
 start_time = time.time()
 
 def cos(a,b):
-    cos_lib = cosine_similarity(a, b)
+    cos_lib = euclidean_distances(a, b)
     cos_l = np.mean(cos_lib)
     return cos_l
 
@@ -76,12 +76,12 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
             for imageName in v:
                 shutil.copy(os.path.join(databasePath, imageName), destpath)
         #print("just:",k)
-        mat = (getDataMatrix(None, ModelType.CM, label=None, directoryPath = destpath))
+        mat = (getDataMatrix(None, ModelType.LBP, label=None, directoryPath = destpath))
         #print("Got matrix for ",k)
         #print(mat)
         #print("-------------------------------------------------------------------------------------------")
 
-        u,vt = PCA(mat, minu).getDecomposition()
+        u,vt = SVD(mat, minu).getDecomposition()
         vt = vt.tolist()
 
         print("Got decomposition for :",k)
@@ -121,10 +121,11 @@ def task6(id, csvFilePath, databasePathid, databasePath, destpath, filepath, ):
 
         print(" Subject ",f," :",k, "    Similarity:",v)
         lis = dic[k]
+        dic3 = dict()
         for l in lis:
-            if l not in dic2:
-                dic2[l]= cv2.cvtColor(cv2.imread(databasePath+"/"+l, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
-        plotHelper.plotFigures(dic2)
+            if l not in dic3:
+                dic3[l]= cv2.cvtColor(cv2.imread(databasePath+"/"+l, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+        plotHelper.plotFigures(dic3)
         if(f==3):
             break
         f+=1
