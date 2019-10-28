@@ -103,32 +103,50 @@ def getQueryImageRepList(vTranspose, imagePaths, modelType):
     return np.array(featuresList)
 
 
-def getQueryImageRep(vTranspose, imagePath, modelType, dimRedType):
+def getQueryImageRepforLDA(vTranspose, imagePath, modelType, dimRedType):
     if not isinstance(modelType, ModelType):
         raise ValueError("Not a valid model type")
 
     if not isinstance(vTranspose, np.ndarray):
         raise ValueError("vTranspose should be a numpy array")
 
-    if dimRedType == ReductionType.LDA:
-        imageFeatures = getImageFeatures(imagePath, modelType, True)
-        imageFeatures = tranformToLDAFeatures(imageFeatures)
+    if modelType == ModelType.CM:
+        dataMatrix = getDataMatrixForCMForLDA([imagePath], [])
     elif modelType == ModelType.SIFT:
-        imageFeatures = getImageFeatures(imagePath, modelType)
-        imageFeatures = getClusters(imageFeatures).flatten()
-    else:
-        imageFeatures = getImageFeatures(imagePath, modelType)
+        dataMatrix = getDataMatrixForSIFTForLDA([imagePath], [])
+    elif modelType == ModelType.LBP:
+        dataMatrix = getDataMatrixForLBPForLDA([imagePath], [])
+    elif modelType == ModelType.HOG:
+        dataMatrix = getDataMatrixForHOGForLDA([imagePath], [])
 
-    print(vTranspose.shape)
-    print(imageFeatures.shape)
-    # if vTranspose.shape[1] != imageFeatures.shape[0]:
-    #     raise ValueError("vTranspose dimensions are not matching with query image features")
+    imageFeatures = dataMatrix[0]
 
-    kSpaceRepresentation = []
-    # for row in vTranspose:
-    # kSpaceRepresentation.append(np.dot(row, imageFeatures))
-    #    kSpaceRepresentation.append(np.matmul(imageFeatures,row))
+    # imageFeatures = getImageFeatures(imagePath, modelType, True)
+
+    # imageFeatures = tranformToLDAFeatures(imageFeatures)
+    # print(vTranspose.shape)
+    # print(imageFeatures.shape)
+    if vTranspose.shape[1] != imageFeatures.shape[0]:
+        raise ValueError("vTranspose dimensions are not matching with query image features")
+
     return np.array(np.matmul(imageFeatures, vTranspose.transpose()))
+
+
+def getQueryImageRep(vTranspose, imagePath, modelType):
+    if not isinstance(modelType, ModelType):
+        raise ValueError("Not a valid model type")
+
+    if not isinstance(vTranspose, np.ndarray):
+        raise ValueError("vTranspose should be a numpy array")
+
+    imageFeatures = getImageFeatures(imagePath, modelType)
+    if modelType == ModelType.SIFT:
+        imageFeatures = getClusters(imageFeatures).flatten()
+
+    if vTranspose.shape[1] != imageFeatures.shape[0]:
+        raise ValueError("vTranspose dimensions are not matching with query image features")
+
+    return np.array(np.matmul(imageFeatures,vTranspose.transpose()))
 
 
 # You may not need to call below methods

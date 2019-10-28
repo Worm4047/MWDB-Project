@@ -1,12 +1,13 @@
 from sklearn import preprocessing, svm
 
 from src.common.latentSemanticsHelper import getSemanticsFromFolder, getParams
-from src.dimReduction.dimRedHelper import getQueryImageRep
+from src.dimReduction.dimRedHelper import getQueryImageRep, getQueryImageRepforLDA
 from src.common.latentSemanticsHelper import getParams, getSemanticsFromFolder
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler
 from src.common.helper import getImagePathsWithLabel
 from src.dimReduction.dimRedHelper import getQueryImageRepList, getQueryImageRep
+from src.dimReduction.enums.reduction import ReductionType
 from src.models.enums.models import ModelType
 from src.dimReduction.dimRedHelper import getDataMatrix
 from src.dimReduction.SVD import SVD
@@ -45,7 +46,7 @@ import sys
 #     print(qdis)
 #
 
-def initTask5(folderPath, imagePath):
+def initTask5(folderPath, imagePath, dimRedTechnique=None):
     classificatonMeta = {
         "Dorsal" : "Palmer",
         "Left-Handed" : "Right-Handed",
@@ -76,7 +77,10 @@ def initTask5(folderPath, imagePath):
     oc_svm_clf = svm.OneClassSVM(gamma=0.01, kernel='rbf', nu=0.1)
     oc_svm_clf.fit(uNomalised)
 
-    queryImage = getQueryImageRep(vt, imagePath, modelType)
+    if ReductionType.LDA == dimRedTechnique:
+        queryImage = getQueryImageRepforLDA(vt, imagePath, modelType, dimRedTechnique)
+    else:
+        queryImage = getQueryImageRep(vt, imagePath, modelType)
     queryImageNormalised = preprocessing.scale(queryImage)
     queryPrediction = oc_svm_clf.predict(queryImageNormalised.reshape((1, queryImageNormalised.shape[0])))
 

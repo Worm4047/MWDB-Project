@@ -8,7 +8,7 @@ from src.common import util
 from src.common.latentSemanticsHelper import getSemanticsFromFolder, getParams
 from src.common.plotHelper import plotFigures
 from src.dimReduction import dimRedHelper
-from src.dimReduction.dimRedHelper import getQueryImageRep
+from src.dimReduction.dimRedHelper import getQueryImageRep, getQueryImageRepforLDA
 from src.dimReduction.enums.reduction import ReductionType
 from src.task5 import initTask5
 from src.task8 import initTask8
@@ -50,7 +50,10 @@ def task2(foldername, folderPath, imagePath, m):
     print(m)
     U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
-    query_image_features = getQueryImageRep(V, imagePath, modelType, dimRidTechnique)
+    if ReductionType.LDA == dimRidTechnique:
+        query_image_features = getQueryImageRepforLDA(V, imagePath, modelType, dimRidTechnique)
+    else:
+        query_image_features = getQueryImageRep(V, imagePath, modelType)
     print(m)
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths, modelType)
     print("List:")
@@ -90,16 +93,21 @@ def task4(foldername, folderPath, imagePath, m):
     # print("Image Path:" + imagePath)
     U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
-    query_image_features = getQueryImageRep(V, imagePath, modelType)
+    if ReductionType.LDA == dimRidTechnique:
+        query_image_features = getQueryImageRepforLDA(V, imagePath, modelType, dimRidTechnique)
+    else:
+        query_image_features = getQueryImageRep(V, imagePath, modelType)
+    print(m)
     list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths, modelType)
     plotFigures(list, 3)
 
 
 def task5(foldername, folderPath, imagePath):
     print(" EXECUTING TASK 5 ")
+    dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     # print(folderPath)
     # print(imagePath)
-    initTask5(folderPath, imagePath)
+    initTask5(folderPath, imagePath, dimRidTechnique)
 
 
 def task6(subjectId, originalDataset, testDataset):

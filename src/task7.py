@@ -32,7 +32,7 @@ def sort_print_n_return(npArray):
 
 def prepros(csvFilePath, databasePath, destpath):
     df = pd.read_csv(csvFilePath, usecols = ['id','imageName'])
-    onlyfiles = [f for f in listdir(databasePath) ]
+    onlyfiles = [f for f in os.listdir(databasePath)]
     dic = dict()
     min_d = dict()
     flag=0

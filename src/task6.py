@@ -6,7 +6,7 @@ from src.dimReduction.PCA import PCA
 from src.dimReduction.SVD import SVD
 from src.models.enums.models import ModelType
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
 import time
 from operator import itemgetter  
 import json
