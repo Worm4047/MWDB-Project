@@ -20,6 +20,7 @@ from src.dimReduction.LDA import LDA
 from src.dimReduction.NMF import NMF
 from src.dimReduction.SVD import SVD
 from src.dimReduction.enums import reduction
+from src.dimReduction.enums.reduction import ReductionType
 from src.models.ColorMoments import ColorMoments
 from src.models.HOG import HOG
 from src.models.LBP import LBP
@@ -28,6 +29,7 @@ from src.models.enums.models import ModelType
 
 from src.dimReduction.PCA import PCA
 from sklearn.cluster import MiniBatchKMeans
+
 
 def getDataMatrix(imagePaths, modelType, label, directoryPath=None):
     imageFomat = "jpg"
@@ -57,6 +59,7 @@ def getDataMatrix(imagePaths, modelType, label, directoryPath=None):
             getDataMatrixForSIFT(imagePaths, dataMatrix)
         save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, dtype=np.float)
+
 
 def getDataMatrixForLDA(imagePaths, modelType, label, directoryPath=None):
     imageFomat = "jpg"
@@ -88,6 +91,7 @@ def getDataMatrixForLDA(imagePaths, modelType, label, directoryPath=None):
         # save_data_matrix_as_pickle(modelType, label, "./store/dataMatrix/", dataMatrix)
     return np.array(dataMatrix, np.float)
 
+
 def getQueryImageRepList(vTranspose, imagePaths, modelType):
     featuresList = []
     imagesCount = len(imagePaths)
@@ -95,29 +99,36 @@ def getQueryImageRepList(vTranspose, imagePaths, modelType):
         if not os.path.exists(imagePath): continue
         print("Transforming Query Image | Processed {} out of {}".format(index, imagesCount))
         featuresList.append(getQueryImageRep(vTranspose, imagePath, modelType))
-    print("featuresList:",featuresList)
+    print("featuresList:", featuresList)
     return np.array(featuresList)
 
 
-def getQueryImageRep(vTranspose, imagePath, modelType):
+def getQueryImageRep(vTranspose, imagePath, modelType, dimRedType):
     if not isinstance(modelType, ModelType):
         raise ValueError("Not a valid model type")
 
     if not isinstance(vTranspose, np.ndarray):
         raise ValueError("vTranspose should be a numpy array")
 
-    imageFeatures = getImageFeatures(imagePath, modelType)
-    if modelType == ModelType.SIFT:
+    if dimRedType == ReductionType.LDA:
+        imageFeatures = getImageFeatures(imagePath, modelType, True)
+        imageFeatures = tranformToLDAFeatures(imageFeatures)
+    elif modelType == ModelType.SIFT:
+        imageFeatures = getImageFeatures(imagePath, modelType)
         imageFeatures = getClusters(imageFeatures).flatten()
+    else:
+        imageFeatures = getImageFeatures(imagePath, modelType)
 
-    if vTranspose.shape[1] != imageFeatures.shape[0]:
-        raise ValueError("vTranspose dimensions are not matching with query image features")
+    print(vTranspose.shape)
+    print(imageFeatures.shape)
+    # if vTranspose.shape[1] != imageFeatures.shape[0]:
+    #     raise ValueError("vTranspose dimensions are not matching with query image features")
 
     kSpaceRepresentation = []
-    #for row in vTranspose:
-        #kSpaceRepresentation.append(np.dot(row, imageFeatures))
+    # for row in vTranspose:
+    # kSpaceRepresentation.append(np.dot(row, imageFeatures))
     #    kSpaceRepresentation.append(np.matmul(imageFeatures,row))
-    return np.array(np.matmul(imageFeatures,vTranspose.transpose()))
+    return np.array(np.matmul(imageFeatures, vTranspose.transpose()))
 
 
 # You may not need to call below methods
@@ -129,6 +140,7 @@ def getDataMatrixForCM(imagePaths, dataMatrix):
         dataMatrix.append(ColorMoments(getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
     return dataMatrix
 
+
 def getDataMatrixForLBPForLDA(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
@@ -138,6 +150,7 @@ def getDataMatrixForLBPForLDA(imagePaths, dataMatrix):
         dataMatrix.append(dim)
 
     return tranformToLDAMatrix(np.array(dataMatrix))
+
 
 def getDataMatrixForCMForLDA(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -150,10 +163,10 @@ def getDataMatrixForCMForLDA(imagePaths, dataMatrix):
 
     return tranformToLDAMatrix(np.array(dataMatrix))
 
+
 def tranformToLDAMatrix(dataMatrix):
     TOPICS_SIZE = 50
     # h, w = self.dataMatrix.shape
-    print(dataMatrix)
     imageFvs = dataMatrix.reshape((dataMatrix.shape[0] * dataMatrix.shape[1], dataMatrix.shape[2]))
     kmeans = MiniBatchKMeans(n_clusters=TOPICS_SIZE, init='k-means++', batch_size=250, random_state=0,
                              verbose=0)
@@ -168,6 +181,26 @@ def tranformToLDAMatrix(dataMatrix):
             ldaDataMatrix[imageIndex][label] += 1
 
     return ldaDataMatrix
+
+
+def tranformToLDAFeatures(dataMatrix):
+    TOPICS_SIZE = 50
+    # h, w = self.dataMatrix.shape
+    imageFvs = dataMatrix.reshape((dataMatrix.shape[0] * dataMatrix.shape[1], dataMatrix.shape[2]))
+    print(imageFvs)
+    kmeans = MiniBatchKMeans(n_clusters=TOPICS_SIZE, init='k-means++', batch_size=250, random_state=0,
+                             verbose=0)
+    kmeans.fit(imageFvs)
+    kmeans.cluster_centers_
+    labels = kmeans.labels_
+    ldaDataMatrix = np.zeros((1, TOPICS_SIZE))
+    for imageIndex in range(1):
+        imageLabels = labels[imageIndex * dataMatrix.shape[1]: dataMatrix.shape[0]]
+        for label in imageLabels:
+            ldaDataMatrix[imageIndex][label] += 1
+
+    return ldaDataMatrix
+
 
 # def getDataMatrixForCMForLDA(imagePaths):
 #     imagesCount = len(imagePaths)
@@ -211,6 +244,7 @@ def getDataMatrixForSIFT(imagePaths, dataMatrix):
         dataMatrix.append(getClusters(SIFT(getGrayScaleImage(imagePath)).getFeatures()).flatten())
     return dataMatrix
 
+
 def getDataMatrixForLBP(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
@@ -220,6 +254,7 @@ def getDataMatrixForLBP(imagePaths, dataMatrix):
         features = lbp.getFeatures()
         dataMatrix.append(features)
     return dataMatrix
+
 
 def getDataMatrixForSIFTForLDA(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
@@ -248,12 +283,13 @@ def getDataMatrixForSIFTForLDA(imagePaths, dataMatrix):
 
     labelStartPointer = 0;
     for imageIndex, imageFeatureCount in enumerate(imageFeaturesCounts):
-        for labelIndex in labels[labelStartPointer : labelStartPointer + imageFeatureCount]:
+        for labelIndex in labels[labelStartPointer: labelStartPointer + imageFeatureCount]:
             ldaDataMatrix[imageIndex][labelIndex] += 1
 
         labelStartPointer += imageFeatureCount
 
     return ldaDataMatrix
+
 
 # def getDataMatrixForLBPForLDA(imagePaths):
 #     imagesCount = len(imagePaths)
@@ -278,13 +314,15 @@ def getDataMatrixForHOG(imagePaths, dataMatrix):
         dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
     return dataMatrix
 
+
 def getDataMatrixForHOGForLDA(imagePaths, dataMatrix):
     imagesCount = len(imagePaths)
     for index, imagePath in enumerate(imagePaths):
         if not os.path.exists(imagePath): continue
         print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
         features = HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeaturesWithDim()
-        features = features.reshape((features.shape[0] * features.shape[1] * features.shape[2] * features.shape[3], features.shape[4]))
+        features = features.reshape(
+            (features.shape[0] * features.shape[1] * features.shape[2] * features.shape[3], features.shape[4]))
         dataMatrix.append(features)
 
     return tranformToLDAMatrix(np.array(dataMatrix))
@@ -339,5 +377,6 @@ def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName,
             print("Check later")
             return None
         print("Image path example ", imagePaths[0])
-        latentSemanticsHelper.saveSemantics(os.path.basename(imageDirName), modelType, label, decompType, k, latent_semantic[0], latent_semantic[1], imagePaths=imagePaths)
+        latentSemanticsHelper.saveSemantics(os.path.basename(imageDirName), modelType, label, decompType, k,
+                                            latent_semantic[0], latent_semantic[1], imagePaths=imagePaths)
     return latent_semantic

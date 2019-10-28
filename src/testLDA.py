@@ -28,7 +28,7 @@ def init():
     dorsalImageIds = dorsalImageIds[0: 100]
     print(dorsalImageIds)
 
-    dm = getDataMatrix(dorsalImageIds, ModelType.HOG,"",None)
+    dm = getDataMatrix(dorsalImageIds, ModelType.HOG, "", None)
     # u, s, vt = LDA(dm, 0).getDecomposition()
     # u_np = numpy.array(u)
     # v_np = numpy.array(vt)

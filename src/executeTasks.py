@@ -47,10 +47,14 @@ def task2(foldername, folderPath, imagePath, m):
     print(" EXECUTING TASK 2 ")
     # print(folderPath)
     # print(imagePath)
+    print(m)
     U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
-    query_image_features = getQueryImageRep(V, imagePath, modelType)
-    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths)
+    query_image_features = getQueryImageRep(V, imagePath, modelType, dimRidTechnique)
+    print(m)
+    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths, modelType)
+    print("List:")
+    print(len(list))
     plotFigures(list, 3)
 
 
@@ -87,7 +91,7 @@ def task4(foldername, folderPath, imagePath, m):
     U, V, imagePaths = getSemanticsFromFolder(folderPath)
     dir, modelType, dimRidTechnique, K, label = getParams(foldername)
     query_image_features = getQueryImageRep(V, imagePath, modelType)
-    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths)
+    list = comparisonHelper.getMSimilarImages(U, query_image_features, m, imagePaths, modelType)
     plotFigures(list, 3)
 
 

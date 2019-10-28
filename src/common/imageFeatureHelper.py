@@ -7,15 +7,27 @@ from src.models.LBP import LBP
 import cv2
 import numpy as np
 
-def getImageFeatures(imagePath, modelType):
+
+def getImageFeatures(imagePath, modelType, isLDA=False):
     if not isinstance(modelType, ModelType):
         raise ValueError("Invalid modelType")
 
-    if modelType == ModelType.SIFT:
-        return SIFT(getGrayScaleImage(imagePath)).getFeatures()
-    if modelType == ModelType.CM:
-        return ColorMoments(getYUVImage(imagePath), 100, 100).getFeatures()
-    if modelType == ModelType.HOG:
-        return HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures()
-    if modelType == ModelType.LBP:
-        return LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3).getFeatures()
+    if(isLDA):
+        if modelType == ModelType.SIFT:
+            return SIFT(getGrayScaleImage(imagePath)).getFeatures()
+        if modelType == ModelType.CM:
+            return ColorMoments(getYUVImage(imagePath), 100, 100).getFeaturesWithDim()
+        if modelType == ModelType.HOG:
+            return HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeaturesWithDim()
+        if modelType == ModelType.LBP:
+            return LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3).getFeatureWithDim()
+    else:
+        if modelType == ModelType.SIFT:
+            return SIFT(getGrayScaleImage(imagePath)).getFeatures()
+        if modelType == ModelType.CM:
+            return ColorMoments(getYUVImage(imagePath), 100, 100).getFeatures()
+        if modelType == ModelType.HOG:
+            return HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures()
+        if modelType == ModelType.LBP:
+            return LBP(getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3).getFeatures()
+
