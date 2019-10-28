@@ -34,6 +34,9 @@ def task1(directoryPath, modelType, k, dimRecTechnique):
         data_matrix = dimRedHelper.getDataMatrix(image_paths, modelType, None, directoryPath)
     latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, None,
                                                      os.path.basename(directoryPath), image_paths)
+    print("Data Indexes:")
+    for i in range(0,len(all_images)):
+        print(i, "=>", all_images[i])
     print("In terms of data")
     twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
     # util.visualize_ec(twpairData, "data", None, directoryPath, all_images)
@@ -79,6 +82,17 @@ def task3(directoryPath, modelType, k, dimRecTechnique, label):
     latent_semantic = dimRedHelper.getLatentSemantic(k, dimRecTechnique, data_matrix, modelType, label,
                                                      os.path.basename(directoryPath),
                                                      image_paths)
+    fil_all_images = []
+    for image in images_list_with_label:
+        imagepath = os.path.join(directoryPath, "{}".format(image))
+        if not os.path.exists(imagepath):
+            continue
+        fil_all_images.append(image)
+
+    all_images = fil_all_images
+    print("Data Indexes:")
+    for i in range(0, len(all_images)):
+        print(i, "=>", all_images[i])
     print("In terms of data")
     twpairData = util.sort_print_n_return(latent_semantic[0].transpose())
     # util.visualize_ec(twpairData, "data", data_matrix, directoryPath, images_list_with_label)

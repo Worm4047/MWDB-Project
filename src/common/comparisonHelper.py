@@ -44,6 +44,16 @@ def getMSimilarImages(dataMatrix, query_image_features, m, imageNames, modelType
             heapq.heappop(h)
     res = heapq.nlargest(m, h)
     finalRes = {}
+    # max = 0
+    # for item in res:
+    #     if modelType == ModelType.SIFT:
+    #         title = item[0]
+    #     else:
+    #         title = -item[0]
+    #     if title > max:
+    #         max = title
+    # if ModelType.SIFT != modelType:
+    #     res.reverse()
     for item in res:
         # finalRes[item[1][0]] = -item[0]
         # print(item[1], str(item[1]), item[1].decode("utf-8"))
