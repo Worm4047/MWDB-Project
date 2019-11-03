@@ -1,5 +1,4 @@
-import pandas as pd
-import os
+
 import shutil
 from src.dimReduction.dimRedHelper1 import getDataMatrix
 from src.dimReduction.PCA import PCA
