@@ -1,0 +1,13 @@
+[Info  - 8:53:40 PM] Microsoft Python Language Server version 0.4.71.0
+[Info  - 8:53:40 PM] Workspace root: /home/worm/Desktop/ASU/CSE 515
+[Info  - 8:53:40 PM] Analysis cache path: /home/worm/.cache/Microsoft/Python Language Server
+[Info  - 8:53:40 PM] GetCurrentSearchPaths /usr/bin/python3 
+[Info  - 8:53:40 PM] Interpreter search paths:
+[Info  - 8:53:40 PM]     /usr/lib/python3.6
+[Info  - 8:53:40 PM]     /usr/lib/python3.6/lib-dynload
+[Info  - 8:53:40 PM]     /home/worm/.local/lib/python3.6/site-packages
+[Info  - 8:53:40 PM]     /usr/local/lib/python3.6/dist-packages
+[Info  - 8:53:40 PM]     /usr/lib/python3/dist-packages
+[Info  - 8:53:40 PM] User search paths:
+[Info  - 8:53:42 PM] Initializing for /usr/bin/python3
+[Info  - 8:53:42 PM] Analysis caching mode: None.

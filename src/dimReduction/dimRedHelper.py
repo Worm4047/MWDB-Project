@@ -22,7 +22,9 @@ from src.models.enums.models import ModelType
 from src.common.imageHelper import ImageHelper
 
 
-class DimRedHelper:
+class DimRedHelper():
+    def __init__(self):
+        pass
     def getDataMatrix(self, imagePaths, modelType, label, directoryPath=None):
         imageFomat = "jpg"
         # print(directoryPath)
