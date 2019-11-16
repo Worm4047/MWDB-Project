@@ -8,13 +8,13 @@ from scipy import spatial
 from src.models.enums.models import ModelType
 
 
-def compareWithCosine(val1, val2):
-    return 1 - spatial.distance.cosine(val1, val2)
+def computeWithCosine(val1, val2):
+    return spatial.distance.cosine(val1, val2)
 
 
 # Eucledian distance is calculated for 2 values val1 and val2
 def computeWithEucledian(val1, val2):
-    return np.linalg.norm(val1 - val2)
+    return 1/np.linalg.norm(val1 - val2)
 
 
 # # Eucledian distance is calculated for 2 values val1 and val2
