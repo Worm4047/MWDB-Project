@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import cv2
 import os
+from src.constants import DATABASE_PATH
 
 class ImageHelper:
     def getYUVImage(self, imagePath):
@@ -16,13 +17,16 @@ class ImageHelper:
         return cv2.cvtColor(cv2.imread(imagePath, cv2.IMREAD_COLOR), cv2.COLOR_BGR2GRAY)
 
     def getImageName(self, imagePath):
-        return os.path.basename(imagePath)
+        return os.path.basename(imagePath).split('.')[0]
 
-    def getImageFeatures(self, imagePath, modelType, isLDA=False):
+    def getImagePath(self, imageName):
+        return os.path.join(DATABASE_PATH, imageName, ".jpg")
+
+    def getImageFeatures(self, imagePath, modelType, retriveshape=False):
         if not isinstance(modelType, ModelType):
             raise ValueError("Invalid modelType")
 
-        if (isLDA):
+        if (retriveshape):
             if modelType == ModelType.SIFT:
                 return SIFT(self.getGrayScaleImage(imagePath)).getFeatures()
             if modelType == ModelType.CM:
