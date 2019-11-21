@@ -20,7 +20,7 @@ class ImageHelper:
         return os.path.basename(imagePath).split('.')[0]
 
     def getImagePath(self, imageName):
-        return os.path.join(DATABASE_PATH, imageName, ".jpg")
+        return os.path.join(DATABASE_PATH, imageName + ".jpg")
 
     def getImageFeatures(self, imagePath, modelType, retriveshape=False):
         if not isinstance(modelType, ModelType):
