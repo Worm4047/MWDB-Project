@@ -1,0 +1,96 @@
+
+Kmeans LBP Euclidean
+    Clusters 10
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 19 	 31
+    PALMAR	 19 	 31
+
+    Clusters 20
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 25 	 25
+    PALMAR	 22 	 28
+
+    Clusters 30
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 24 	 26
+    PALMAR	 26 	 24
+
+Kmeans SIFT Euclidean
+    Clusters 10
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 30 	 20
+    PALMAR	 23 	 27
+
+    Clusters 20
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 34 	 16
+    PALMAR	 25 	 25
+
+    Clusters 30
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 36 	 14
+    PALMAR	 31 	 19
+
+Kmeans SIFT cosine
+    Clusters 10
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 5 	 45
+    PALMAR	 4 	 46
+
+    Clusters 20
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 3 	 47
+    PALMAR	 1 	 49
+
+    Clusters 30
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 48 	 2
+    PALMAR	 50 	 0
+
+Kmeans LBP cosine
+
+    CLUSTERS 10
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 32 	 18
+    PALMAR	 18 	 32
+
+
+    Clusters 20
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 29 	 21
+    PALMAR	 0 	 50
+
+    CLuster 30
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 25 	 25
+    PALMAR	 0 	 50
+
+
+SPECTRAL CLUSTERING
+    CLuster 5
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 32 	 18
+    PALMAR	 20 	 30
+    
+    Cluster 10
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 8 	 2
+    PALMAR	 0 	 10
+
+    CLuster 10
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 25 	 25
+    PALMAR	 0
+
+    Cluster 10
+    TYPE 	 DORSAL RESULT	 PALMAR RESULT
+    DORSAL	 28 	 22
+    PALMAR	 0 	 50
+
+
+
+
+
+
+
+
