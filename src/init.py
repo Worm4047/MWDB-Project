@@ -11,11 +11,11 @@ def init():
     DistanceArchiver(checkArchive=True)
     ga = GraphArchiver(10)
     imagePaths = [
-        "/Users/yvtheja/Documents/Dataset2/Hand_0001620.jpg",
-        "/Users/yvtheja/Documents/Dataset2/Hand_0001621.jpg",
-        "/Users/yvtheja/Documents/Dataset2/Hand_0001622.jpg"
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000004.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000005.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000006.jpg"
     ]
-    Task3(10).getSimilarImagePaths(10, imagePaths)
+    Task3(10).visualiseSimilarImages(10, imagePaths)
 
 
 if __name__ == "__main__":

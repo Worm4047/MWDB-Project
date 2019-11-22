@@ -24,6 +24,7 @@ class GraphArchiver:
     imageIndex = None
     imageHelper = None
     imagesCount = None
+    beta = 0.15
 
     def __init__(self, k, modelType=ModelType.CM, distanceType=DistanceType.EUCLIDEAN):
         self.modelType = modelType
@@ -51,26 +52,32 @@ class GraphArchiver:
         distance_matrix = distance_matrix[:, 1:]
         distanceMatrixLen = len(distance_matrix)
 
-        for row_index, row in enumerate(distance_matrix):
-            adjacent_items = [arg for arg in np.argsort(row)[1:self.k + 1]]
-            newRow = [0 for j in range(0, distanceMatrixLen)]
+        for colIndex in range(0, self.imagesCount):
+            col = distance_matrix[:, colIndex]
+            adjacent_items = [arg for arg in np.argsort(col)[1:self.k + 1]]
+            newCol = [0 for j in range(0, distanceMatrixLen)]
             for adjacent_item in adjacent_items:
-                newRow[adjacent_item] = row[adjacent_item]
+                newCol[adjacent_item] = col[adjacent_item]
 
-            distance_matrix[row_index] = newRow
+            distance_matrix[:, colIndex] = newCol
 
-        self.saveGraph(distance_matrix, GraphType.WEIGHTED_UNNORMALISED)
-        self.normaliseEdgesForNodes(distance_matrix)
-        self.testNormalisation(distance_matrix)
-        self.saveGraph(distance_matrix, GraphType.TRANSITION)
-        distance_matrix[distance_matrix > 0] = 1
-        self.saveGraph(distance_matrix, GraphType.UNWEIGHTED)
+        similarityMatrix = np.exp(-distance_matrix)
 
-    def normaliseEdgesForNodes(self, distanceMatrix):
-        for index, row in enumerate(distanceMatrix):
-            newRow = row/np.sum(row)
-            distanceMatrix[index] = newRow
-            distanceMatrix[:, index] = newRow
+        self.saveGraph(similarityMatrix, GraphType.WEIGHTED_UNNORMALISED)
+        self.normaliseEdgesForNodes(similarityMatrix)
+        # self.testNormalisation(distance_matrix)
+        self.saveGraph(similarityMatrix, GraphType.TRANSITION)
+        similarityMatrix[similarityMatrix > 0] = 1
+        self.saveGraph(similarityMatrix, GraphType.UNWEIGHTED)
+
+    def normaliseEdgesForNodes(self, matrix):
+        for index in range(0, self.imagesCount):
+            col = matrix[:, index]
+            if np.sum(col) == 0:
+                print("Boom | index: {}".format(index))
+
+            newCol = col/np.sum(col)
+            matrix[:, index] = newCol
 
     def testNormalisation(self, matrix):
         for index in range(0, len(matrix)):
@@ -125,34 +132,41 @@ class GraphArchiver:
             raise ValueError("One of iter and thres should be passed")
 
         transitionMatrixInSparse = self.getGraph(GraphType.TRANSITION)
-        pageRank = self.getTeleportationVector(imageIds)
+        teleportationVector = self.getTeleportationVector(imageIds)
+        initialPageRank = [1/self.imagesCount for j in range(0, self.imagesCount)]
+
+        initialPageRank = teleportationVector
 
         if iter is not None:
-            return self.runPPRWithTransitionMatrixForIter(pageRank, iter, transitionMatrixInSparse)
+            return self.runPPRWithTransitionMatrixForIter(initialPageRank, iter, transitionMatrixInSparse, teleportationVector)
         elif thres is not None:
-            return self.runPPRWithTransitionMatrixForThres(pageRank, thres, transitionMatrixInSparse)
+            return self.runPPRWithTransitionMatrixForThres(initialPageRank, thres, transitionMatrixInSparse, teleportationVector)
 
-    def runPPRWithTransitionMatrixForThres(self, pageRank, thres, transitionMatrixInSparse):
+    def runPPRWithTransitionMatrixForThres(self, pageRank, thres, transitionMatrixInSparse, teleportationVector):
         iterCount = 0
+        randomJumpProb = teleportationVector * self.beta
         while (True):
             prevPageRank = pageRank
-            pageRank = transitionMatrixInSparse @ pageRank
+            jumpFromNeighboursPrb = (1 - self.beta) * (transitionMatrixInSparse @ pageRank)
+            pageRank = jumpFromNeighboursPrb + randomJumpProb
 
             error = np.linalg.norm(pageRank - prevPageRank)
             if error < thres: break
 
-            if iterCount % 1 == 0: print("Iteration: {} | Error: {}".format(iterCount, error))
+            if iterCount % 500 == 0: print("Iteration: {} | Error: {}".format(iterCount, error))
             iterCount += 1
 
         return pageRank
 
-    def runPPRWithTransitionMatrixForIter(self, pageRank, iter, transitionMatrixInSparse):
+    def runPPRWithTransitionMatrixForIter(self, pageRank, iter, transitionMatrixInSparse, teleportationVector):
+        randomJumpProb = teleportationVector * self.beta
         for iterCount in range(0, iter):
             prevPageRank = pageRank
-            pageRank = transitionMatrixInSparse @ pageRank
+            jumpFromNeighboursPrb = (1-self.beta) * (transitionMatrixInSparse @ pageRank)
+            pageRank = jumpFromNeighboursPrb + randomJumpProb
 
             error = np.linalg.norm(pageRank - prevPageRank)
-            print("Iteration: {} | Error: {}".format(iterCount, error))
+            if iterCount % 500 == 0: print("Iteration: {} | Error: {}".format(iterCount, error))
 
         return pageRank
 
@@ -163,7 +177,7 @@ class GraphArchiver:
         :return: imageIds of K similar images
         '''
 
-        pageRank = self.getPersonalisedPageRankForThreeImages(imageIds, thres=1e-50)
+        pageRank = self.getPersonalisedPageRankForThreeImages(imageIds, thres=1e-05)
         return np.flip(np.argsort(pageRank))[0:K]
 
 
