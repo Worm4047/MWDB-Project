@@ -19,8 +19,17 @@ class ImageHelper:
     def getImageName(self, imagePath):
         return os.path.basename(imagePath).split('.')[0]
 
+    def getRGBImage(self, imagePath):
+        return cv2.cvtColor(cv2.imread(imagePath, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+
+    def getBGRImage(self, imagePath):
+        return cv2.imread(imagePath, cv2.IMREAD_COLOR)
+
+    def getRGBImageFromBGRImage(self, imagePath):
+        return cv2.imread(imagePath, cv2.IMREAD_COLOR)
+
     def getImagePath(self, imageName):
-        return os.path.join(DATABASE_PATH, imageName, ".jpg")
+        return os.path.join(DATABASE_PATH, imageName + ".jpg")
 
     def getImageFeatures(self, imagePath, modelType, retriveshape=False):
         if not isinstance(modelType, ModelType):
@@ -45,3 +54,28 @@ class ImageHelper:
             if modelType == ModelType.LBP:
                 return LBP(self.getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3).getFeatures()
 
+    def draw_grid(self, img, line_color=(0, 255, 0), thickness=2, type_=cv2.LINE_AA):
+        '''(ndarray, 3-tuple, int, int) -> void
+        draw gridlines on img
+        line_color:
+            BGR representation of colour
+        thickness:
+            line thickness
+        type:
+            8, 4 or cv2.LINE_AA
+        pxstep:
+            grid line frequency in pixels
+        '''
+        pxstep = 100
+        pystep = 100
+        x = pxstep
+        y = pystep
+        while x < img.shape[1]:
+            cv2.line(img, (x, 0), (x, img.shape[0]), color=line_color, lineType=type_, thickness=thickness)
+            x += pxstep
+
+        while y < img.shape[0]:
+            cv2.line(img, (0, y), (img.shape[1], y), color=line_color, lineType=type_, thickness=thickness)
+            y += pystep
+
+        return img
