@@ -2,6 +2,7 @@ from src.common.imageHelper import ImageHelper
 from src.common.imageIndex import ImageIndex
 from src.partition.graphArchiver import GraphArchiver
 from src.archive.plotHelper import plotFigures
+from src.models.enums.models import ModelType
 import numpy as np
 
 class Task3:
@@ -9,10 +10,10 @@ class Task3:
     imageIndex = None
     graphArchiver = None
 
-    def __init__(self, k):
+    def __init__(self, k, modelType=ModelType.CM):
         self.imageHelper = ImageHelper()
         self.imageIndex = ImageIndex()
-        self.graphArchiver = GraphArchiver(k)
+        self.graphArchiver = GraphArchiver(k, modelTypes=[ModelType.CM, ModelType.HOG])
 
     def getSimilarImagePaths(self, K, queryImagePaths):
         queryImageIds = self.imageIndex.getImageIds(queryImagePaths)
@@ -24,7 +25,7 @@ class Task3:
         imagePaths = self.getSimilarImagePaths(K, queryImagePaths)
         imageDict = {}
         for imagePath in imagePaths:
-            imageDict[self.imageHelper.getImageName(imagePath)] = self.imageHelper.draw_grid(self.imageHelper.getRGBImage(imagePath))
+            imageDict[self.imageHelper.getImageName(imagePath)] = self.imageHelper.getRGBImage(imagePath)
 
         plotFigures(imageDict)
 

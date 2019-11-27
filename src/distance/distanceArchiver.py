@@ -23,7 +23,7 @@ class DistanceArchiver:
     modelType = None
     distanceType = None
 
-    def __init__(self, modelType=ModelType.CM, distanceType=DistanceType.EUCLIDEAN, checkArchive=False):
+    def __init__(self, modelType=ModelType.CM, distanceType=DistanceType.EUCLIDEAN):
         self.imageHelper = ImageHelper()
         self.distanceCalculator = DistanceCalculator()
         self.imageIndex = ImageIndex()
@@ -32,9 +32,8 @@ class DistanceArchiver:
         self.dimRedHelper = DimRedHelper()
         self.modelType = modelType
         self.distanceType = distanceType
-        if checkArchive:
-            self.checkDistancesStoreDir()
-            self.createPairWiseDistances()
+        self.checkDistancesStoreDir()
+        self.createPairWiseDistances()
 
     def checkDistancesStoreDir(self):
         if not os.path.isdir(DISTANCES_MATRIX_STORE):
