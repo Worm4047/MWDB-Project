@@ -1,8 +1,8 @@
-import enum
+from enum import Enum
 import numpy as np
 from scipy import spatial
 
-class DistanceType(enum):
+class DistanceType(Enum):
     COSINE_SIMILARITY=1
     EUCLIDEAN=2
 
@@ -14,4 +14,4 @@ class DistanceCalculator:
         if distanceType == DistanceType.EUCLIDEAN:
             return np.linalg.norm(a - b)
         elif distanceType == DistanceType.COSINE_SIMILARITY:
-            return spatial.distance.cosine(a, b)
+            return spatial.distance.cosine(a.flatten(), b.flatten())
