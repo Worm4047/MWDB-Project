@@ -406,12 +406,12 @@ def helper():
         key = y_predict[i]
         img = testImageNames[i]
         print(img, key)
-        if key == 1:
+        if key == -1:
             palmarImages.append(img)
         else:
             dorsalImages.append(img)
     
-    return palmarImages, dorsalImages, accuracy_score
+    return palmarImages, dorsalImages, correct*1.0/len(y_predict)
 
 if __name__ == "__main__":
     helper()

@@ -1,6 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 from src.task2 import helper
 import src.task5 as t5
+import src.task4_run as t4svm
 import json
 from random import shuffle
 import os
@@ -81,6 +82,15 @@ def task3():
 
 @app.route("/task4/")
 def task4():
+    dorsalImages, palmarImages, accuracy_score = t4svm.helper()
+    dorsalImages2, palmarImages2 = [], []
+    for img in dorsalImages:
+        dorsalImages2.append(getPathForStatic(img))
+    for img in palmarImages:
+        palmarImages2.append(getPathForStatic(img))
+    dorsalImages = dorsalImages2
+    palmarImages = palmarImages2
+    return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
     return "TASK 4 TO BE DONE"
 
 @app.route("/task5/")
