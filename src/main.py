@@ -2,6 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 from src.task2 import helper
 import src.task5 as t5
 import json
+from random import shuffle
 import os
 app = Flask(__name__)
 
@@ -47,7 +48,7 @@ def task2():
     dorsalImages = getLabelledImages(True)
     palmarImages = getLabelledImages(False)
     queryImages = getQueryImageResuls()
-
+    shuffle(queryImages['PALMAR'])
     for key in dorsalImages:
         li = []
         for elem in dorsalImages[key]:

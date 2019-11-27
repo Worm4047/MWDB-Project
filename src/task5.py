@@ -41,9 +41,6 @@ class LSH:
                         hash_vec[i][buckets[i]] = []
                     if img_id not in hash_vec[i][buckets[i]]:
                         hash_vec[i][buckets[i]].append(img_id)
-        # TODO save hashtable somewhere
-        # if verbose:
-        #     pprint(hash_table)
         return hash_table
 
     def init_hash_table(self):
@@ -64,19 +61,14 @@ class LSH:
             hash_vec = hash_table[layer_idx]
             
             buckets = self.hash_obj.hash(query_point, layer, self.b[layer_idx], self.w)
-            # try:
             cand = hash_vec[0][buckets[0]].copy()
-            # self.test(hash_vec[1])
             for ix, idx in enumerate(buckets[1:num_conjunctions]):
-                # needs ix+1 since we already took care of index 0
                 cand = set(cand)
                 cand = cand.intersection(set(hash_vec[ix + 1][idx]))
             candidate_imgs = candidate_imgs.union(cand)
             if len(candidate_imgs) >=  k:
-                # print(f'Early stopping at layer {layer_idx} found {len(candidate_imgs) }')
+                print(f'Early stopping at layer {layer_idx} found {len(candidate_imgs) }')
                 return candidate_imgs
-            # except:
-            #     pass
         if len(candidate_imgs) < k:
             if num_conjunctions > 1:
                 self.num_hash -= 1
@@ -158,7 +150,7 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
 
 def helper():
     # Number of hashes per layer
-    k = 30
+    k = 100
     # Number of layers
     l = 100
     #Similar IMgaes
