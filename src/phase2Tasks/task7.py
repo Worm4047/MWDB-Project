@@ -133,5 +133,5 @@ def task7(k, csvFilePath, databasePath, destpath, filepath):
         for j in range(len(t[i])):
             k = t[i][j][0]
             print("Subject Id:",key[k],"\t Weight:",t[i][j][1])
-            
+
 print("Execution Time :",( time.time()-start_time))
