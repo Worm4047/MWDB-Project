@@ -23,47 +23,48 @@ def helper():
 
     path = '/Users/studentworker/PycharmProjects/phase_3/test/sample/Labelled/Set1/'
     csvPath = '/Users/studentworker/PycharmProjects/phase_3/HandInfo.csv'
-    inputPath = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/input/'
+    inputPath = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/input2/'
     all_dorsal_left_images = getLabelledDorsalLeftImages(csvPath, pathDorsal)
     all_dorsal_right_images = getLabelledDorsalRightImages(csvPath, pathDorsal)
     all_palmar_left_images = getLabelledPalmarRightImages(csvPath, pathPalmar)
     all_palmar_right_images = getLabelledPalmarLeftImages(csvPath, pathPalmar)
     inputImages = glob.glob(inputPath + "*.jpg")
+    print(len(inputImages))
     obj = DimRedHelper()
     print("Dorsal Left")
-    dataMatrixDorsalLeft = obj.getDataMatrixForSIFT(all_dorsal_left_images, [])
-    dataMatrixDorsalLeft = np.stack(dataMatrixDorsalLeft, axis=0)
+    dataMatrixDorsalLeft = obj.getDataMatrix(all_dorsal_left_images, ModelType.SIFT)
+    # dataMatrixDorsalLeft = np.stack(dataMatrixDorsalLeft, axis=0)
     print("Dorsal Right")
-    dataMatrixDorsalRight = obj.getDataMatrixForSIFT(all_dorsal_right_images, [])
-    dataMatrixDorsalRight = np.stack(dataMatrixDorsalRight, axis=0)
+    dataMatrixDorsalRight = obj.getDataMatrix(all_dorsal_right_images, ModelType.SIFT)
+    # dataMatrixDorsalRight = np.stack(dataMatrixDorsalRight, axis=0)
     print("Palmar Left")
-    dataMatrixPalmarLeft = obj.getDataMatrixForSIFT(all_palmar_left_images, [])
-    dataMatrixPalmarLeft = np.stack(dataMatrixPalmarLeft, axis=0)
+    dataMatrixPalmarLeft = obj.getDataMatrix(all_palmar_left_images, ModelType.SIFT)
+    # dataMatrixPalmarLeft = np.stack(dataMatrixPalmarLeft, axis=0)
     print("Palmar Right")
-    dataMatrixPalmarRight = obj.getDataMatrixForSIFT(all_palmar_right_images, [])
-    dataMatrixPalmarRight = np.stack(dataMatrixPalmarRight, axis=0)
+    dataMatrixPalmarRight = obj.getDataMatrix(all_palmar_right_images, ModelType.SIFT)
+    # dataMatrixPalmarRight = np.stack(dataMatrixPalmarRight, axis=0)
 
-    dataMatrixInput = obj.getDataMatrixForSIFT(inputImages, [])
-    dataMatrixInput = np.stack(dataMatrixInput, axis=0)
+    dataMatrixInput = obj.getDataMatrix(inputImages, ModelType.SIFT)
+    # dataMatrixInput = np.stack(dataMatrixInput, axis=0)
 
-    reductionType = ReductionType.LDA
+    reductionType = ReductionType.PCA
     modelType = ModelType.SIFT
     k = 15
 
     dimRedHelper = LatentSemantic()
     dorsalLeftSemantic = dimRedHelper.getLatentSemantic(k, reductionType, dataMatrixDorsalLeft, modelType,
                                                         LabelType.DORSAL, pathDorsal, all_dorsal_left_images)
-    U_dorsal_left, V_dorsal_left = dorsalLeftSemantic
+    U_dorsal_left, V_dorsal_left = dorsalLeftSemantic[0], dorsalLeftSemantic[1]
     dorsalRightSemantic = dimRedHelper.getLatentSemantic(k, reductionType, dataMatrixDorsalRight, modelType,
                                                          LabelType.DORSAL, pathDorsal, all_dorsal_right_images)
-    U_dorsal_right, V_dorsal_right = dorsalRightSemantic
+    U_dorsal_right, V_dorsal_right = dorsalRightSemantic[0], dorsalRightSemantic[1]
 
     palmarLeftSemantic = dimRedHelper.getLatentSemantic(k, reductionType, dataMatrixPalmarLeft, modelType,
                                                         LabelType.PALMER, pathPalmar, all_palmar_left_images)
-    U_palmar_left, V_palmar_left = palmarLeftSemantic
+    U_palmar_left, V_palmar_left = palmarLeftSemantic[0], palmarLeftSemantic[1]
     palmarRightSemantic = dimRedHelper.getLatentSemantic(k, reductionType, dataMatrixPalmarRight, modelType,
                                                          LabelType.PALMER, pathPalmar, all_palmar_right_images)
-    U_palmar_right, V_palmar_right = palmarRightSemantic
+    U_palmar_right, V_palmar_right = palmarRightSemantic[0], palmarRightSemantic[1]
 
     V_dorsal_left_norm = normalize(V_dorsal_left, axis=0, norm='max')
     U_dorsal_left_norm = normalize(U_dorsal_left, axis=0, norm='max')
@@ -169,6 +170,7 @@ def helper():
     print("*********** USING SUM *************")
     # Using SUM
     index = 0
+    label_final = []
     for row in dataMatrixInput:
         total_left_dorsal = 0
         total_right_dorsal = 0
@@ -198,14 +200,20 @@ def helper():
 
         if distances.index(minRatio) is 0:
             print(inputImages[index] + ": DORSAL LEFT :", (' '.join(map(str, distances))))
+            label_final.append("DORSAL")
         elif distances.index(minRatio) is 1:
             print(inputImages[index] + ": DORSAL RIGHT :", (' '.join(map(str, distances))))
+            label_final.append("DORSAL")
         elif distances.index(minRatio) is 2:
             print(inputImages[index] + ": PALMAR LEFT :", (' '.join(map(str, distances))))
+            label_final.append("PALMAR")
         elif distances.index(minRatio) is 3:
             print(inputImages[index] + ": PALMAR RIGHT :", (' '.join(map(str, distances))))
+            label_final.append("PALMAR")
 
         index += 1
+
+
 
     print("*********** USING MEAN *************")
     # Using Mean distance
@@ -253,6 +261,8 @@ def helper():
             print(inputImages[index] + ": PALMAR RIGHT :", (' '.join(map(str, distances))))
 
         index += 1
+
+    return inputImages, label_final
 
 
 # This is the main function
@@ -303,4 +313,4 @@ def getLabelledImages(csvPath, imagePath, dorsal, hand):
     return images
 
 
-helper()
+images, labels = helper()

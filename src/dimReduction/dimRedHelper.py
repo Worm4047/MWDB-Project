@@ -25,7 +25,7 @@ from src.common.imageHelper import ImageHelper
 class DimRedHelper():
     def __init__(self):
         pass
-    def getDataMatrix(self, imagePaths, modelType, label, directoryPath=None):
+    def getDataMatrix(self, imagePaths, modelType, label=None, directoryPath=None):
         imageFomat = "jpg"
         # print(directoryPath)
         if modelType is None:
@@ -52,7 +52,7 @@ class DimRedHelper():
                 self.getDataMatrixForHOG(imagePaths, dataMatrix)
             if modelType == ModelType.SIFT:
                 self.getDataMatrixForSIFT(imagePaths, dataMatrix)
-            # save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
+            save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
         return np.array(dataMatrix, dtype=np.float)
 
     def getDataMatrixForCM(self, imagePaths, dataMatrix):
@@ -82,7 +82,7 @@ class DimRedHelper():
         return dataMatrix
 
     def getClusters(self, descriptors):
-        CLUSTERS_COUNT = 10
+        CLUSTERS_COUNT = 20
         wcss = []
         finalclusters = len(descriptors)
         kmeans = KMeans(n_clusters=CLUSTERS_COUNT, init='k-means++', max_iter=300, n_init=10, random_state=0)
