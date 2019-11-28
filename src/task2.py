@@ -7,7 +7,6 @@ import json
 import scipy
 import matplotlib
 import networkx as nx
-import seaborn as sns
 from src.dimReduction.dimRedHelper import DimRedHelper
 from src.models.enums.models import ModelType
 from src.common import comparisonHelper

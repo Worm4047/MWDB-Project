@@ -10,10 +10,12 @@ class Task3:
     imageIndex = None
     graphArchiver = None
 
-    def __init__(self, k, modelType=ModelType.CM):
+    def __init__(self, k, modelTypes=None):
+        if modelTypes is None:
+            modelTypes = [ModelType.CM, ModelType.HOG]
         self.imageHelper = ImageHelper()
         self.imageIndex = ImageIndex()
-        self.graphArchiver = GraphArchiver(k, modelTypes=[ModelType.CM, ModelType.HOG])
+        self.graphArchiver = GraphArchiver(k, modelTypes=modelTypes)
 
     def getSimilarImagePaths(self, K, queryImagePaths):
         queryImageIds = self.imageIndex.getImageIds(queryImagePaths)

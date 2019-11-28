@@ -8,14 +8,12 @@ from src.models.enums.models import ModelType
 
 def init():
     ImageIndex()
-    FeatureArchiver(modelType=ModelType.HOG)
-    ga = GraphArchiver(10)
     imagePaths = [
-        "/Users/yvtheja/Documents/Dataset2/Hand_0000171.jpg",
-        "/Users/yvtheja/Documents/Dataset2/Hand_0000173.jpg",
-        "/Users/yvtheja/Documents/Dataset2/Hand_0000174.jpg"
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000023.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000024.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000025.jpg"
     ]
-    Task3(10, modelType=ModelType.HOG).visualiseSimilarImages(10, imagePaths)
+    Task3(10, modelTypes=[ModelType.HOG]).visualiseSimilarImages(10, imagePaths)
 
 
 if __name__ == "__main__":

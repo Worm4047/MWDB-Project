@@ -59,7 +59,6 @@ class GraphArchiver:
 
         return distanceMatrix
 
-
     def createGraph(self):
         if os.path.exists(self.getGraphFilePath(GraphType.UNWEIGHTED)): return
 
@@ -67,16 +66,16 @@ class GraphArchiver:
         distance_matrix = distance_matrix[:, 1:]
         distanceMatrixLen = len(distance_matrix)
 
+        similarityMatrix = np.exp(-distance_matrix)
+
         for colIndex in range(0, self.imagesCount):
-            col = distance_matrix[:, colIndex]
-            adjacent_items = [arg for arg in np.argsort(col)[1:self.k + 1]]
+            col = similarityMatrix[:, colIndex]
+            adjacent_items = [arg for arg in np.flip(np.argsort(col))[1:self.k + 1]]
             newCol = [0 for j in range(0, distanceMatrixLen)]
             for adjacent_item in adjacent_items:
                 newCol[adjacent_item] = col[adjacent_item]
 
-            distance_matrix[:, colIndex] = newCol
-
-        similarityMatrix = np.exp(-distance_matrix)
+            similarityMatrix[:, colIndex] = newCol
 
         self.saveGraph(similarityMatrix, GraphType.WEIGHTED_UNNORMALISED)
         self.normaliseEdgesForNodes(similarityMatrix)
@@ -152,6 +151,8 @@ class GraphArchiver:
 
         initialPageRank = teleportationVector
 
+        # return self.get_personalized_page_rank_general(transitionMatrixInSparse.todense(), imageIds)
+
         if iter is not None:
             return self.runPPRWithTransitionMatrixForIter(initialPageRank, iter, transitionMatrixInSparse, teleportationVector)
         elif thres is not None:
@@ -194,6 +195,49 @@ class GraphArchiver:
 
         pageRank = self.getPersonalisedPageRankForThreeImages(imageIds, thres=1e-05)
         return np.flip(np.argsort(pageRank))[0:K + 3]
+
+    def set_seed_values(self, rank_array, seed_values, damping_factor):
+        for seed_index in seed_values:
+            rank_array.itemset(seed_index, (1 - damping_factor) / 3)
+
+    def get_personalized_page_rank_general(self, sim_graph, imageIds, tolerance=1.0e-5):
+        return self.get_personalized_page_rank_without_transition_matrix(sim_graph, imageIds, tolerance)
+
+    def get_personalized_page_rank_without_transition_matrix(self, sim_graph, seed_values, tolerance=1.0e-5):
+        np_graph = np.array(sim_graph)
+        graph_transpose = np_graph.transpose()
+        damping_factor = 0.85
+        total_nodes = len(sim_graph)
+        error = 1
+        iteration = 0
+        # page_rank_current = np.full(shape=(total_nodes, total_nodes), fill_value=(1 - damping_factor) / total_nodes)
+        # initial_page_rank = np.full(shape=(total_nodes, total_nodes), fill_value=(1 - damping_factor) / total_nodes)
+
+        page_rank_current = np.array([0.0 for i in range(0, total_nodes)])
+        initial_page_rank = np.array([0.0 for i in range(0, total_nodes)])
+        self.set_seed_values(page_rank_current, seed_values, damping_factor)
+        self.set_seed_values(initial_page_rank, seed_values, damping_factor)
+
+        while error > tolerance:
+            index = 0
+            print("Iteration: {} | Tolerance: {}".format(iteration, error))
+            for row in graph_transpose:
+                edge_indexes = np.nonzero(row > -1)[0]
+                for edge_index in edge_indexes:
+                    page_rank_current[index] += initial_page_rank[edge_index] * damping_factor / self.k
+                index += 1
+            # page_rank_sum = np.sum(page_rank_current)
+            # page_rank_current = page_rank_current/page_rank_sum
+            error = np.linalg.norm(page_rank_current - initial_page_rank, 2)
+            initial_page_rank = page_rank_current
+            page_rank_current = np.array([0.0 for i in range(0, total_nodes)])
+            self.set_seed_values(page_rank_current, seed_values, damping_factor)
+            iteration += 1
+
+        print("Iteration: {}".format(iteration))
+
+        return initial_page_rank
+
 
 
 
