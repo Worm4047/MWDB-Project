@@ -1,4 +1,4 @@
-# MWDB Phase II
+# MWDB Phase III
 
 The project deals with finding latent semantic using different models and dimensionality reduction techniques. It also supports searching similar images based on a query image.
 
