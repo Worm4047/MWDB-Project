@@ -20,11 +20,15 @@ from src.models.LBP import LBP
 from src.models.SIFT import SIFT
 from src.models.enums.models import ModelType
 from src.common.imageHelper import ImageHelper
+from src.models.featureArchiver import FeatureArchiver
 
 
-class DimRedHelper():
+class DimRedHelper:
+    featureArchiver = None
+
     def __init__(self):
-        pass
+        self.featureArchiver = FeatureArchiver()
+
     def getDataMatrix(self, imagePaths, modelType, label=None, directoryPath=None):
         imageFomat = "jpg"
         # print(directoryPath)
@@ -58,9 +62,10 @@ class DimRedHelper():
     def getDataMatrixForCM(self, imagePaths, dataMatrix):
         imagesCount = len(imagePaths)
         for index, imagePath in enumerate(imagePaths):
-            if not os.path.exists(imagePath): continue
-            print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-            dataMatrix.append(ColorMoments(ImageHelper().getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
+            dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.CM).flatten())
+            # if not os.path.exists(imagePath): continue
+            # print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+            # dataMatrix.append(ColorMoments(ImageHelper().getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
         return dataMatrix
 
     def getDataMatrixForLBP(self, imagePaths, dataMatrix):
