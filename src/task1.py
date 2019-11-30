@@ -16,21 +16,26 @@ from src.common.enums.labels import LabelType
 
 
 # This is a temp function and is used for testing only
-def helper():
-    pathDorsal = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/dorsal/'
-    pathPalmar = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/palmar/'
+def findClusters(pathDorsal, pathPalmar, csvPath, inputPath):
     # inputPath = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/input/'
+    # path = '/Users/studentworker/PycharmProjects/phase_3/test/sample/Labelled/Set1/'
+    # pathDorsal = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/dorsal/'
+    # pathPalmar = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/palmar/'
+    # csvPath = '/Users/studentworker/PycharmProjects/phase_3/HandInfo.csv'
+    # inputPath = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/input2/'
 
-    path = '/Users/studentworker/PycharmProjects/phase_3/test/sample/Labelled/Set1/'
-    csvPath = '/Users/studentworker/PycharmProjects/phase_3/HandInfo.csv'
-    inputPath = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/input2/'
+    reductionType = ReductionType.PCA
+    modelType = ModelType.SIFT
+    k = 15
+    dimRedHelper = LatentSemantic()
+    obj = DimRedHelper()
+
     all_dorsal_left_images = getLabelledDorsalLeftImages(csvPath, pathDorsal)
     all_dorsal_right_images = getLabelledDorsalRightImages(csvPath, pathDorsal)
     all_palmar_left_images = getLabelledPalmarRightImages(csvPath, pathPalmar)
     all_palmar_right_images = getLabelledPalmarLeftImages(csvPath, pathPalmar)
     inputImages = glob.glob(inputPath + "*.jpg")
     print(len(inputImages))
-    obj = DimRedHelper()
     print("Dorsal Left")
     dataMatrixDorsalLeft = obj.getDataMatrix(all_dorsal_left_images, ModelType.SIFT)
     # dataMatrixDorsalLeft = np.stack(dataMatrixDorsalLeft, axis=0)
@@ -43,15 +48,10 @@ def helper():
     print("Palmar Right")
     dataMatrixPalmarRight = obj.getDataMatrix(all_palmar_right_images, ModelType.SIFT)
     # dataMatrixPalmarRight = np.stack(dataMatrixPalmarRight, axis=0)
-
+    print("Input Images")
     dataMatrixInput = obj.getDataMatrix(inputImages, ModelType.SIFT)
     # dataMatrixInput = np.stack(dataMatrixInput, axis=0)
 
-    reductionType = ReductionType.PCA
-    modelType = ModelType.SIFT
-    k = 15
-
-    dimRedHelper = LatentSemantic()
     dorsalLeftSemantic = dimRedHelper.getLatentSemantic(k, reductionType, dataMatrixDorsalLeft, modelType,
                                                         LabelType.DORSAL, pathDorsal, all_dorsal_left_images)
     U_dorsal_left, V_dorsal_left = dorsalLeftSemantic[0], dorsalLeftSemantic[1]
@@ -170,7 +170,8 @@ def helper():
     print("*********** USING SUM *************")
     # Using SUM
     index = 0
-    label_final = []
+    dorsal_images = []
+    palmar_images = []
     for row in dataMatrixInput:
         total_left_dorsal = 0
         total_right_dorsal = 0
@@ -200,20 +201,18 @@ def helper():
 
         if distances.index(minRatio) is 0:
             print(inputImages[index] + ": DORSAL LEFT :", (' '.join(map(str, distances))))
-            label_final.append("DORSAL")
+            dorsal_images.append(inputImages[index])
         elif distances.index(minRatio) is 1:
             print(inputImages[index] + ": DORSAL RIGHT :", (' '.join(map(str, distances))))
-            label_final.append("DORSAL")
+            dorsal_images.append(inputImages[index])
         elif distances.index(minRatio) is 2:
             print(inputImages[index] + ": PALMAR LEFT :", (' '.join(map(str, distances))))
-            label_final.append("PALMAR")
+            palmar_images.append(inputImages[index])
         elif distances.index(minRatio) is 3:
             print(inputImages[index] + ": PALMAR RIGHT :", (' '.join(map(str, distances))))
-            label_final.append("PALMAR")
+            palmar_images.append(inputImages[index])
 
         index += 1
-
-
 
     print("*********** USING MEAN *************")
     # Using Mean distance
@@ -242,7 +241,6 @@ def helper():
             palmar_dist = np.linalg.norm(palmar_right_row_reduced - palmar_row)
             total_right_palmar += palmar_dist
 
-
         dist_mean_palmar_left = total_left_palmar / len(all_dorsal_left_images)
         dist_mean_palmar_right = total_right_palmar / len(all_dorsal_right_images)
         dist_mean_dorsal_left = total_left_dorsal / len(all_dorsal_left_images)
@@ -262,19 +260,18 @@ def helper():
 
         index += 1
 
-    return inputImages, label_final
+    return dorsal_images, palmar_images
 
 
 # This is the main function
 # Input : Datamatrix computed for the images, Image paths (absolute)
 # Function :  Performs clustering of the image then visualizes them
-def task1(dm, images, c=10):
-    print(dm.shape, len(images))
-    kmeans = KMeans(n_clusters=c)
-    kmeans.fit(dm)
-    clusters = kmeans.cluster_centers_
-    for cluster in clusters:
-        print(cluster.shape)
+def task1(palmarPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/palmar/',
+            dorsalPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/dorsal/',
+            metaDataFile='/Users/studentworker/PycharmProjects/phase_3/HandInfo.csv',
+            inputPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/input2/'):
+    dorsalImages, palmarImages = findClusters(palmarPath, dorsalPath, metaDataFile, inputPath)
+    return dorsalImages, palmarImages
 
 
 def compareWithCosine(val1, val2):
@@ -313,4 +310,4 @@ def getLabelledImages(csvPath, imagePath, dorsal, hand):
     return images
 
 
-images, labels = helper()
+task1()
