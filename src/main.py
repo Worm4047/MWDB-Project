@@ -1,5 +1,5 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
-from src.task2 import helper
+import src.task2 as t2
 import src.task5 as t5
 import src.task1 as t1
 import src.task4_run as t4svm
@@ -48,11 +48,11 @@ def getPathForStatic(img):
 
 @app.route("/task2/")
 def task2():
-    # helper()
+    # t2.helper()
     dorsalImages = getLabelledImages(True)
     palmarImages = getLabelledImages(False)
     queryImages = getQueryImageResuls()
-    shuffle(queryImages['PALMAR'])
+    queryImages['PALMAR'] = reversed(queryImages['PALMAR'])
     for key in dorsalImages:
         li = []
         for elem in dorsalImages[key]:
@@ -83,8 +83,8 @@ def task2():
 def task3():
     return "TASK 3 TO BE DONE"       
 
-@app.route("/task4/")
-def task4():
+@app.route("/task4/svm")
+def task4_svm():
     dorsalImages, palmarImages, accuracy_score = t4svm.helper()
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
@@ -96,23 +96,40 @@ def task4():
     return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
     return "TASK 4 TO BE DONE"
 
+@app.route("/task4/dt")
+def task4_dt():
+    return "TASK 4 DT TO BE DONE"
+
+@app.route("/task4/ppr")
+def task4_ppr():
+    return "TASK 4 PPR TO BE DONE"
+
 @app.route("/task5/")
 def task5():
     queryImage, candidateImages = t5.helper()
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
-    candidateImagesNames = set()
+    candidateImagesNames = []
     for img in candidateImages:
-        candidateImagesNames.add(imageHelper(img))
-    candidateImages2 = set()
+        candidateImagesNames.append(imageHelper(img))
+    candidateImages2 = []
     for img in candidateImages:
-        candidateImages2.add(getPathForStatic(img))
-    candidateImages = list(candidateImages2)
+        candidateImages2.append(getPathForStatic(img))
+    candidateImages = candidateImages2
     print(candidateImages)
     return render_template('task5.html', queryImage = queryImage, queryImageName = queryImageName, candidateImages = candidateImages, candidateImagesNames = candidateImagesNames, len = len(candidateImages))
 
 @app.route("/task6/")
 def task6():
-    return "TASK 6 TO BE DONE"
+    images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
+    return render_template("task6.html", images = images)
+
+@app.route("/process_feedback", methods = ['GET', 'POST'])
+def process_feedback():
+    images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
+    shuffle(images)
+    data = request.get_json().get('data')
+    print(data)
+    return render_template("imageList.html", images = images);
 if __name__ == "__main__":
     app.run()

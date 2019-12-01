@@ -196,6 +196,6 @@ def helper():
     dmqueryImages = obj.getDataMatrixForLBP(queryImages, [])
     dmqueryImages = np.stack( dmqueryImages, axis=0 )
     obj = Task2(dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages)
-
+    
 if __name__ == '__main__':
     helper()

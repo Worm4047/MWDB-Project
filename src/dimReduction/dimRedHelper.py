@@ -20,14 +20,15 @@ from src.models.LBP import LBP
 from src.models.SIFT import SIFT
 from src.models.enums.models import ModelType
 from src.common.imageHelper import ImageHelper
-from src.models.featureArchiver import FeatureArchiver
+# from src.models.featureArchiver import FeatureArchiver
 
 
 class DimRedHelper:
     featureArchiver = None
 
     def __init__(self):
-        self.featureArchiver = FeatureArchiver()
+        # self.featureArchiver = FeatureArchiver()
+        pass
 
     def getDataMatrix(self, imagePaths, modelType, label=None, directoryPath=None):
         imageFomat = "jpg"
