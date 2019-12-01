@@ -3,6 +3,7 @@ from enum import Enum
 class ImageClass(Enum):
     DORSAL=1
     PALMAR=2
+    NONE=3
 
 # class PPRClassifier:
 #     graphPos = None
