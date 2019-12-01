@@ -11,16 +11,17 @@ from src.constants import CLASSIFICATION_IMG_DIR, CLASSIFICATION_META_CSV
 import glob
 
 def init():
-    # ImageIndex()
-    # imagePaths = [
-    #     "/Users/yvtheja/Documents/Dataset2/Hand_0011710.jpg",
-    #     "/Users/yvtheja/Documents/Dataset2/Hand_0010144.jpg",
-    #     "/Users/yvtheja/Documents/Dataset2/Hand_0008978.jpg"
-    # ]
-    # Task3(10, modelTypes=[ModelType.HOG]).visualiseSimilarImages(10, imagePaths)
+    ImageIndex()
+    imageDir = "/Users/yvtheja/Documents/Dataset2"
+    imagePaths = [
+        "/Users/yvtheja/Documents/Dataset2/Hand_0006321.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0006322.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0006323.jpg"
+    ]
+    Task3(10, imageDir, modelTypes=[ModelType.HOG],).visualiseSimilarImages(10, imagePaths)
 
-    for imagePath in glob.glob("/Users/yvtheja/Documents/Test_Set/*.jpg"):
-        print("Image class : {}".format(Task4PPRNoCache(CLASSIFICATION_IMG_DIR, CLASSIFICATION_META_CSV, modelTypes=[ModelType.CM]).getClassForImage(imagePath)))
+    # for imagePath in glob.glob("/Users/yvtheja/Documents/Test_Set/*.jpg"):
+    #     print("Image class : {}".format(Task4PPRNoCache(CLASSIFICATION_IMG_DIR, CLASSIFICATION_META_CSV, modelTypes=[ModelType.CM]).getClassForImage(imagePath)))
 
 
 if __name__ == "__main__":

@@ -192,5 +192,5 @@ class GraphArchiverNoCache:
         :return: imageIds of K similar images
         '''
 
-        pageRank = self.getPersonalisedPageRankForThreeImages(imageIds, thres=1e-05)
+        pageRank = self.getPersonalisedPageRankForImages(imageIds, thres=1e-05)
         return np.flip(np.argsort(pageRank))[0:K + 3]

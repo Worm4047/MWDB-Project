@@ -1,5 +1,5 @@
 BLOCK_SIZE = 100
-DATABASE_PATH = "/Users/yvtheja/Documents/Hands"
+DATABASE_PATH = "/Users/yvtheja/Documents/Dataset2"
 DORSAL_DATABASE_PATH = "store/dorsalImages"
 PALMAR_DATABASE_PATH = "store/palmarImages"
 IMAGE_IDS_CSV = "store/imageIds.csv"
