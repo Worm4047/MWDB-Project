@@ -17,21 +17,25 @@ class GraphType(Enum):
     UNWEIGHTED=3
 
 class GraphArchiver:
-    modelType = None
+    modelTypes = []
     distanceType = None
     graphFolderName = None
-    distanceArchiver = None
+    distanceArchivers = []
     imageIndex = None
     imageHelper = None
     imagesCount = None
     beta = 0.15
 
-    def __init__(self, k, modelType=ModelType.CM, distanceType=DistanceType.EUCLIDEAN):
-        self.modelType = modelType
+    def __init__(self, k, modelTypes=None, distanceType=DistanceType.EUCLIDEAN):
+        if modelTypes is None:
+            modelTypes = [ModelType.CM]
+
+        self.modelTypes = modelTypes
         self.distanceType = distanceType
         self.k = k
         self.graphFolderName = self.getGraphFolderName()
-        self.distanceArchiver = DistanceArchiver()
+        for modelType in modelTypes:
+            self.distanceArchivers.append(DistanceArchiver(modelType=modelType))
         self.imageIndex = ImageIndex()
         self.imageHelper = ImageHelper()
         self.setImagesCount()
@@ -45,10 +49,21 @@ class GraphArchiver:
         if not os.path.exists(self.graphFolderName):
             os.makedirs(self.graphFolderName)
 
+    def getDistanceMatrix(self):
+        distanceMatrix = None
+        for distanceArchiver in self.distanceArchivers:
+            if distanceMatrix is None:
+                distanceMatrix = distanceArchiver.getDistances().to_numpy()
+            else:
+                distanceMatrix += distanceArchiver.getDistances().to_numpy()
+
+        return distanceMatrix
+
+
     def createGraph(self):
         if os.path.exists(self.getGraphFilePath(GraphType.UNWEIGHTED)): return
 
-        distance_matrix = self.distanceArchiver.getDistances().to_numpy()
+        distance_matrix = self.getDistanceMatrix()
         distance_matrix = distance_matrix[:, 1:]
         distanceMatrixLen = len(distance_matrix)
 
@@ -88,7 +103,7 @@ class GraphArchiver:
                 print("Bug in row: {} | val: {}".format(index, np.sum(matrix[index])))
 
     def getGraphFolderName(self):
-        return os.path.join(GRAPH_STORE, "{}_{}_{}".format(self.modelType.name, self.distanceType.name, self.k))
+        return os.path.join(GRAPH_STORE, "{}_{}_{}".format(",".join([x.name for x in self.modelTypes]), self.distanceType.name, self.k))
 
     def saveGraph(self, matrix, graphType):
         '''
@@ -178,7 +193,7 @@ class GraphArchiver:
         '''
 
         pageRank = self.getPersonalisedPageRankForThreeImages(imageIds, thres=1e-05)
-        return np.flip(np.argsort(pageRank))[0:K]
+        return np.flip(np.argsort(pageRank))[0:K + 3]
 
 
 

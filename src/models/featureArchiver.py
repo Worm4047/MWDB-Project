@@ -16,12 +16,11 @@ class FeatureArchiver:
     distanceCalculator = None
     imageIndex = None
 
-    def __init__(self, modelType=ModelType.CM, checkArchive=False):
+    def __init__(self, modelType=ModelType.CM):
         self.imageHelper = ImageHelper()
         self.imageIndex = ImageIndex()
-        if checkArchive:
-            self.checkFeaturesStoreDir()
-            self.createFeatureVectors(modelType)
+        self.checkFeaturesStoreDir()
+        self.createFeatureVectors(modelType)
 
     def checkFeaturesStoreDir(self):
         if not os.path.isdir(FEATURE_STORE):

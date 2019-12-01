@@ -1,0 +1,10 @@
+
+    {% for img in images %}
+
+        <div class="card" style="width: 18rem;">
+        <img src={{url_for("static", filename=img)}} alt={{queryImageName}} class="card-img-top">
+        <div class="card-body" >
+            <h5>{{img}}</h5>
+            </div>
+        </div>
+    {% endfor %} 

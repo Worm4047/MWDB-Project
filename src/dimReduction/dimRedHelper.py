@@ -20,14 +20,15 @@ from src.models.LBP import LBP
 from src.models.SIFT import SIFT
 from src.models.enums.models import ModelType
 from src.common.imageHelper import ImageHelper
-from src.models.featureArchiver import FeatureArchiver
+# from src.models.featureArchiver import FeatureArchiver
 
 
 class DimRedHelper:
     featureArchiver = None
 
     def __init__(self):
-        self.featureArchiver = FeatureArchiver()
+        # self.featureArchiver = FeatureArchiver()
+        pass
 
     def getDataMatrix(self, imagePaths, modelType, label=None, directoryPath=None):
         imageFomat = "jpg"
@@ -56,7 +57,7 @@ class DimRedHelper:
                 self.getDataMatrixForHOG(imagePaths, dataMatrix)
             if modelType == ModelType.SIFT:
                 self.getDataMatrixForSIFT(imagePaths, dataMatrix)
-            # save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
+            save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
         return np.array(dataMatrix, dtype=np.float)
 
     def getDataMatrixForCM(self, imagePaths, dataMatrix):
@@ -87,7 +88,7 @@ class DimRedHelper:
         return dataMatrix
 
     def getClusters(self, descriptors):
-        CLUSTERS_COUNT = 10
+        CLUSTERS_COUNT = 20
         wcss = []
         finalclusters = len(descriptors)
         kmeans = KMeans(n_clusters=CLUSTERS_COUNT, init='k-means++', max_iter=300, n_init=10, random_state=0)

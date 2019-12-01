@@ -30,6 +30,25 @@ class SIFT(Model):
         sift = cv2.xfeatures2d.SIFT_create()
         return sift.detectAndCompute(imageGray, None)
 
+    def getSimilarityScore(self, siftModel):
+        if not isinstance(siftModel, SIFT):
+            raise ValueError("siftModel should be of SIFT")
+
+        des1 = self.getSIFTFeatures()
+        des2 = siftModel.getFeatures()
+
+        # BFMatcher with default params
+        bf = cv2.BFMatcher()
+        matches = bf.knnMatch(des1, des2, k=2)
+
+        # Apply ratio test
+        good = []
+        for m, n in matches:
+            if m.distance < 0.75 * n.distance:
+                good.append([m])
+
+
+
     def compare(self, siftModel):
         if not isinstance(siftModel, SIFT):
             raise ValueError("Not a SIFT model")
