@@ -54,7 +54,7 @@ $('#submitButton').on('click', function(event){
     jQuery.ajax({
         contentType: "application/json; charset=utf-8",
         type: "POST",
-        url: "/process_feedback",
+        url: "/process_feedback_svm",
         data: JSON.stringify({'data' : data}),
         success: function(data, status){
             $('.images').empty();

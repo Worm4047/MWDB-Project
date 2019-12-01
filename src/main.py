@@ -1,11 +1,16 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import src.task2 as t2
 import src.task5 as t5
+import src.task6_svm as t6_svm
 # import src.task1 as t1
 import src.task4_run as t4svm
 import json
 from random import shuffle
 import os
+from src.tasks.task3 import Task3
+
+from src.models.enums.models import ModelType
+from src.tasks.task6PPR import Task6PPR
 app = Flask(__name__)
 
 @app.route("/")
@@ -81,7 +86,18 @@ def task2():
 
 @app.route("/task3/")
 def task3():
-    return "TASK 3 TO BE DONE"       
+    imageDir = "static/Dataset2"
+    queryImagePaths = [
+        "static/Dataset2/Hand_0000010.jpg",
+        "static/Dataset2/Hand_0000011.jpg",
+        "static/Dataset2/Hand_0000012.jpg"
+    ]
+    queryImagePathsForRender = [os.path.relpath(imagePath, "static/") for imagePath in queryImagePaths]
+    capitalK = 10
+    smallK = 10
+    paths = Task3(smallK, imageDir, modelTypes=[ModelType.HOG]).getSimilarImagePaths(capitalK, queryImagePaths)
+    pathsToRender = [os.path.relpath(imagePath, "static/") for imagePath in paths]
+    return render_template('task3.html', images=pathsToRender, queryImages=queryImagePathsForRender)
 
 @app.route("/task4/svm")
 def task4_svm():
@@ -119,17 +135,45 @@ def task5():
     print(candidateImages)
     return render_template('task5.html', queryImage = queryImage, queryImageName = queryImageName, candidateImages = candidateImages, candidateImagesNames = candidateImagesNames, len = len(candidateImages))
 
-@app.route("/task6/")
-def task6():
-    images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
-    return render_template("task6.html", images = images)
+@app.route("/task6_svm")
+def task6_svm():
+    images = t6_svm.getImages()[:10]
+    print(images)
+    images = [getPathForStatic(imagePath) for imagePath in images]
+    print(images)
+    return render_template("task6_svm.html", images=images)
 
-@app.route("/process_feedback", methods = ['GET', 'POST'])
-def process_feedback():
-    images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
-    shuffle(images)
+@app.route("/task6_ppr")
+def task6_ppr():
+    images = ['Dataset2/Hand_0006333.jpg',
+              'Dataset2/Hand_0006332.jpg',
+              'Dataset2/Hand_0006331.jpg',
+              'Dataset2/Hand_0000002.jpg',
+              'Dataset2/Hand_0000003.jpg',
+              'Dataset2/Hand_0000005.jpg',
+              'Dataset2/Hand_0000008.jpg']
+
+    return render_template("task6_ppr.html", images=images)
+
+@app.route("/process_feedback_ppr", methods = ['GET', 'POST'])
+def process_feedback_ppr():
+    # images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
+    # shuffle(images)
     data = request.get_json().get('data')
-    print(data)
+    imagesTemp = Task6PPR().getRelaventImages(data)
+    images = [os.path.relpath(imagePath, "static/") for imagePath in imagesTemp]
     return render_template("imageList.html", images = images);
+
+@app.route("/process_feedback_svm", methods = ['GET', 'POST'])
+def process_feedback_svm():
+    # images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
+    # shuffle(images)
+    data = request.get_json().get('data')
+    data['relevant'] = [os.path.abspath('src') + img for img in data['relevant']]
+    data['nonrelevant'] = [os.path.abspath('src') + img for img in data['nonrelevant']]
+    imagesTemp = t6_svm.helper(data)
+    images = [getPathForStatic(imagePath) for imagePath in imagesTemp]
+    return render_template("imageList.html", images = images);
+
 if __name__ == "__main__":
     app.run()

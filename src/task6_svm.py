@@ -101,8 +101,13 @@ def getImages():
 def helper(d):
     liImages = []
     labels = []
-    
+    t = 10
+
     try:
+        
+        with open('src/store/lsh_candidate_images.pkl', 'rb') as f2:
+            temp = pickle.load(f2)
+            t = len(temp)
         with open('src/store/task6_svm_iteration_images.pkl', 'rb') as f2:
             liImages = pickle.load(f2) 
         with open('src/store/task6_svm_iteration_labels.pkl', 'rb') as f2:
@@ -110,24 +115,21 @@ def helper(d):
     except:
         pass
 
-    # Todo
-    #1. Overwrite latest value for the image
-    #2. link with ui
-
-    for img  in d['relevant']:
+    for img in d['relevant']:
         if img not in liImages:
             liImages.append(img)
             labels.append(1)
         else:
-            indx = liImages.find(img)
-            labels[idx] = 1
+            indx = liImages.index(img)
+            labels[indx] = 1
+
     for img in d['nonrelevant']:
         if img not in liImages:
             liImages.append(img)
-            labels.append(-1)
+            labels.append(0)
         else:
-            indx = liImages.find(img)
-            labels[idx] = -1
+            indx = liImages.index(img)
+            labels[indx] = 0
 
     print("Labels len {} images len {}".format(len(liImages), len(labels)))
 
@@ -136,15 +138,17 @@ def helper(d):
 
     with open('src/store/task6_svm_iteration_labels.pkl', 'wb') as f2:
         pickle.dump(labels, f2)
-
+    
     names = getImages()
     obj = DimRedHelper()
-    features = obj.getDataMatrixForHOG(names, [])
+
+    features1 = obj.getDataMatrixForHOG(names, [])
+    features2 = obj.getDataMatrixForHOG(liImages, [])
 
     relevance_labels = []
     train_data = []
     pca = PCA()
-    pca.fit(features)
+    pca.fit(features1)
     ratio = 0.0
     m = 0
     for i in range(len(pca.explained_variance_ratio_)):
@@ -155,112 +159,34 @@ def helper(d):
     if m > 10:
         m = 10
     pca = PCA(m)
-    features = pca.fit_transform(features)
+    features1 = pca.fit_transform(features1)
+    features2 = pca.transform(features2)
 
     for i in range(len(liImages)):
         if labels[i] == 0:
             relevance_labels.append(-1)
-            train_data.append(features[i])
+            train_data.append(features2[i])
             continue
         if labels[i] == 1:
             relevance_labels.append(1)
-            train_data.append(features[i])
+            train_data.append(features2[i])
     train_data = np.asarray(train_data)
-    # assume relevance is 1, non-relevance is -1
+
     sample_size = train_data.shape[0]
     alpha, b = SMO(C=100.0, tol=1e-4, train_data=train_data, labels=relevance_labels,
                     kernel=Linear_kernel, max_passes=3)
     scores = []
-    for i in range(features.shape[0]):
-        sample = features[i]
+    for i in range(features1.shape[0]):
+        sample = features1[i]
         score = f(alpha, relevance_labels, Linear_kernel, train_data, sample, b)
         scores.append(score)
     score_indexes = list(np.argsort(scores))
     score_indexes.reverse()  # decreasing order
     reordered_img_names = [names[index] for index in score_indexes]
-    print(reordered_img_names)
-    return reordered_img_names[:len(labels)]
+    return reordered_img_names[:t]
 
 if __name__ == '__main__':
     iteration = 0
     names = []
     d = {'relevant': ['/static/sample_data/Hands/Hand_0006333.jpg', '/static/sample_data/Hands/Hand_0006332.jpg', '/static/sample_data/Hands/Hand_0000005.jpg'], 'nonrelevant': ['/static/sample_data/Hands/Hand_0006331.jpg', '/static/sample_data/Hands/Hand_0000002.jpg', '/static/sample_data/Hands/Hand_0000003.jpg', '/static/sample_data/Hands/Hand_0000008.jpg']}
     helper(d)
-    helper(d)
-    # print(getImages())
-    # while iteration < 2:
-    #     if iteration == 0:
-    #         path_labelled_images = 'D:/studies/multimedia and web databases/project/Hands/Hands/'
-    #         names = []
-    #         for filename in glob.glob(path_labelled_images + "*.jpg"):
-    #             names.append(filename)
-
-    #         shuffle(names)
-    #         names = names[:5]
-
-    #     obj = DimRedHelper()
-    #     features = obj.getDataMatrixForHOG(names, [])
-    #     labels = []
-    #     plt.ion()
-    #     for i in range(len(names)):
-    #         img = names[i]
-    #         print(img)
-    #         imshow(img)
-    #         a = input("1:relevant, 0:irrelevant, else:unknown")
-    #         if a == '0':
-    #             labels.append(0)
-    #         elif a == '1':
-    #             labels.append(1)
-    #         else:
-    #             labels.append(-1)
-    #     plt.ioff()
-    #     plt.close()
-    #     relevance_labels = []
-    #     train_data = []
-    #     pca = PCA()
-    #     pca.fit(features)
-    #     ratio = 0.0
-    #     m = 0
-    #     for i in range(len(pca.explained_variance_ratio_)):
-    #         ratio += pca.explained_variance_ratio_[0]
-    #         if ratio >= 0.95:
-    #             m = i
-    #             break
-    #     if m > 10:
-    #         m = 10
-    #     pca = PCA(m)
-    #     features = pca.fit_transform(features)
-
-    #     for i in range(len(names)):
-    #         if labels[i] == 0:
-    #             relevance_labels.append(-1)
-    #             train_data.append(features[i])
-    #             continue
-    #         if labels[i] == 1:
-    #             relevance_labels.append(1)
-    #             train_data.append(features[i])
-    #     train_data = np.asarray(train_data)
-    #     # assume relevance is 1, non-relevance is -1
-    #     sample_size = train_data.shape[0]
-    #     alpha, b = SMO(C=100.0, tol=1e-4, train_data=train_data, labels=relevance_labels,
-    #                    kernel=Linear_kernel, max_passes=3)
-    #     scores = []
-    #     for i in range(features.shape[0]):
-    #         sample = features[i]
-    #         score = f(alpha, relevance_labels, Linear_kernel, train_data, sample, b)
-    #         scores.append(score)
-    #     score_indexes = list(np.argsort(scores))
-    #     score_indexes.reverse()  # decreasing order
-    #     reordered_img_names = [names[index] for index in score_indexes]
-    #     print(reordered_img_names)
-    #     plt.figure(num="Ranked images based on svm FBS", figsize=(25, 15))
-    #     rows = len(reordered_img_names) / 5 + 1
-    #     cols = 5
-    #     names = reordered_img_names
-    #     iteration += 1
-    #     for i in range(len(reordered_img_names)):
-    #         plt.subplot(rows, cols, i + 1)
-    #         plt.title("score=%.3f" % scores[score_indexes[i]])
-    #         plt.imshow(imread(reordered_img_names[i]))
-    #         plt.axis('off')
-    #     plt.show()

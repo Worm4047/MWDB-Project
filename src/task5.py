@@ -220,6 +220,8 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
         # print(elem)
         img_id = elem['img_id']
         candidate_ids.append(img_id)
+    with open('src/store/lsh_candidate_images.pkl', 'wb') as f:
+        pickle.dump(candidate_ids, f)
     return candidate_ids
 
 def helper():
