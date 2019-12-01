@@ -213,27 +213,27 @@ def helper():
     #Similar Imgaes
     t = 20
     # Datamatrix
-    # path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/'
-    # images = []
-    # for filename in glob.glob(path_labelled_images + "*.jpg"):
-    #     images.append(filename)
+    path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/'
+    images = []
+    for filename in glob.glob(path_labelled_images + "*.jpg"):
+        images.append(filename)
     
-    # images.sort()
-    # images = images[:1000]
+    images.sort()
+    images = images[:1000]
     # for img in images:
     #     print(img)
     # print(images)
-    csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
-    imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
+    # csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
+    # imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
     query_image = ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006333.jpg']
-    images = getImages(csvpath, imagePath)[:30]
+    # images = getImages(csvpath, imagePath)[:30]
     obj = DimRedHelper()
     dm = []
-    dm = obj.getDataMatrixForHOG(images, [])
+    # dm = obj.getDataMatrixForHOG(images, [])
     queryDm = obj.getDataMatrixForHOG(query_image, [])
     w = 400
     # print(queryDm)
     candidate_ids = getCandidateImages(k, l, w, dm, images, queryDm, t)
-    return query_image[0], candidate_ids
+    # return query_image[0], candidate_ids
 if __name__ == '__main__':
     helper()
