@@ -124,7 +124,9 @@ class LSH:
             cand = candidates[i]
             dist = self.hash_obj.dist(query_point, cand)
             distances.append({'img_id' : img_id, 'dist' : dist})
-        return sorted(distances, key=lambda x: x['dist'])[:k]
+        li = sorted(distances, key=lambda x: x['dist'])
+        saveImages(li)
+        return li[:k]
 
 class l2DistHash:
 
@@ -138,6 +140,21 @@ class l2DistHash:
         v = (point1 - point2)**2
         return math.sqrt(sum(v))
 
+def saveImages(li):
+    candidate_ids = []
+
+    for elem in li:
+        # print(elem)
+        img_id = elem['img_id']
+        candidate_ids.append(img_id)
+    with open('src/store/ls_image.pkl', 'wb') as f:
+        pickle.dump(candidate_ids, f)
+
+def getImages():
+    li = []
+    with open('src/store/ls_image.pkl', 'rb') as f:
+        li = pickle.load(f)    
+    return li
 def getImages(csvPath, imagePath):
     label_df = pd.read_csv(csvPath)
     images = list(label_df['imageName'].values)
@@ -200,7 +217,7 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
     candidate_ids = []
 
     for elem in dist_res:
-        print(elem)
+        # print(elem)
         img_id = elem['img_id']
         candidate_ids.append(img_id)
     return candidate_ids
@@ -234,6 +251,7 @@ def helper():
     w = 400
     # print(queryDm)
     candidate_ids = getCandidateImages(k, l, w, dm, images, queryDm, t)
+    print(len(candidate_ids))
     # return query_image[0], candidate_ids
 if __name__ == '__main__':
     helper()

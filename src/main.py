@@ -1,7 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import src.task2 as t2
 import src.task5 as t5
-import src.task1 as t1
+# import src.task1 as t1
 import src.task4_run as t4svm
 import json
 from random import shuffle
@@ -13,10 +13,10 @@ def index():
 
     return render_template('index.html')
 
-@app.route("/task1/")
-def task1():
-    dorsalImages, palmarImages = t1.task1()
-    return render_template('index.html',  dorsalImages = dorsalImages, palmarImages = palmarImages)
+# @app.route("/task1/")
+# def task1():
+#     dorsalImages, palmarImages = t1.task1()
+#     return render_template('index.html',  dorsalImages = dorsalImages, palmarImages = palmarImages)
 
 
 def getLabelledImages(dorsal):
