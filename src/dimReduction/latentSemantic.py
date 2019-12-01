@@ -6,7 +6,7 @@ from src.dimReduction.NMF import NMF
 from src.dimReduction.LDA import LDA
 
 class LatentSemantic:
-    def getLatentSemantic(k, decompType, dataMatrix, modelType, label, imageDirName, imagePaths):
+    def getLatentSemantic(self, k, decompType, dataMatrix, modelType, label, imageDirName, imagePaths):
         folderName = "{}_{}_{}_{}_{}".format(imageDirName, modelType.name, decompType.name, k, label)
         lsPath = LatentSemanticSaver().getLatentSemanticPath(modelType, decompType, k, label)
         latent_semantic = LatentSemanticSaver().getSemanticsFromFolder(lsPath)

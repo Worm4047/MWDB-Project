@@ -93,7 +93,5 @@ class ColorMoments(Model):
                 self.skewFeatureVector[math.floor(i / self.BLOCK_SIZE), math.floor(j / self.BLOCK_SIZE), 2] = skew(blockV, axis=None)
                 # print("Skew calculation time: {} seconds".format(time.time() - skewStart))
 
-                self.momentsY = np.concatenate((self.meanFeatureVector[:, :, 0], self.varianceFeatureVector[:, :, 0],
-                                                self.skewFeatureVector[:, :, 0]))
                 j += self.BLOCK_SIZE
             i += self.BLOCK_SIZE

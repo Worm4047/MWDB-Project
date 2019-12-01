@@ -1,9 +1,15 @@
 .DS_Store
 .idea/
 src/featureVectorsStore/
+<<<<<<< HEAD
+=======
+src/store/dataMatrix
+src/store/latentSemantics
+>>>>>>> f974bc110618b769dc55bd7a75045f5964cb3c58
 src/store/
 src/Hands
 *.pyc
 *.pdf
 *.jpg
 *.csv
+~/
