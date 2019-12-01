@@ -6,6 +6,8 @@ import src.task4_run as t4svm
 import json
 from random import shuffle
 import os
+from src.tasks.task3 import Task3
+from src.models.enums.models import ModelType
 app = Flask(__name__)
 
 @app.route("/")
@@ -81,7 +83,14 @@ def task2():
 
 @app.route("/task3/")
 def task3():
-    return "TASK 3 TO BE DONE"       
+    imagePaths = [
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000171.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000173.jpg",
+        "/Users/yvtheja/Documents/Dataset2/Hand_0000174.jpg"
+    ]
+    paths = Task3(10, modelTypes=[ModelType.HOG, ModelType.CM]).getSimilarImagePaths(10, imagePaths)
+    print(paths)
+    return "Some String"
 
 @app.route("/task4/svm")
 def task4_svm():
