@@ -2,6 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import src.task2 as t2
 import src.task5 as t5
 import src.task6_svm as t6_svm
+import src.task6_naive as t6_naive
 import src.task1 as t1
 import src.task4_run as t4svm
 import json
@@ -162,6 +163,25 @@ def task6_svm():
     images = [getPathForStatic(imagePath) for imagePath in images]
     print(images)
     return render_template("task6_svm.html", images=images)
+
+@app.route("/task6_naive", methods = ['GET', 'POST'])
+def task6_naive():
+    images = t6_naive.getImages()[:10]
+    print(images)
+    images = [getPathForStatic(imagePath) for imagePath in images]
+    print(images)
+    return render_template("task6_naive.html", images=images)
+
+@app.route("/process_feedback_naive", methods = ['GET', 'POST'])
+def process_feedback_naive():
+    data = request.get_json().get('data')
+    data['relevant'] = [os.path.abspath('src') + img for img in data['relevant']]
+    data['nonrelevant'] = [os.path.abspath('src') + img for img in data['nonrelevant']]
+    imagesTemp = t6_naive.main(data)
+    print(imagesTemp)
+    images = [getPathForStatic(imagePath) for imagePath in imagesTemp]
+    return render_template("imageList.html", images = images);
+
 
 @app.route("/task6_ppr", methods = ['GET', 'POST'])
 def task6_ppr():
