@@ -4,7 +4,7 @@ import src.task5 as t5
 import src.task6_svm as t6_svm
 import src.task6_naive as t6_naive
 import src.task1 as t1
-import src.task4_run as t4svm
+import src.task4_svm_run as t4svm
 import json
 from random import shuffle
 import os
