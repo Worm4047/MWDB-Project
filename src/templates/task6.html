@@ -4,12 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Task 2</title>
+    <title>Task 6</title>
     <style>
+        img{
+            max-height: 10em;
+        }
         .images{
             margin: 2em;
             max-height: 500px;
             overflow-y: scroll;
+            cursor: pointer;
         }
         .card{
             max-width: 15rem;
@@ -18,6 +22,10 @@
         }
         .main{
           margin-top:4em;
+        }
+        .relevant{
+            border: 1px solid blue;
+            opacity: 0.7;
         }
     </style>
   </head>
@@ -46,24 +54,6 @@
                     <a class="nav-link active" href="#">
                       <span data-feather="home"></span>
                       Dashboard<span class="sr-only">(current)</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="show_dorsal_clusters();">
-                      <span data-feather="dorsal_clusters" ></span>
-                      View Dorsal Clusters
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="show_palmar_clusters();">
-                      <span data-feather="palmar_clusters" ></span>
-                      View Palmar Clusters
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="show_query_results();">
-                      <span data-feather="unlabelled_data"></span>
-                      View Results of Unlabelled data
                     </a>
                   </li>
                 </ul>
@@ -131,61 +121,26 @@
                 </ul>
               </div>
             </nav>
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-              <div id="dorsal_clusters">
-                  <h1 class="text-center">DORSAL CLUSTERS</h1>
-                  {% for key in dorsalData %}
-                    <div class="text-center"><h2>Cluster : {{ key }} </h2></div>
-                    <div class="row images">
-                      {% for element in dorsalData[key] %}     
-                        <div class="card" style="width: 18rem;">
-                          <img src={{url_for("static", filename=element[1])}} alt={{element[0]}} class="card-img-top">
-                          <div class="card-body" >
-                              <h5>{{element[0]}}</h5>
-                            </div>
-                        </div>
-                      {% endfor %} 
-                    </div>
-                  {% endfor %} 
-                </div>
-                <div id="palmar_clusters">
-                  <h1 class="text-center">PALMAR CLUSTERS</h1>
-                  {% for key in palmarData %}
-                    <div class="text-center"><h2>Cluster : {{ key }} </h2></div>
-                    <div class="row images">
-                      {% for element in palmarData[key] %}     
-                        <div class="card" style="width: 18rem;">
-                            <img src={{url_for("static", filename=element[1])}} alt={{element[0]}} class="card-img-top">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 center-block">
+                  <h1 class="text-center">Iteration : 0</h1>
+                  <div class="row images">
+                        {% for img in images %}
+                    
+                            <div class="card" style="width: 18rem;">
+                            <img src={{url_for("static", filename=img)}} alt={{queryImageName}} class="card-img-top">
                             <div class="card-body" >
-                              <h5>{{element[0]}}</h5>
+                                <h5>{{img}}</h5>
+                                </div>
                             </div>
-                        </div>
-                      {% endfor %} 
-                    </div>
-                  {% endfor %} 
-                </div>
-                <div id="query_clusters">
-                    <h1 class="text-center">Query Results</h1>
-                    {% for key in queryData %}
-                      <div class="text-center"><h2>Cluster : {{ key }} </h2></div>
-                      <div class="row images">
-                        {% for element in queryData[key] %}     
-                          <div class="card" style="width: 18rem;">
-                              <img src={{url_for("static", filename=element[1])}} alt={{element[0]}} class="card-img-top">
-                              <div class="card-body" >
-                                <h5>{{element[0]}}</h5>
-                              </div>
-                          </div>
                         {% endfor %} 
-                      </div>
-                    {% endfor %} 
-                  </div>
+                    </div>
+                <button id="submitButton" name="singleButton" class="btn btn-primary center-block">Submit</button>
             </main>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src={{url_for('static', filename='js/task2.js')}}></script>
+    <script src={{url_for('static', filename='js/task6.js')}}></script>
 </body>
 </html>

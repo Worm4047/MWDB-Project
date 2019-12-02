@@ -28,6 +28,7 @@ class DimRedHelper:
 
     def __init__(self):
         self.featureArchiver = FeatureArchiver()
+        pass
 
     def getDataMatrix(self, imagePaths, modelType, label=None, directoryPath=None):
         imageFomat = "jpg"
@@ -56,16 +57,18 @@ class DimRedHelper:
                 self.getDataMatrixForHOG(imagePaths, dataMatrix)
             if modelType == ModelType.SIFT:
                 self.getDataMatrixForSIFT(imagePaths, dataMatrix)
-            # save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
+            save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
         return np.array(dataMatrix, dtype=np.float)
 
     def getDataMatrixForCM(self, imagePaths, dataMatrix):
         imagesCount = len(imagePaths)
         for index, imagePath in enumerate(imagePaths):
-            dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.CM).flatten())
-            # if not os.path.exists(imagePath): continue
-            # print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-            # dataMatrix.append(ColorMoments(ImageHelper().getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
+            try:
+                dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.CM).flatten())
+            except:
+                if not os.path.exists(imagePath): continue
+                print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+                dataMatrix.append(ColorMoments(ImageHelper().getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
         return dataMatrix
 
     def getDataMatrixForLBP(self, imagePaths, dataMatrix):
@@ -81,13 +84,16 @@ class DimRedHelper:
     def getDataMatrixForHOG(self, imagePaths, dataMatrix):
         imagesCount = len(imagePaths)
         for index, imagePath in enumerate(imagePaths):
-            if not os.path.exists(imagePath): continue
-            print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-            dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
+            try:
+                dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.HOG).flatten())
+            except:
+                if not os.path.exists(imagePath): continue
+                print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+                dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
         return dataMatrix
 
     def getClusters(self, descriptors):
-        CLUSTERS_COUNT = 10
+        CLUSTERS_COUNT = 20
         wcss = []
         finalclusters = len(descriptors)
         kmeans = KMeans(n_clusters=CLUSTERS_COUNT, init='k-means++', max_iter=300, n_init=10, random_state=0)

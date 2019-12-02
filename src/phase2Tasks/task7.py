@@ -25,6 +25,20 @@ def sort_print_n_return(npArray):
     twpair = np.delete(twpair, (0), axis=0)
     return twpair
 
+def sort_print_n_return(npArray):
+    ind = np.flip(np.argsort(npArray, axis=1), 1)
+    rows = ind.shape[0]
+    cols = ind.shape[1]
+    twpair = np.zeros((cols,), dtype = 'i,f')
+    for x in range(0, rows):
+        l = []
+        for y in range(0, cols):
+            l.append((ind[x, y], npArray[x,ind[x,y]]))
+        twpair = np.vstack([twpair,  np.array(l, dtype='i,f')])
+    #need to delete the initialized all zero row
+    twpair = np.delete(twpair, (0), axis=0)
+    return twpair
+
 def prepros(csvFilePath, databasePath, destpath):
     df = pd.read_csv(csvFilePath, usecols = ['id','imageName'])
     onlyfiles = [f for f in os.listdir(databasePath)]
@@ -43,7 +57,6 @@ def prepros(csvFilePath, databasePath, destpath):
                 dic.setdefault(j,[])
                 dic[j].append(l)
                 min_d[j]=1
-        
 
     for k,v in min_d.items():
         print(k)
@@ -65,15 +78,13 @@ def prepros(csvFilePath, databasePath, destpath):
             shutil.copy(os.path.join(databasePath, imageName), destpath)
         print("just:",k)
         mat = (getDataMatrix(None, ModelType.LBP, label=None, directoryPath = destpath))
-    
 
         u,vt = SVD(mat, minu).getDecomposition()
-        vt = vt.tolist()
+        #vt = vt.tolist()
 
         print("Got decomp for :",k)
         dic1[k]=vt
-            #print(dic1[k])
-            #print(vt)
+
         for imageName in v:
                 temp = destpath+"/"+imageName
                 os.remove(temp)
@@ -122,6 +133,5 @@ def task7(k, csvFilePath, databasePath, destpath, filepath):
         for j in range(len(t[i])):
             k = t[i][j][0]
             print("Subject Id:",key[k],"\t Weight:",t[i][j][1])
-
 
 print("Execution Time :",( time.time()-start_time))
