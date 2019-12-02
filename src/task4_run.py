@@ -296,18 +296,18 @@ def read_features_put_dataframe(path_storing_files, string):
 
 
 def helper():
-    # path_labelled_images = input("Enter path to folder with labelled images:")
-    # path_labelled_metadata = input("Enter path to metadata with labelled images:")
-    # path_unlabelled_images = input("Enter path to folder with unlabelled images:")
-    # path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
-    # path_original_metadata = input("Enter path to metadata with original data:")
-    # path_storing_files = input("Enter path to store feature files:")
-    path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set2/'
-    path_labelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set2.csv'
-    path_unlabelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set 2/'
-    path_unlabelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set2.csv'
-    path_original_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/HandInfo.csv'
-    path_storing_files = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/store/'
+    path_labelled_images = input("Enter path to folder with labelled images:")
+    path_labelled_metadata = input("Enter path to metadata with labelled images:")
+    path_unlabelled_images = input("Enter path to folder with unlabelled images:")
+    path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
+    path_original_metadata = input("Enter path to metadata with original data:")
+    path_storing_files = input("Enter path to store feature files:")
+    # path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set2/'
+    # path_labelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set2.csv'
+    # path_unlabelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set 2/'
+    # path_unlabelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set2.csv'
+    # path_original_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/HandInfo.csv'
+    # path_storing_files = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/store/'
     """X_train is the data matrix"""
 
     trainImageNames = read_images_store_features(path_labelled_images, path_storing_files)
@@ -391,8 +391,30 @@ def helper():
 
     gsearch.fit(X_train, y_training)
     # print(gsearch.best_params_)
-   
-    svc_clf = SVM(**gsearch.best_params_)
+    #  ------------------------------------------------------------------------------------
+    #  finer grid search
+    #  ------------------------------------------------------------------------------------
+    C = gsearch.best_params_['C']
+    # print("C value:", C)
+    gamma = gsearch.best_params_['gamma']
+    # print("gamma value:", gamma)
+    kernel = gsearch.best_params_['kernel']
+    # print("kernel value:", kernel)
+
+    param_grid_finer = {'C': np.linspace(C / 2, C * 2, num=10),
+                        'gamma': [gamma],
+                        'kernel': [kernel]
+                        }
+    gsearch_finer = GridSearchCV(estimator=model,
+                                 param_grid=param_grid_finer,
+                                 scoring='f1_micro',
+                                 cv=5,
+                                 verbose=1000)
+
+    gsearch_finer.fit(X_train, y_training)
+    print("After finer grid search:", gsearch_finer.best_params_)
+
+    svc_clf = SVM(**gsearch_finer.best_params_)
     svc_clf.fit(X_train, y_training)
     y_predict = svc_clf.predict(X_test)
     # print("type of y_predict:", type(y_predict))
