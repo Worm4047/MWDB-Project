@@ -2,7 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import src.task2 as t2
 import src.task5 as t5
 import src.task6_svm as t6_svm
-# import src.task1 as t1
+import src.task1 as t1
 import src.task4_run as t4svm
 import json
 from random import shuffle
@@ -18,10 +18,14 @@ def index():
 
     return render_template('index.html')
 
-# @app.route("/task1/")
-# def task1():
-#     dorsalImages, palmarImages = t1.task1()
-#     return render_template('index.html',  dorsalImages = dorsalImages, palmarImages = palmarImages)
+@app.route("/task1/", methods = ['GET', 'POST'])
+def task1():
+    palmarPath = request.form['palmarPath']
+    dorsalPath = request.form['dorsalPath']
+    metaDataFile = request.form['metaDataFile']
+    inputPath = request.form['inputPath']
+    dorsalImages, palmarImages = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
+    return render_template('index.html',  dorsalImages = dorsalImages, palmarImages = palmarImages)
 
 
 def getLabelledImages(dorsal):
@@ -51,13 +55,21 @@ def getPathForStatic(img):
     res = img[idx+8:]
     return res
 
-@app.route("/task2/")
+@app.route("/task2/", methods = ['GET', 'POST'])
 def task2():
-    # t2.helper()
+    csvpath = request.form['csvpath']
+    imagePath = request.form['imagePath']
+    queryPath = request.form['queryPath']
+    queryCsvPath = request.form['queryCsvPath']
+
+    t2.helper(csvpath, imagePath, queryPath, queryCsvPath)
+
+
     dorsalImages = getLabelledImages(True)
     palmarImages = getLabelledImages(False)
     queryImages = getQueryImageResuls()
     queryImages['PALMAR'] = reversed(queryImages['PALMAR'])
+
     for key in dorsalImages:
         li = []
         for elem in dorsalImages[key]:
@@ -65,6 +77,7 @@ def task2():
             imagePath = getPathForStatic(imagePath)
             li.append([imageName, imagePath])
         dorsalImages[key] = li
+
     for key in palmarImages:
         li = []
         for elem in palmarImages[key]:
@@ -72,6 +85,7 @@ def task2():
             imagePath = getPathForStatic(imagePath)
             li.append([imageName, imagePath])
         palmarImages[key] = li
+
     for key in queryImages:
         li = []
         for elem in queryImages[key]:
@@ -79,27 +93,33 @@ def task2():
             imagePath = getPathForStatic(imagePath)
             li.append([imageName, imagePath])
         queryImages[key] = li
-    # print(dorsalImages)
-    # print(palmarImages)
-    # return "Task2"
+
     return render_template('task2.html', dorsalData = dorsalImages, palmarData = palmarImages, queryData = queryImages)
 
-@app.route("/task3/")
+@app.route("/task3/", methods = ['GET', 'POST'])
 def task3():
-    imageDir = "static/Dataset2"
-    queryImagePaths = [
-        "static/Dataset2/Hand_0000010.jpg",
-        "static/Dataset2/Hand_0000011.jpg",
-        "static/Dataset2/Hand_0000012.jpg"
-    ]
+
+    imageDir = request.form['imageDir']
+    q1 = request.form['q1']
+    q2 = request.form['q2']
+    q3 = request.form['q3']
+    queryImagePaths = [q1,q2,q3]
+    capitalK = request.form['capitalK']
+    smallK = request.form['smallK']
+    # imageDir = "static/Dataset2"
+    # queryImagePaths = [
+    #     "static/Dataset2/Hand_0000010.jpg",
+    #     "static/Dataset2/Hand_0000011.jpg",
+    #     "static/Dataset2/Hand_0000012.jpg"
+    # ]
+    # capitalK = 10
+    # smallK = 10
     queryImagePathsForRender = [os.path.relpath(imagePath, "static/") for imagePath in queryImagePaths]
-    capitalK = 10
-    smallK = 10
     paths = Task3(smallK, imageDir, modelTypes=[ModelType.HOG]).getSimilarImagePaths(capitalK, queryImagePaths)
     pathsToRender = [os.path.relpath(imagePath, "static/") for imagePath in paths]
     return render_template('task3.html', images=pathsToRender, queryImages=queryImagePathsForRender)
 
-@app.route("/task4/svm")
+@app.route("/task4/svm", methods = ['GET', 'POST'])
 def task4_svm():
     dorsalImages, palmarImages, accuracy_score = t4svm.helper()
     dorsalImages2, palmarImages2 = [], []
@@ -112,15 +132,15 @@ def task4_svm():
     return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
     return "TASK 4 TO BE DONE"
 
-@app.route("/task4/dt")
+@app.route("/task4/dt", methods = ['GET', 'POST'])
 def task4_dt():
     return "TASK 4 DT TO BE DONE"
 
-@app.route("/task4/ppr")
+@app.route("/task4/ppr", methods = ['GET', 'POST'])
 def task4_ppr():
     return "TASK 4 PPR TO BE DONE"
 
-@app.route("/task5/")
+@app.route("/task5/", methods = ['GET', 'POST'])
 def task5():
     queryImage, candidateImages = t5.helper()
     queryImageName = imageHelper(queryImage)
@@ -135,7 +155,7 @@ def task5():
     print(candidateImages)
     return render_template('task5.html', queryImage = queryImage, queryImageName = queryImageName, candidateImages = candidateImages, candidateImagesNames = candidateImagesNames, len = len(candidateImages))
 
-@app.route("/task6_svm")
+@app.route("/task6_svm", methods = ['GET', 'POST'])
 def task6_svm():
     images = t6_svm.getImages()[:10]
     print(images)
@@ -143,7 +163,7 @@ def task6_svm():
     print(images)
     return render_template("task6_svm.html", images=images)
 
-@app.route("/task6_ppr")
+@app.route("/task6_ppr", methods = ['GET', 'POST'])
 def task6_ppr():
     images = ['Dataset2/Hand_0006333.jpg',
               'Dataset2/Hand_0006332.jpg',

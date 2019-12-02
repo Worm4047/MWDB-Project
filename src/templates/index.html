@@ -7,25 +7,144 @@
     <title>POODLE - MWDB</title>
   </head>
   <body>
+    <div class="modal fade" id="task1Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Input for task1</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/task1" >
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">palmar Path</label>
+                      <input type="text" class="form-control" id="palmarPath" name="palmarPath" aria-describedby="palmarPath" placeholder="Enter palmar Path">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Dorsal Path</label>
+                        <input type="text" class="form-control" id="dorsalPath" name="dorsalPath" aria-describedby="Dorsal Path" placeholder="Enter Dorsal Path">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">metaDataFile</label>
+                        <input type="text" class="form-control" id="metaDataFile" name="metaDataFile" aria-describedby="metaDataFile" placeholder="Enter metaDataFile">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">inputPath</label>
+                        <input type="text" class="form-control" id="inputPath" name="inputPath" aria-describedby="inputPath" placeholder="Enter inputPath">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="task2Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Input for task2</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <form method="POST" action="/task2" >
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Lablled Folder Path</label>
+                        <input type="text" class="form-control" id="imagePath" name="imagePath" aria-describedby="imagePath" placeholder="Enter imagePath">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Labelled CSV Path</label>
+                          <input type="text" class="form-control" id="csvpath" name="csvpath" aria-describedby="csvpath" placeholder="Enter Labelled csvpath">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Unlabelled Folder path</label>
+                          <input type="text" class="form-control" id="queryPath" name="queryPath" aria-describedby="queryPath" placeholder="Enter Unlabelled imagePath">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Unlabelled CVS path</label>
+                          <input type="text" class="form-control" id="queryCsvPath" name="queryCsvPath" aria-describedby="queryCsvPath" placeholder="Enter query Csv Path">
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="task3Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Input for task2</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/task3" >
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">imageDir Path</label>
+                          <input type="text" class="form-control" id="imageDir" name="imageDir" aria-describedby="imageDir" placeholder="Enter imageDir">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Query Image 1</label>
+                            <input type="text" class="form-control" id="q1" name="q1" aria-describedby="q1" placeholder="Enter Query image 1 path">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Query Image 2</label>
+                            <input type="text" class="form-control" id="q2" name="q2" aria-describedby="q2" placeholder="Enter Query image 2 path">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Query Image 3</label>
+                            <input type="text" class="form-control" id="q3" name="q3" aria-describedby="q3" placeholder="Enter Query image 3 path">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Number of edges</label>
+                            <input type="text" class="form-control" id="capitalK" name="capitalK" aria-describedby="capitalK" placeholder="Enter capitalK">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Number of Similar images required</label>
+                            <input type="text" class="form-control" id="smallK" name="smallK" aria-describedby="smallK" placeholder="Enter smallK">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
           <img src="{{url_for('static', filename='poodle_banner.png')}}" alt="Poodle Banner">
           <h1 class="display-4">Multimedia and web databases - Phase 3</h1>
           <p class="lead"> Where multimedia ends and jargon begins !</p>
-        <a href="/task1"><button type="button" class="btn btn-primary">Task 1</button></a>
-        <a href="/task2"><button type="button" class="btn btn-secondary">Task 2</button></a>
-        <a href="/task3"><button type="button" class="btn btn-primary">Task 3</button></a>
-        <a href="/task4/svm"><button type="button" class="btn btn-info">Task 4 - SVM</button></a>
-        <a href="/task4/dt"><button type="button" class="btn btn-info">Task 4 - Decision Tree</button></a>
-        <a href="/task4/ppr"><button type="button" class="btn btn-info">Task 4 - PPR</button></a>
-        <a href="/task5"><button type="button" class="btn btn-secondary">Task 5</button></a>
-        <a href="/task6"><button type="button" class="btn btn-primary">Task 6</button></a>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#task1Modal">Task 1</button>
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#task2Modal">Task 2</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#task3Modal">Task 3</button>
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#task4_svm_Modal">Task 4 - SVM</button>
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#task4_dt_Modal">Task 4 - Decision Tree</button>
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#task4_ppr_Modal">Task 4 - PPR</button>
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#task5Modal">Task 5</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#task6Modal">Task 6</button>
         </div>
       </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <!-- <script type="text/javascript" src="../task2.json"></script> -->
+    <script src={{url_for('static', filename='js/common.js')}}></script>
     
 </body>
 </html>

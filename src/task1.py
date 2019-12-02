@@ -266,10 +266,7 @@ def findClusters(pathDorsal, pathPalmar, csvPath, inputPath):
 # This is the main function
 # Input : Datamatrix computed for the images, Image paths (absolute)
 # Function :  Performs clustering of the image then visualizes them
-def task1(palmarPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/palmar/',
-            dorsalPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/dorsal/',
-            metaDataFile='/Users/studentworker/PycharmProjects/phase_3/HandInfo.csv',
-            inputPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/input2/'):
+def task1(palmarPath,dorsalPath,metaDataFile,inputPath):
     dorsalImages, palmarImages = findClusters(palmarPath, dorsalPath, metaDataFile, inputPath)
     return dorsalImages, palmarImages
 
@@ -310,4 +307,4 @@ def getLabelledImages(csvPath, imagePath, dorsal, hand):
     return images
 
 
-task1()
+# task1()
