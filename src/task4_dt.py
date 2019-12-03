@@ -211,4 +211,3 @@ def helper():
 	# print(dorsal, palmar)
 	return dorsal,palmar
 
-helper()

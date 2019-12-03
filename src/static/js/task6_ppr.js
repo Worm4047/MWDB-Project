@@ -4,9 +4,18 @@ $(document).ready(function(){
 
         console.log("Clicked");
         console.log(event);
-        $target = $(event.target);   
+        $target = $(event.target);
+        $target.removeClass('irrelevant');
            $target.toggleClass('relevant');
     
+    });
+
+    $('.images').on('contextmenu', 'div', function(event) {
+        console.log(event);
+        event.preventDefault();
+        $target = $(event.target);
+        $target.removeClass('relevant');
+        $target.toggleClass('irrelevant');
     });
 });
 
@@ -37,13 +46,15 @@ function change_images(images){
     console.log(images);
 }
 
+iterationCount = 0
 $('#submitButton').on('click', function(event){
+    iterationCount++;
     var relevant = []
     var nonrelevant = [];
     var all = $("img").map(function() {
         if($(this).hasClass("relevant"))
             relevant.push($(this).attr('src'));
-        else
+        else if($(this).hasClass("irrelevant"))
             nonrelevant.push($(this).attr('src'));
 
         console.log(this.className, $(this).attr('src'));
@@ -61,5 +72,5 @@ $('#submitButton').on('click', function(event){
             $(".images").html(data);
         },
     });     
-
+    $('#count').html(iterationCount);
 });

@@ -6,7 +6,7 @@ $(document).ready(function(){
         console.log(event);
         $target = $(event.target);
         $target.removeClass('irrelevant');
-        $target.toggleClass('relevant');
+           $target.toggleClass('relevant');
     
     });
 
@@ -15,6 +15,7 @@ $(document).ready(function(){
         event.preventDefault();
         $target = $(event.target);
         $target.removeClass('relevant');
+
         $target.toggleClass('irrelevant');
     });
 });
@@ -65,7 +66,7 @@ $('#submitButton').on('click', function(event){
     jQuery.ajax({
         contentType: "application/json; charset=utf-8",
         type: "POST",
-        url: "/process_feedback_svm",
+        url: "/process_feedback_naive",
         data: JSON.stringify({'data' : data}),
         success: function(data, status){
             $('.images').empty();

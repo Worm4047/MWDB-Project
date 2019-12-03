@@ -111,7 +111,7 @@ if __name__ == "__main__":
     path_labelled_metadata = input("Enter path to metadata with labelled images:")
     #'phase3_sample_data/labelled_set2.csv'
     path_unlabelled_images = input("Enter path to folder with unlabelled images:")
-    #'phase3_sample_data/Unlabelled/Set 2/'
+    #'phase3_sample_data/Unlabelled/Set2/'
     path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
     #'phase3_sample_data/unlabelled_set2.csv'
     path_original_metadata = input("Enter path to metadata with original data:")

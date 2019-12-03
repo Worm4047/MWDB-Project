@@ -2,10 +2,16 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import src.task2 as t2
 import src.task5 as t5
 import src.task6_svm as t6_svm
+
+import src.task6_naive as t6_naive
+import src.task1 as t1
+import src.task4_svm_run as t4svm
+
 import src.task6_dt as t6_dt
 import src.task1 as t1
-import src.task4_run as t4svm
+# import src.task4_run as t4svm
 import src.task4_dt as t4dt
+
 import json
 from random import shuffle
 import os
@@ -18,7 +24,10 @@ from src.classifiers.pprClassifier import ImageClass
 
 app = Flask(__name__)
 
-
+iterationCountSVM = 0
+iterationCountPPR = 0
+iterationCountDT = 0
+iterationCountNaive = 0
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -37,16 +46,16 @@ def getLabelledImages(dorsal):
     path = ''
 
     if(dorsal):
-        path = 'src/store/dorsal_labels.json'
+        path = 'store/dorsal_labels.json'
     else:
-        path = 'src/store/palmar_labels.json'
+        path = 'store/palmar_labels.json'
     print(path)
     with open(path ) as json_file:
         data = json.load(json_file)
         return data
 
 def getQueryImageResuls():
-    path = 'src/store/query_labels.json'
+    path = 'store/query_labels.json'
     with open(path ) as json_file:
         data = json.load(json_file)
         return data    
@@ -108,8 +117,8 @@ def task3():
     q2 = request.form['q2']
     q3 = request.form['q3']
     queryImagePaths = [q1,q2,q3]
-    capitalK = request.form['capitalK']
-    smallK = request.form['smallK']
+    capitalK = int(request.form['capitalK'])
+    smallK = int(request.form['smallK'])
     # imageDir = "static/Dataset2"
     # queryImagePaths = [
     #     "static/Dataset2/Hand_0000010.jpg",
@@ -153,7 +162,7 @@ def task4_dt():
 def task4_ppr():
     imgDir = "static/Labelled/Set2"
     csvFile = "static/labelled_set2.csv"
-    unlabelledImageDir = "static/Unlabelled/Set 2"
+    unlabelledImageDir = "static/Unlabelled/Set2"
 
     imageDict = {
         ImageClass.DORSAL.name: [],
@@ -191,6 +200,23 @@ def task6_svm():
     print(images)
     return render_template("task6_svm.html", images=images)
 
+@app.route("/task6_naive", methods = ['GET', 'POST'])
+def task6_naive():
+    images = t6_naive.getImages()[:10]
+    print(images)
+    images = [getPathForStatic(imagePath) for imagePath in images]
+    print(images)
+    return render_template("task6_naive.html", images=images)
+
+@app.route("/process_feedback_naive", methods = ['GET', 'POST'])
+def process_feedback_naive():
+    data = request.get_json().get('data')
+    data['relevant'] = [os.path.abspath('src') + img for img in data['relevant']]
+    data['nonrelevant'] = [os.path.abspath('src') + img for img in data['nonrelevant']]
+    imagesTemp = t6_naive.main(data)
+    print(imagesTemp)
+    images = [getPathForStatic(imagePath) for imagePath in imagesTemp]
+    return render_template("imageList.html", images = images);
 
 @app.route("/task6_dt", methods = ['GET', 'POST'])
 def task6_dt():

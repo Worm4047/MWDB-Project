@@ -76,7 +76,7 @@ class Task2():
         return result
 
     def saveData(self, labels, images, name):
-        imageLabelFileName = 'src/store/' + name + '_labels.json'
+        imageLabelFileName = 'store/' + name + '_labels.json'
         label_dict = {}
         for i in range(len(labels)):
             label_dict[str(labels[i])] = []
@@ -165,21 +165,23 @@ def getLabelledImages(csvPath, imagePath, dorsal):
     else:
         label_df = label_df.loc[ label_df['aspectOfHand'].str.contains('palmar')]
     images = list(label_df['imageName'].values)
+    imagePaths = []
     for i in range(len(images)):
-        images[i] = imagePath + images[i]
-    return images
+        imagePaths.append(os.path.join(imagePath, images[i]))
+    return imagePaths
 
 def getUnLabelledImages(csvPath, imagePath):
     label_df = pd.read_csv(csvPath)
     images = list(label_df['imageName'].values)
+    imagePaths = []
     for i in range(len(images)):
-        images[i] = imagePath + images[i]
-    return images
+        imagePaths.append(os.path.join(imagePath, images[i]))
+    return imagePaths
 
 def helper(csvpath, imagePath, queryPath, queryCsvPath):
     # csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
     # imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
-    # queryPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set 1/'
+    # queryPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set1/'
     # queryCsvPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set1.csv'
     
     # queryImage = [queryPath + 'Hand_0007735.jpg']

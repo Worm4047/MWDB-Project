@@ -147,12 +147,12 @@ def saveImages(li):
         # print(elem)
         img_id = elem['img_id']
         candidate_ids.append(img_id)
-    with open('src/store/ls_image.pkl', 'wb') as f:
+    with open('store/ls_image.pkl', 'wb') as f:
         pickle.dump(candidate_ids, f)
 
 def getImages():
     li = []
-    with open('src/store/ls_image.pkl', 'rb') as f:
+    with open('store/ls_image.pkl', 'rb') as f:
         li = pickle.load(f)    
     return li
 def getImages(csvPath, imagePath):
@@ -163,27 +163,27 @@ def getImages(csvPath, imagePath):
     return images
 
 def saveHashTableData(hashTable, l, w, k, vec, b):
-    with open('src/store/hashTable.pkl', 'wb') as f:
+    with open('store/hashTable.pkl', 'wb') as f:
         pickle.dump(hashTable, f)
-    with open('src/store/hashTableParams.txt', 'w+') as outfile2:
+    with open('store/hashTableParams.txt', 'w+') as outfile2:
         str = "{} {} {}".format(l, w, k)
         outfile2.write(str)
-    np.save("src/store/hashTableVec", vec)
-    np.save("src/store/hashTableB", b)
+    np.save("store/hashTableVec", vec)
+    np.save("store/hashTableB", b)
 
 
 def readHashTable():
     hashTable = ''
     l, w, k = 0, 0, 0
     vec, b = '',''
-    with open('src/store/hashTable.pkl', 'rb') as f:
+    with open('store/hashTable.pkl', 'rb') as f:
         hashTable = pickle.load(f) 
-    with open('src/store/hashTableParams.txt', 'r') as outfile2:
+    with open('store/hashTableParams.txt', 'r') as outfile2:
         str = outfile2.readline()
         l,w,k = str.split()
         l,w,k = int(l), int(w), int(k)
-    vec = np.load("src/store/hashTableVec.npy")
-    b = np.load("src/store/hashTableB.npy")
+    vec = np.load("store/hashTableVec.npy")
+    b = np.load("store/hashTableB.npy")
     return hashTable, l, w, k, vec, b
 
 def createAndSaveHashTable(k, l, w, dm, images):
@@ -220,11 +220,13 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
         # print(elem)
         img_id = elem['img_id']
         candidate_ids.append(img_id)
-    with open('src/store/lsh_candidate_images.pkl', 'wb') as f:
+    with open('store/lsh_candidate_images.pkl', 'wb') as f:
         pickle.dump(candidate_ids, f)
     return candidate_ids
 
 def helper():
+    path_labelled_images = 'static/Hands/'
+    query_image = ['static/Hands/Hand_0006333.jpg']
     # Number of hashes per layer
     k = 50
     # Number of layers
@@ -232,23 +234,22 @@ def helper():
     #Similar Imgaes
     t = 20
     # Datamatrix
-    path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/'
     images = []
     for filename in glob.glob(path_labelled_images + "*.jpg"):
         images.append(filename)
     
     images.sort()
-    images = images[:1000]
+    # images = images[:1000]
     # for img in images:
     #     print(img)
     # print(images)
     # csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
     # imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
-    query_image = ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/Hands/Hand_0006333.jpg']
+
     # images = getImages(csvpath, imagePath)[:30]
     obj = DimRedHelper()
     dm = []
-    # dm = obj.getDataMatrixForHOG(images, [])
+    dm = obj.getDataMatrixForHOG(images, [])
     queryDm = obj.getDataMatrixForHOG(query_image, [])
     w = 400
     # print(queryDm)

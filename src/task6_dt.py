@@ -138,7 +138,7 @@ def f(alpha, labels, kernel, train_data, row, b):
 
 def getImages():
     li = []
-    with open('src/store/ls_image.pkl', 'rb') as f2:
+    with open('store/ls_image.pkl', 'rb') as f2:
         li = pickle.load(f2)    
     return li
 
@@ -151,9 +151,9 @@ def helper(d):
         # with open('src/store/lsh_candidate_images.pkl', 'rb') as f2:
         #     temp = pickle.load(f2)
         #     t = len(temp)
-        with open('src/store/task6_dt_iteration_images.pkl', 'rb') as f2:
+        with open('store/task6_dt_iteration_images.pkl', 'rb') as f2:
             liImages = pickle.load(f2) 
-        with open('src/store/task6_dt_iteration_labels.pkl', 'rb') as f2:
+        with open('store/task6_dt_iteration_labels.pkl', 'rb') as f2:
             labels = pickle.load(f2) 
     except:
         pass
@@ -176,10 +176,10 @@ def helper(d):
 
     print("Labels len {} images len {}".format(len(liImages), len(labels)))
 
-    with open('src/store/task6_dt_iteration_images.pkl', 'wb') as f2:
+    with open('store/task6_dt_iteration_images.pkl', 'wb') as f2:
         pickle.dump(liImages, f2)
 
-    with open('src/store/task6_dt_iteration_labels.pkl', 'wb') as f2:
+    with open('store/task6_dt_iteration_labels.pkl', 'wb') as f2:
         pickle.dump(labels, f2)
     
     names = getImages()
@@ -241,8 +241,8 @@ def helper(d):
     reordered_img_names = [names[index] for index in score_reordered]
     return reordered_img_names[:t]
 
-if __name__ == '__main__':
-    iteration = 0
-    names = []
-    d = {'relevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006333.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006332.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000005.jpg'], 'nonrelevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006331.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000002.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000003.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000008.jpg']}
-    helper(d)
+# if __name__ == '__main__':
+#     iteration = 0
+#     names = []
+#     d = {'relevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006333.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006332.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000005.jpg'], 'nonrelevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006331.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000002.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000003.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000008.jpg']}
+#     helper(d)
