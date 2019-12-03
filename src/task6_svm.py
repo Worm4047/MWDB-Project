@@ -13,10 +13,10 @@ def Linear_kernel(x1, x2):
     return inner_product
 
 
-def RBF_kernel(x1, x2):
-    global gamma
-    index = -1 * (la.norm((x1 - x2)) ** 2) * gamma
-    return math.exp(index)
+# def RBF_kernel(x1, x2):
+#     global gamma
+#     index = -1 * (la.norm((x1 - x2)) ** 2) * gamma
+#     return math.exp(index)
 
 
 def f(alpha, labels, kernel, train_data, row, b):
