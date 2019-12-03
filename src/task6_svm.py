@@ -94,7 +94,7 @@ def SMO(C, tol, train_data, labels, kernel, max_passes):
 
 def getImages():
     li = []
-    with open('src/store/ls_image.pkl', 'rb') as f2:
+    with open('store/ls_image.pkl', 'rb') as f2:
         li = pickle.load(f2)    
     return li
 
@@ -105,12 +105,12 @@ def helper(d):
 
     try:
         
-        with open('src/store/lsh_candidate_images.pkl', 'rb') as f2:
+        with open('store/lsh_candidate_images.pkl', 'rb') as f2:
             temp = pickle.load(f2)
             t = len(temp)
-        with open('src/store/task6_svm_iteration_images.pkl', 'rb') as f2:
+        with open('store/task6_svm_iteration_images.pkl', 'rb') as f2:
             liImages = pickle.load(f2) 
-        with open('src/store/task6_svm_iteration_labels.pkl', 'rb') as f2:
+        with open('store/task6_svm_iteration_labels.pkl', 'rb') as f2:
             labels = pickle.load(f2) 
     except:
         pass
@@ -133,10 +133,10 @@ def helper(d):
 
     print("Labels len {} images len {}".format(len(liImages), len(labels)))
 
-    with open('src/store/task6_svm_iteration_images.pkl', 'wb') as f2:
+    with open('store/task6_svm_iteration_images.pkl', 'wb') as f2:
         pickle.dump(liImages, f2)
 
-    with open('src/store/task6_svm_iteration_labels.pkl', 'wb') as f2:
+    with open('store/task6_svm_iteration_labels.pkl', 'wb') as f2:
         pickle.dump(labels, f2)
     
     names = getImages()
