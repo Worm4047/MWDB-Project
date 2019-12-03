@@ -46,7 +46,9 @@ function change_images(images){
     console.log(images);
 }
 
+iterationCount = 0
 $('#submitButton').on('click', function(event){
+    iterationCount++;
     var relevant = []
     var nonrelevant = [];
     var all = $("img").map(function() {
@@ -70,5 +72,5 @@ $('#submitButton').on('click', function(event){
             $(".images").html(data);
         },
     });     
-
+    $('#count').html(iterationCount);
 });

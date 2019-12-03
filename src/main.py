@@ -24,7 +24,10 @@ from src.classifiers.pprClassifier import ImageClass
 
 app = Flask(__name__)
 
-
+iterationCountSVM = 0
+iterationCountPPR = 0
+iterationCountDT = 0
+iterationCountNaive = 0
 @app.route("/")
 def index():
     return render_template('index.html')
