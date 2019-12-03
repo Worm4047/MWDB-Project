@@ -23,6 +23,7 @@ from skimage.measure import block_reduce
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
+from src.dimReduction.dimRedHelper import DimRedHelper
 
 
 def making_two_columns(path):
@@ -296,29 +297,31 @@ def read_features_put_dataframe(path_storing_files, string):
 
 
 def helper():
-    path_labelled_images = input("Enter path to folder with labelled images:")
-    path_labelled_metadata = input("Enter path to metadata with labelled images:")
-    path_unlabelled_images = input("Enter path to folder with unlabelled images:")
-    path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
-    path_original_metadata = input("Enter path to metadata with original data:")
-    path_storing_files = input("Enter path to store feature files:")
-    # path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set2/'
-    # path_labelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set2.csv'
-    # path_unlabelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set 2/'
-    # path_unlabelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set2.csv'
-    # path_original_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/HandInfo.csv'
-    # path_storing_files = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/store/'
+    # path_labelled_images = input("Enter path to folder with labelled images:")
+    # path_labelled_metadata = input("Enter path to metadata with labelled images:")
+    # path_unlabelled_images = input("Enter path to folder with unlabelled images:")
+    # path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
+    # path_original_metadata = input("Enter path to metadata with original data:")
+    # path_storing_files = input("Enter path to store feature files:")
+    path_labelled_images = 'static/Labelled/Set2/'
+    path_labelled_metadata = 'static/labelled_set2.csv'
+    path_unlabelled_images = 'static/Unlabelled/Set 2/'
+    path_unlabelled_metadata = 'static/unlabelled_set2.csv'
+    path_original_metadata = 'store/HandInfo.csv'
+    path_storing_files = 'store/'
     """X_train is the data matrix"""
 
-    trainImageNames = read_images_store_features(path_labelled_images, path_storing_files)
-    # read_features_put_dataframe(path_storing_files, "labelled")
-    
-    
-    X_train = pd.read_csv(path_storing_files + "table_for_labelled_Hand_features.csv", delimiter=",", header=None)
-    X_train.drop(X_train.columns[len(X_train.columns) - 1], axis=1, inplace=True)
-    ss = StandardScaler()
-    X_train = ss.fit_transform(X_train)
+    imagePaths = glob.glob(os.path.join(path_labelled_images, "*.{}".format('jpg')))
+    obj = DimRedHelper()
+    X_train = obj.getDataMatrixForLBP(imagePaths, [])
 
+    # print(type(X_train))
+    ss = StandardScaler()
+    # ss = MinMaxScaler(feature_range=(0, 1))
+    X_train = ss.fit_transform(X_train)
+    # X_train=pd.DataFrame(X_train)
+    pca = PCA(n_components=100)
+    X_train = (pca.fit_transform(np.mat(X_train)))
 
     """Storing the name of images from labelled folder in a csv file as sequence is not same in folder and metadata"""
     df_labelled_images_name = store_image_name(path_labelled_images, "labelled")
@@ -344,14 +347,11 @@ def helper():
 
     """X_test is the data matrix of unlabelled images"""
     testImageNames = read_images_store_features(path_unlabelled_images, path_storing_files)
-    # read_features_put_dataframe(path_storing_files, "unlabelled")
-    
-    
-    X_test = pd.read_csv(path_storing_files + "table_for_unlabelled_Hand_features.csv", delimiter=",", header=None)
-    X_test.drop(X_test.columns[len(X_test.columns) - 1], axis=1, inplace=True)
-    ss = StandardScaler()
-    X_test = ss.fit_transform(X_test)
-
+    imagePaths = glob.glob(os.path.join(path_unlabelled_images, "*.{}".format('jpg')))
+    X_test = obj.getDataMatrixForLBP(imagePaths, [])
+    X_test = ss.transform(X_test)
+    # X_test=pd.DataFrame(X_test)
+    X_test = (pca.transform(np.mat(X_test)))
 
     """df_original_dataInfo datafram after dividing the aspect of hand column"""
 
