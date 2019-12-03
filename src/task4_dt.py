@@ -6,15 +6,12 @@ from csv import reader
 import random
 import pandas as pd
 import os
-from common.imageHelper import getYUVImage
-from constants import BLOCK_SIZE
-from models.ColorMoments import ColorMoments
 import numpy as np
 import csv
 import cv2
 import matplotlib.pyplot as plt
 import pickle
-from preprocess import getdata
+from src.preprocess import getdata
  
 # Load a CSV file
 def load_csv(filename):
@@ -169,7 +166,7 @@ def decision_tree(train, test, max_depth, min_size):
 		predictions.append(prediction)
 	return(predictions)
         
-def main():
+def helper():
 	getdata()
 	filename = 'train_data.csv'
 	dataset = load_csv(filename)
@@ -189,8 +186,8 @@ def main():
 	#print(actual)
 
 	n_folds = 5
-	max_depth = 5
-	min_size = 10
+	max_depth = 10
+	min_size = 1
 	tree = build_tree(dataset,max_depth, min_size)
 	pickle.dump(tree,open('dt_model.sav','wb'))
 	tree = pickle.load(open('dt_model.sav', 'rb'))
@@ -211,5 +208,7 @@ def main():
 	#print("Dorsal")
 	#print(dorsal)
 	#print("P:",palmar)
+	# print(dorsal, palmar)
 	return dorsal,palmar
 
+helper()

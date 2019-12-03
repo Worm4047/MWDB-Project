@@ -12,17 +12,14 @@ import cv2
 from skimage.measure import block_reduce
 from sklearn.decomposition import PCA
 
-from common.imageHelper import getYUVImage
-from constants import BLOCK_SIZE
-from models.ColorMoments import ColorMoments
+from src.common.imageHelper import ImageHelper
+from src.constants import BLOCK_SIZE
+from src.models.ColorMoments import ColorMoments
 
 from random import seed
 from random import randrange
 from csv import reader
 import random
-from common.imageHelper import getYUVImage
-from constants import BLOCK_SIZE
-from models.ColorMoments import ColorMoments
 import numpy as np
 import csv
 import cv2
@@ -50,7 +47,8 @@ def read_images_store_features(path_labelled_images, path_storing_files):
     for filename in glob.glob(path_labelled_images+"*.jpg"):
         #img=cv2.imread(filename,0)##LBP
         img_name=os.path.basename(filename)
-        feature_vector = ColorMoments(getYUVImage(filename), BLOCK_SIZE, BLOCK_SIZE).getFeatures()
+        obj = ImageHelper()
+        feature_vector = ColorMoments(obj.getYUVImage(filename), BLOCK_SIZE, BLOCK_SIZE).getFeatures()
         
         # img=cv2.imread(filename)##HOG
         # HOG_object=HistogramOfGradients(9,8,2)
@@ -102,17 +100,24 @@ def coding(col, codeDict):
 
 
 def getdata():
-    path_labelled_images = input("Enter path to folder with labelled images:")
+    print("In get data")
+    path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
+    path_labelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
+    path_unlabelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set 1/'
+    path_unlabelled_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set1.csv'
+    path_original_metadata = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/HandInfo.csv'
+    path_storing_files = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/store/imgstore'
+    # path_labelled_images = input("Enter path to folder with labelled images:")
     #'phase3_sample_data/Labelled/Set2/'
-    path_labelled_metadata = input("Enter path to metadata with labelled images:")
+    # path_labelled_metadata = input("Enter path to metadata with labelled images:")
     #'phase3_sample_data/labelled_set2.csv'
-    path_unlabelled_images = input("Enter path to folder with unlabelled images:")
+    # path_unlabelled_images = input("Enter path to folder with unlabelled images:")
     #'phase3_sample_data/Unlabelled/Set 2/'
-    path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
+    # path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
     #'phase3_sample_data/unlabelled_set2.csv'
-    path_original_metadata = input("Enter path to metadata with original data:")
+    # path_original_metadata = input("Enter path to metadata with original data:")
     #'phase3_sample_data/HandInfo.csv'
-    path_storing_files = input("Enter path to store feature files:")
+    # path_storing_files = input("Enter path to store feature files:")
     #'feature/'
 
     """X_train is the data matrix"""

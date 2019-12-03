@@ -5,6 +5,7 @@ import src.task6_svm as t6_svm
 import src.task6_dt as t6_dt
 import src.task1 as t1
 import src.task4_run as t4svm
+import src.task4_dt as t4dt
 import json
 from random import shuffle
 import os
@@ -124,9 +125,7 @@ def task3():
 
 @app.route("/task4/svm", methods = ['GET', 'POST'])
 def task4_svm():
-    print("Boom")
     dorsalImages, palmarImages, accuracy_score = t4svm.helper()
-    print("Boom2")
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -139,7 +138,16 @@ def task4_svm():
 
 @app.route("/task4/dt", methods = ['GET', 'POST'])
 def task4_dt():
-    return "TASK 4 DT TO BE DONE"
+    dorsalImages, palmarImages= t4dt.helper()
+    dorsalImages2, palmarImages2 = [], []
+    for img in dorsalImages:
+        dorsalImages2.append(getPathForStatic(img))
+    for img in palmarImages:
+        palmarImages2.append(getPathForStatic(img))
+    dorsalImages = dorsalImages2
+    palmarImages = palmarImages2
+    return render_template("task4_dt.html", dorsalImages = dorsalImages, palmarImages = palmarImages)
+    return "TASK 4 TO BE DONE"
 
 @app.route("/task4/ppr", methods = ['GET', 'POST'])
 def task4_ppr():
