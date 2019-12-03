@@ -104,7 +104,6 @@ def helper(d):
     t = 10
 
     try:
-        
         with open('src/store/lsh_candidate_images.pkl', 'rb') as f2:
             temp = pickle.load(f2)
             t = len(temp)
@@ -180,13 +179,15 @@ def helper(d):
         sample = features1[i]
         score = f(alpha, relevance_labels, Linear_kernel, train_data, sample, b)
         scores.append(score)
+    print(scores)
     score_indexes = list(np.argsort(scores))
     score_indexes.reverse()  # decreasing order
+    print(score_indexes)
     reordered_img_names = [names[index] for index in score_indexes]
     return reordered_img_names[:t]
 
 if __name__ == '__main__':
     iteration = 0
     names = []
-    d = {'relevant': ['/static/sample_data/Hands/Hand_0006333.jpg', '/static/sample_data/Hands/Hand_0006332.jpg', '/static/sample_data/Hands/Hand_0000005.jpg'], 'nonrelevant': ['/static/sample_data/Hands/Hand_0006331.jpg', '/static/sample_data/Hands/Hand_0000002.jpg', '/static/sample_data/Hands/Hand_0000003.jpg', '/static/sample_data/Hands/Hand_0000008.jpg']}
+    d = {'relevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006333.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006332.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000005.jpg'], 'nonrelevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006331.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000002.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000003.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000008.jpg']}
     helper(d)

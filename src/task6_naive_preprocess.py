@@ -100,7 +100,6 @@ def coding(col, codeDict):
         colCoded.replace(key, value, inplace=True)
     return colCoded
 
-
 def getdata():
     path_labelled_images = input("Enter path to folder with labelled images:")
     #'phase3_sample_data/Labelled/Set2/'
