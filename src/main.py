@@ -9,14 +9,17 @@ import json
 from random import shuffle
 import os
 from src.tasks.task3 import Task3
-
+import glob
 from src.models.enums.models import ModelType
 from src.tasks.task6PPR import Task6PPR
+from src.tasks.task4pprNoCache import Task4PPRNoCache
+from src.classifiers.pprClassifier import ImageClass
+
 app = Flask(__name__)
+
 
 @app.route("/")
 def index():
-
     return render_template('index.html')
 
 @app.route("/task1/", methods = ['GET', 'POST'])
@@ -99,7 +102,6 @@ def task2():
 
 @app.route("/task3/", methods = ['GET', 'POST'])
 def task3():
-
     imageDir = request.form['imageDir']
     q1 = request.form['q1']
     q2 = request.form['q2']
@@ -122,7 +124,9 @@ def task3():
 
 @app.route("/task4/svm", methods = ['GET', 'POST'])
 def task4_svm():
+    print("Boom")
     dorsalImages, palmarImages, accuracy_score = t4svm.helper()
+    print("Boom2")
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -139,7 +143,22 @@ def task4_dt():
 
 @app.route("/task4/ppr", methods = ['GET', 'POST'])
 def task4_ppr():
-    return "TASK 4 PPR TO BE DONE"
+    imgDir = "static/Labelled/Set2"
+    csvFile = "static/labelled_set2.csv"
+    unlabelledImageDir = "static/Unlabelled/Set 2"
+
+    imageDict = {
+        ImageClass.DORSAL.name: [],
+        ImageClass.PALMAR.name: []
+    }
+    for imagePath in glob.glob(os.path.join(unlabelledImageDir, "*.jpg")):
+        imageClass = Task4PPRNoCache(imgDir, csvFile, modelTypes=[ModelType.CM]).getClassForImage(imagePath)
+        imageDict[imageClass.name].append(imagePath)
+
+
+    return render_template("task4_ppr.html",
+                           dorsalImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.DORSAL.name]],
+                           palmarImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.PALMAR.name]])
 
 @app.route("/task5/", methods = ['GET', 'POST'])
 def task5():
@@ -147,7 +166,7 @@ def task5():
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
     candidateImagesNames = []
-    for img in candidateImages:
+    for img in candidateImages
         candidateImagesNames.append(imageHelper(img))
     candidateImages2 = []
     for img in candidateImages:
