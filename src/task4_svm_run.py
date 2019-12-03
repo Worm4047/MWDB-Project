@@ -305,7 +305,7 @@ def helper():
     # path_storing_files = input("Enter path to store feature files:")
     path_labelled_images = 'static/Labelled/Set2/'
     path_labelled_metadata = 'static/labelled_set2.csv'
-    path_unlabelled_images = 'static/Unlabelled/Set 2/'
+    path_unlabelled_images = 'static/Unlabelled/Set2/'
     path_unlabelled_metadata = 'static/unlabelled_set2.csv'
     path_original_metadata = 'store/HandInfo.csv'
     path_storing_files = 'store/'

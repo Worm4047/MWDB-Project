@@ -2,9 +2,16 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import src.task2 as t2
 import src.task5 as t5
 import src.task6_svm as t6_svm
+
 import src.task6_naive as t6_naive
 import src.task1 as t1
 import src.task4_svm_run as t4svm
+
+import src.task6_dt as t6_dt
+import src.task1 as t1
+# import src.task4_run as t4svm
+import src.task4_dt as t4dt
+
 import json
 from random import shuffle
 import os
@@ -36,16 +43,16 @@ def getLabelledImages(dorsal):
     path = ''
 
     if(dorsal):
-        path = 'src/store/dorsal_labels.json'
+        path = 'store/dorsal_labels.json'
     else:
-        path = 'src/store/palmar_labels.json'
+        path = 'store/palmar_labels.json'
     print(path)
     with open(path ) as json_file:
         data = json.load(json_file)
         return data
 
 def getQueryImageResuls():
-    path = 'src/store/query_labels.json'
+    path = 'store/query_labels.json'
     with open(path ) as json_file:
         data = json.load(json_file)
         return data    
@@ -107,8 +114,8 @@ def task3():
     q2 = request.form['q2']
     q3 = request.form['q3']
     queryImagePaths = [q1,q2,q3]
-    capitalK = request.form['capitalK']
-    smallK = request.form['smallK']
+    capitalK = int(request.form['capitalK'])
+    smallK = int(request.form['smallK'])
     # imageDir = "static/Dataset2"
     # queryImagePaths = [
     #     "static/Dataset2/Hand_0000010.jpg",
@@ -124,9 +131,7 @@ def task3():
 
 @app.route("/task4/svm", methods = ['GET', 'POST'])
 def task4_svm():
-    print("Boom")
     dorsalImages, palmarImages, accuracy_score = t4svm.helper()
-    print("Boom2")
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -139,13 +144,22 @@ def task4_svm():
 
 @app.route("/task4/dt", methods = ['GET', 'POST'])
 def task4_dt():
-    return "TASK 4 DT TO BE DONE"
+    dorsalImages, palmarImages= t4dt.helper()
+    dorsalImages2, palmarImages2 = [], []
+    for img in dorsalImages:
+        dorsalImages2.append(getPathForStatic(img))
+    for img in palmarImages:
+        palmarImages2.append(getPathForStatic(img))
+    dorsalImages = dorsalImages2
+    palmarImages = palmarImages2
+    return render_template("task4_dt.html", dorsalImages = dorsalImages, palmarImages = palmarImages)
+    return "TASK 4 TO BE DONE"
 
 @app.route("/task4/ppr", methods = ['GET', 'POST'])
 def task4_ppr():
     imgDir = "static/Labelled/Set2"
     csvFile = "static/labelled_set2.csv"
-    unlabelledImageDir = "static/Unlabelled/Set 2"
+    unlabelledImageDir = "static/Unlabelled/Set2"
 
     imageDict = {
         ImageClass.DORSAL.name: [],
@@ -201,6 +215,13 @@ def process_feedback_naive():
     images = [getPathForStatic(imagePath) for imagePath in imagesTemp]
     return render_template("imageList.html", images = images);
 
+@app.route("/task6_dt", methods = ['GET', 'POST'])
+def task6_dt():
+    images = t6_dt.getImages()[:10]
+    print(images)
+    images = [getPathForStatic(imagePath) for imagePath in images]
+    print(images)
+    return render_template("task6_dt.html", images=images)
 
 @app.route("/task6_ppr", methods = ['GET', 'POST'])
 def task6_ppr():
@@ -213,6 +234,17 @@ def task6_ppr():
               'Dataset2/Hand_0000008.jpg']
 
     return render_template("task6_ppr.html", images=images)
+
+@app.route("/process_feedback_dt", methods = ['GET', 'POST'])
+def process_feedback_dt():
+    # images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
+    # shuffle(images)
+    data = request.get_json().get('data')
+    data['relevant'] = [os.path.abspath('src') + img for img in data['relevant']]
+    data['nonrelevant'] = [os.path.abspath('src') + img for img in data['nonrelevant']]
+    imagesTemp = t6_dt.helper(data)
+    images = [getPathForStatic(imagePath) for imagePath in imagesTemp]
+    return render_template("imageList.html", images = images);
 
 @app.route("/process_feedback_ppr", methods = ['GET', 'POST'])
 def process_feedback_ppr():

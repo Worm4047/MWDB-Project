@@ -20,7 +20,7 @@ def load_csv_dataset(filename):
 
 def getImages():
     li = []
-    with open('src/store/ls_image.pkl', 'rb') as f2:
+    with open('store/ls_image.pkl', 'rb') as f2:
         li = pickle.load(f2)    
     return li
 
@@ -181,9 +181,9 @@ def main(d):
         # with open('src/store/lsh_candidate_images.pkl', 'rb') as f2:
         #     temp = pickle.load(f2)
         #     t = len(temp)
-        with open('src/store/task6_naive_iteration_images.pkl', 'rb') as f2:
+        with open('store/task6_naive_iteration_images.pkl', 'rb') as f2:
             liImages = pickle.load(f2) 
-        with open('src/store/task6_naive_iteration_labels.pkl', 'rb') as f2:
+        with open('store/task6_naive_iteration_labels.pkl', 'rb') as f2:
             labels = pickle.load(f2) 
     except:
         pass
@@ -206,10 +206,10 @@ def main(d):
             labels[indx] = 0
     print(len(liImages))
     # print(labels)
-    with open('src/store/task6_naive_iteration_images.pkl', 'wb') as f2:
+    with open('store/task6_naive_iteration_images.pkl', 'wb') as f2:
         pickle.dump(liImages, f2)
 
-    with open('src/store/task6_naive_iteration_labels.pkl', 'wb') as f2:
+    with open('store/task6_naive_iteration_labels.pkl', 'wb') as f2:
         pickle.dump(labels, f2)
 
     names = getImages()
@@ -275,6 +275,6 @@ def main(d):
     # print(images)
     return images[:t]
 
-if __name__ == '__main__':
-    d = {'relevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006333.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006332.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000005.jpg'], 'nonrelevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006331.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000002.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000003.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000008.jpg']}
-    main(d)
+# if __name__ == '__main__':
+#     d = {'relevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006333.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006332.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000005.jpg'], 'nonrelevant': ['/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0006331.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000002.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000003.jpg', '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Hands/Hand_0000008.jpg']}
+#     main(d)

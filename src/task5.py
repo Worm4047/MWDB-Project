@@ -225,6 +225,8 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
     return candidate_ids
 
 def helper():
+    path_labelled_images = 'static/Hands/'
+    query_image = ['static/Hands/Hand_0006333.jpg']
     # Number of hashes per layer
     k = 50
     # Number of layers
@@ -232,19 +234,18 @@ def helper():
     #Similar Imgaes
     t = 20
     # Datamatrix
-    path_labelled_images = 'static/Hands/'
     images = []
     for filename in glob.glob(path_labelled_images + "*.jpg"):
         images.append(filename)
     
     images.sort()
-    images = images[:1000]
+    # images = images[:1000]
     # for img in images:
     #     print(img)
     # print(images)
     # csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
     # imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
-    query_image = ['static/Hands/Hand_0006333.jpg']
+
     # images = getImages(csvpath, imagePath)[:30]
     obj = DimRedHelper()
     dm = []
