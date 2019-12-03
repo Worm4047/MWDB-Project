@@ -28,6 +28,7 @@ class DimRedHelper:
 
     def __init__(self):
         self.featureArchiver = FeatureArchiver()
+        pass
 
     def getDataMatrix(self, imagePaths, modelType, label=None, directoryPath=None):
         imageFomat = "jpg"
@@ -62,28 +63,36 @@ class DimRedHelper:
     def getDataMatrixForCM(self, imagePaths, dataMatrix):
         imagesCount = len(imagePaths)
         for index, imagePath in enumerate(imagePaths):
-            dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.CM).flatten())
-            # if not os.path.exists(imagePath): continue
-            # print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-            # dataMatrix.append(ColorMoments(ImageHelper().getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
+            try:
+                dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.CM).flatten())
+            except:
+                if not os.path.exists(imagePath): continue
+                print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+                dataMatrix.append(ColorMoments(ImageHelper().getYUVImage(imagePath), BLOCK_SIZE, BLOCK_SIZE).getFeatures())
         return dataMatrix
 
     def getDataMatrixForLBP(self, imagePaths, dataMatrix):
         imagesCount = len(imagePaths)
         for index, imagePath in enumerate(imagePaths):
-            if not os.path.exists(imagePath): continue
-            print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-            lbp = LBP(ImageHelper().getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3)
-            features = lbp.getFeatures()
-            dataMatrix.append(features)
+            try:
+                dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.CM).flatten())
+            except:
+                if not os.path.exists(imagePath): continue
+                print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+                lbp = LBP(ImageHelper().getGrayScaleImage(imagePath), blockSize=100, numPoints=24, radius=3)
+                features = lbp.getFeatures()
+                dataMatrix.append(features)
         return dataMatrix
 
     def getDataMatrixForHOG(self, imagePaths, dataMatrix):
         imagesCount = len(imagePaths)
         for index, imagePath in enumerate(imagePaths):
-            if not os.path.exists(imagePath): continue
-            print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
-            dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
+            try:
+                dataMatrix.append(self.featureArchiver.getFeaturesForImage(imagePath, modelType=ModelType.HOG).flatten())
+            except:
+                if not os.path.exists(imagePath): continue
+                print("Data matrix creation | Processed {} out of {} images".format(index, imagesCount - 1))
+                dataMatrix.append(HOG(cv2.imread(imagePath, cv2.IMREAD_COLOR), 9, 8, 2).getFeatures())
         return dataMatrix
 
     def getClusters(self, descriptors):

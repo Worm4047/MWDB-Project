@@ -346,10 +346,10 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
 #           metaDataFile='/Users/studentworker/PycharmProjects/phase_3/HandInfo.csv',
 #           testPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/test/'):
 
-def task1(imagesFolder='/Users/studentworker/PycharmProjects/phase_3/test/sample/Labelled/Set1/',
-          metaDataFile='/Users/studentworker/PycharmProjects/phase_3/test/sample/labelled_set1.csv',
-          testPath='/Users/studentworker/PycharmProjects/phase_3/test/sample/Unlabelled/Set1/',
-          metaDataTestFile='/Users/studentworker/PycharmProjects/phase_3/test/sample/Unlabelled/unlablled_set1.csv'):
+def task1(imagesFolder='static/Labelled/Set1/',
+          metaDataFile='static/labelled_set1.csv',
+          testPath='static/Unlabelled/Set1/',
+          metaDataTestFile='static/Unlabelled/unlablled_set1.csv'):
     dorsalImages, palmarImages, accuracy = classifyImages(imagesFolder, metaDataFile, testPath, metaDataTestFile)
     return dorsalImages, palmarImages, accuracy
 
@@ -416,4 +416,4 @@ def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
 
-task1()
+# task1()

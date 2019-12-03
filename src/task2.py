@@ -7,7 +7,6 @@ import json
 import scipy
 import matplotlib
 import networkx as nx
-import seaborn as sns
 from src.dimReduction.dimRedHelper import DimRedHelper
 from src.models.enums.models import ModelType
 from src.common import comparisonHelper
@@ -77,7 +76,7 @@ class Task2():
         return result
 
     def saveData(self, labels, images, name):
-        imageLabelFileName = 'src/store/' + name + '_labels.json'
+        imageLabelFileName = 'store/' + name + '_labels.json'
         label_dict = {}
         for i in range(len(labels)):
             label_dict[str(labels[i])] = []
@@ -166,36 +165,42 @@ def getLabelledImages(csvPath, imagePath, dorsal):
     else:
         label_df = label_df.loc[ label_df['aspectOfHand'].str.contains('palmar')]
     images = list(label_df['imageName'].values)
+    imagePaths = []
     for i in range(len(images)):
-        images[i] = imagePath + images[i]
-    return images
+        imagePaths.append(os.path.join(imagePath, images[i]))
+    return imagePaths
 
 def getUnLabelledImages(csvPath, imagePath):
     label_df = pd.read_csv(csvPath)
     images = list(label_df['imageName'].values)
+    imagePaths = []
     for i in range(len(images)):
-        images[i] = imagePath + images[i]
-    return images
+        imagePaths.append(os.path.join(imagePath, images[i]))
+    return imagePaths
 
-def helper():
-    csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
-    imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
-    queryPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set 1/'
-    queryCsvPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set1.csv'
+def helper(csvpath, imagePath, queryPath, queryCsvPath):
+    # csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
+    # imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
+    # queryPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set1/'
+    # queryCsvPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set1.csv'
     
     # queryImage = [queryPath + 'Hand_0007735.jpg']
     dorsalImages = getLabelledDorsalImages(csvpath, imagePath)
     palmarImages = getLabelledPalmarImages(csvpath, imagePath)
     queryImages = getUnLabelledImages(queryCsvPath, queryPath)
-    print(queryImages)
+
     obj = DimRedHelper()
+
     dmDorsal = obj.getDataMatrixForLBP(dorsalImages, [])
     dmDorsal = np.stack( dmDorsal, axis=0 )
+
     dmPalmar = obj.getDataMatrixForLBP(palmarImages, [])
     dmPalmar = np.stack( dmPalmar, axis=0 )
+
     dmqueryImages = obj.getDataMatrixForLBP(queryImages, [])
     dmqueryImages = np.stack( dmqueryImages, axis=0 )
-    obj = Task2(dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages)
 
+    obj = Task2(dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages)
+    
 if __name__ == '__main__':
     helper()

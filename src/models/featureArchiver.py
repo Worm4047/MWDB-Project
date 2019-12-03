@@ -45,12 +45,18 @@ class FeatureArchiver:
     def saveFeaturesForImage(self, imagePath, featureVector, modelType):
         np.save(self.getFeaturesFilePathForImage(imagePath, modelType), featureVector)
 
+    def createAndStoreImageFeatures(self, imagePath, modelType):
+        featureVector = self.imageHelper.getImageFeatures(imagePath, modelType, retriveshape=True)
+        self.saveFeaturesForImage(imagePath, featureVector, modelType)
+
+        return featureVector
+
     def getFeaturesForImage(self, imagePath, modelType):
         featuresFilePath = self.getFeaturesFilePathForImage(imagePath, modelType)
         if os.path.exists(featuresFilePath):
             return np.load(featuresFilePath)
         else:
-            raise ValueError("No feature file exists for {} image".format(imagePath))
+            return self.createAndStoreImageFeatures(imagePath, modelType)
 
     def getFeaturesFilePathForImage(self, imagePath, modelType):
         return os.path.join(FEATURE_STORE, "{}_{}.npy".format(self.imageHelper.getImageName(imagePath), modelType.name))

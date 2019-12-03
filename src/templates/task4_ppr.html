@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Task 1</title>
+    <title>Task 4 - SVM</title>
     <style>
         .images{
             margin: 2em;
@@ -48,9 +48,9 @@
                       Dashboard<span class="sr-only">(current)</span>
                     </a>
                   </li>
-
+                  
                 </ul>
-
+        
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                   <span>Tasks</span>
                   <a class="d-flex align-items-center text-muted" href="#">
@@ -58,75 +58,87 @@
                   </a>
                 </h6>
                 <ul class="nav flex-column mb-2">
-                  <li class="nav-item">
-                    <a class="nav-link" href="/task1">
-                      <span data-feather="file-text"></span>
-                      Task 1
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/task2">
-                      <span data-feather="file-text"></span>
-                      Task 2
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/task3">
-                      <span data-feather="file-text"></span>
-                      Task 3
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/task4">
-                      <span data-feather="file-text"></span>
-                      Task 4
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/task5">
-                      <span data-feather="file-text"></span>
-                      Task 5
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="/task6">
+                    <li class="nav-item">
+                      <a class="nav-link" href="/task1">
                         <span data-feather="file-text"></span>
-                        Task 6
+                        Task 1
                       </a>
-                  </li>
-                </ul>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/task2">
+                        <span data-feather="file-text"></span>
+                        Task 2
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/task3">
+                        <span data-feather="file-text"></span>
+                        Task 3
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <ul class="nav flex-column mb-2">
+                        <li>
+                            <a class="nav-link" href="/task4/svm">
+                              <span data-feather="file-text"></span>
+                              Task 4 - SVM
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="/task4/dt">
+                              <span data-feather="file-text"></span>
+                              Task 4 - Decision Tree
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="/task4/ppr">
+                              <span data-feather="file-text"></span>
+                              Task 4 - PPR
+                            </a>
+                        </li>
+                      </ul>
+  
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/task5">
+                        <span data-feather="file-text"></span>
+                        Task 5
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/task6">
+                          <span data-feather="file-text"></span>
+                          Task 6
+                        </a>
+                    </li>
+                  </ul>
               </div>
             </nav>
-            <!-- Modal -->
-
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-              <div>
-<!--                    <h1 class="text-center">Accuracy  :: {{accuracy_score}}</h1>-->
-              </div>
               <div id="dorsal_clusters">
-                  <h1 class="text-center">Dorsal Labelled Results</h1>
+                  <h1 class="text-center">Dorsal Images</h1>
                     <div class="row images">
-                      {% for element in dorsalImages %}
+                      {% for element in dorsalImages %}     
                         <div class="card" style="width: 18rem;">
                           <img src={{url_for("static", filename=element)}} alt={{element}} class="card-img-top">
                           <div class="card-body" >
                               <!-- <h5>{{element}}</h5> -->
                             </div>
                         </div>
-                      {% endfor %}
+                      {% endfor %} 
                     </div>
                 </div>
                 <div id="dorsal_clusters">
-                    <h1 class="text-center">Palmar Labelled Results</h1>
+                    <h1 class="text-center">Palmar Images</h1>
                       <div class="row images">
-                        {% for element in palmarImages %}
+                        {% for element in palmarImages %}     
                           <div class="card" style="width: 18rem;">
                             <img src={{url_for("static", filename=element)}} alt={{element}} class="card-img-top">
                             <div class="card-body" >
                                 <!-- <h5>{{element}}</h5> -->
                               </div>
                           </div>
-                        {% endfor %}
+                        {% endfor %} 
                       </div>
                   </div>
             </main>
