@@ -2,6 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import src.task2 as t2
 import src.task5 as t5
 import src.task6_svm as t6_svm
+import src.task6_dt as t6_dt
 import src.task1 as t1
 import src.task4_run as t4svm
 import json
@@ -165,7 +166,7 @@ def task5():
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
     candidateImagesNames = []
-    for img in candidateImages
+    for img in candidateImages:
         candidateImagesNames.append(imageHelper(img))
     candidateImages2 = []
     for img in candidateImages:
@@ -182,6 +183,15 @@ def task6_svm():
     print(images)
     return render_template("task6_svm.html", images=images)
 
+
+@app.route("/task6_dt", methods = ['GET', 'POST'])
+def task6_dt():
+    images = t6_dt.getImages()[:10]
+    print(images)
+    images = [getPathForStatic(imagePath) for imagePath in images]
+    print(images)
+    return render_template("task6_dt.html", images=images)
+
 @app.route("/task6_ppr", methods = ['GET', 'POST'])
 def task6_ppr():
     images = ['Dataset2/Hand_0006333.jpg',
@@ -193,6 +203,17 @@ def task6_ppr():
               'Dataset2/Hand_0000008.jpg']
 
     return render_template("task6_ppr.html", images=images)
+
+@app.route("/process_feedback_dt", methods = ['GET', 'POST'])
+def process_feedback_dt():
+    # images = ['sample_data/Hands/Hand_0006333.jpg', 'sample_data/Hands/Hand_0006332.jpg','sample_data/Hands/Hand_0006331.jpg','sample_data/Hands/Hand_0000002.jpg','sample_data/Hands/Hand_0000003.jpg','sample_data/Hands/Hand_0000005.jpg','sample_data/Hands/Hand_0000008.jpg']
+    # shuffle(images)
+    data = request.get_json().get('data')
+    data['relevant'] = [os.path.abspath('src') + img for img in data['relevant']]
+    data['nonrelevant'] = [os.path.abspath('src') + img for img in data['nonrelevant']]
+    imagesTemp = t6_dt.helper(data)
+    images = [getPathForStatic(imagePath) for imagePath in imagesTemp]
+    return render_template("imageList.html", images = images);
 
 @app.route("/process_feedback_ppr", methods = ['GET', 'POST'])
 def process_feedback_ppr():
