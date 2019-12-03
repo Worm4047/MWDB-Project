@@ -55,6 +55,7 @@ class LSH:
 
     def find_ann(self, query_point, hash_table, k=5):
         candidate_imgs = set()
+        totalImagesConsidered = 0
         num_conjunctions = self.num_hash
         for layer_idx, layer in enumerate(self.vec):
             hash_vec = hash_table[layer_idx]
@@ -65,6 +66,7 @@ class LSH:
             for ix, idx in enumerate(buckets[1:num_conjunctions]):
                 # needs ix+1 since we already took care of index 0
                 cand = cand.intersection(hash_vec[ix + 1][idx])
+                totalImagesConsidered += len(hash_vec[ix + 1][idx])
             candidate_imgs = candidate_imgs.union(cand)
             if len(candidate_imgs) > 4 * k:
                 print(f'Early stopping at layer {layer_idx} found {len(candidate_imgs) }')
@@ -76,7 +78,7 @@ class LSH:
                 return self.find_ann(query_point, hash_table, k=k)
             else:
                 print('fubar')
-        return candidate_imgs
+        return candidate_imgs, totalImagesConsidered
     # def init_hash_table(self):
     #     hash_table = []
     #     for i in range(self.num_layers):
@@ -208,8 +210,9 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
     except:
         print("Creating and saving hash table")
         hashTable, lsh = createAndSaveHashTable(k, l, w, dm, images)
-    candidate_ids = lsh.find_ann(query_point=queryDm[0], hash_table=hashTable, k=t)
+    candidate_ids, totalImagesConsidered = lsh.find_ann(query_point=queryDm[0], hash_table=hashTable, k=t)
     candidate_ids = list(candidate_ids)
+    uniqueImagesConsidered = len(candidate_ids)
     obj = DimRedHelper()
     candidate_vecs = obj.getDataMatrixForHOG(candidate_ids, []) 
     # print(len(candidate_vecs), len(candidate_ids))
@@ -222,7 +225,7 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
         candidate_ids.append(img_id)
     with open('store/lsh_candidate_images.pkl', 'wb') as f:
         pickle.dump(candidate_ids, f)
-    return candidate_ids
+    return candidate_ids, totalImagesConsidered, uniqueImagesConsidered
 
 def helper():
     path_labelled_images = 'static/Hands/'
@@ -239,7 +242,7 @@ def helper():
         images.append(filename)
     
     images.sort()
-    # images = images[:1000]
+    images = images[:1000]
     # for img in images:
     #     print(img)
     # print(images)
@@ -253,10 +256,10 @@ def helper():
     queryDm = obj.getDataMatrixForHOG(query_image, [])
     w = 400
     # print(queryDm)
-    candidate_ids = getCandidateImages(k, l, w, dm, images, queryDm, t)
+    candidate_ids, totalImagesConsidered, uniqueImagesConsidered = getCandidateImages(k, l, w, dm, images, queryDm, t)
     print(len(candidate_ids))
 
-    return query_image[0], candidate_ids
+    return query_image[0], candidate_ids, totalImagesConsidered, uniqueImagesConsidered
 
 if __name__ == '__main__':
     helper()

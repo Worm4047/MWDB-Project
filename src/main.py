@@ -179,7 +179,7 @@ def task4_ppr():
 
 @app.route("/task5/", methods = ['GET', 'POST'])
 def task5():
-    queryImage, candidateImages = t5.helper()
+    queryImage, candidateImages, totalImagesConsidered, uniqueImagesConsidered = t5.helper()
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
     candidateImagesNames = []
@@ -190,7 +190,7 @@ def task5():
         candidateImages2.append(getPathForStatic(img))
     candidateImages = candidateImages2
     print(candidateImages)
-    return render_template('task5.html', queryImage = queryImage, queryImageName = queryImageName, candidateImages = candidateImages, candidateImagesNames = candidateImagesNames, len = len(candidateImages))
+    return render_template('task5.html', queryImage = queryImage, queryImageName = queryImageName, candidateImages = candidateImages, candidateImagesNames = candidateImagesNames, totalImagesConsidered = totalImagesConsidered, uniqueImagesConsidered = uniqueImagesConsidered)
 
 @app.route("/task6_svm", methods = ['GET', 'POST'])
 def task6_svm():
