@@ -57,7 +57,7 @@ class DimRedHelper:
                 self.getDataMatrixForHOG(imagePaths, dataMatrix)
             if modelType == ModelType.SIFT:
                 self.getDataMatrixForSIFT(imagePaths, dataMatrix)
-            save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
+            # save_data_matrix(modelType, label, "./store/dataMatrix/", dataMatrix)
         return np.array(dataMatrix, dtype=np.float)
 
     def getDataMatrixForCM(self, imagePaths, dataMatrix):
