@@ -166,7 +166,7 @@ def task5():
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
     candidateImagesNames = []
-    for img in candidateImages
+    for img in candidateImages:
         candidateImagesNames.append(imageHelper(img))
     candidateImages2 = []
     for img in candidateImages:
