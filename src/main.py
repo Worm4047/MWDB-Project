@@ -39,8 +39,8 @@ def task1():
     # metaDataFile = request.form['metaDataFile']
     # inputPath = request.form['inputPath']
     # dorsalImages, palmarImages = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
-    dorsalImages, palmarImages, _ = t1.task1()
-    return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages])
+    dorsalImages, palmarImages, accuracy = t1.task1()
+    return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)
 
 
 def getLabelledImages(dorsal):
