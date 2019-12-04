@@ -81,7 +81,6 @@ def task2():
     print(c)
     t2.helper(csvpath, imagePath, queryPath, queryCsvPath, c)
 
-
     dorsalImages = getLabelledImages(True)
     palmarImages = getLabelledImages(False)
     queryImages = getQueryImageResuls()
