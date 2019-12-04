@@ -348,7 +348,7 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
 
 def task1(imagesFolder='static/Labelled/Set2/',
           metaDataFile='static/labelled_set2.csv',
-          testPath='static/Unlabelled/Set1/',
+          testPath='static/Unlabelled/Set2/',
           metaDataTestFile='static/HandInfo.csv'):
     dorsalImages, palmarImages, accuracy = classifyImages(imagesFolder, metaDataFile, testPath, metaDataTestFile)
     return dorsalImages, palmarImages, accuracy
@@ -396,20 +396,23 @@ def getLabelledImages(csvPath, imagePath, dorsal, hand):
 
 def calculateAccuracy(dorsal_images, palmar_images, csvPath):
     label_df = pd.read_csv(csvPath)
-    accuracy = 0
+    correctImages = 0
     for image in dorsal_images:
         name = path_leaf(image)
         actual_label = label_df.at[label_df['imageName'].eq(name).idxmax(), 'aspectOfHand']
         print(name, " - ", actual_label, ":dorsal")
         if 'dorsal' in actual_label:
-            accuracy += 1
+            correctImages += 1
     for image in palmar_images:
         name = path_leaf(image)
         actual_label = label_df.at[label_df['imageName'].eq(name).idxmax(), 'aspectOfHand']
         print(name, " - ", actual_label, ":palmar")
         if 'palmar' in actual_label:
-            accuracy += 1
-    print("Accuracy:", accuracy/(len(dorsal_images)+len(palmar_images)))
+            correctImages += 1
+    accuracy = correctImages/(len(dorsal_images)+len(palmar_images))
+    print("Accuracy:", accuracy)
+
+    return accuracy
 
 
 def path_leaf(path):

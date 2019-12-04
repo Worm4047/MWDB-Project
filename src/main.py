@@ -40,6 +40,7 @@ def task1():
     # inputPath = request.form['inputPath']
     # dorsalImages, palmarImages = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
     dorsalImages, palmarImages, accuracy = t1.task1()
+    print(accuracy)
     return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)
 
 
@@ -76,8 +77,9 @@ def task2():
     imagePath = request.form['imagePath']
     queryPath = request.form['queryPath']
     queryCsvPath = request.form['queryCsvPath']
-
-    t2.helper(csvpath, imagePath, queryPath, queryCsvPath)
+    c = int(request.form['c'])
+    print(c)
+    t2.helper(csvpath, imagePath, queryPath, queryCsvPath, c)
 
 
     dorsalImages = getLabelledImages(True)
