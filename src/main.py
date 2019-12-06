@@ -149,7 +149,7 @@ def task4_svm():
 
 @app.route("/task4/dt", methods = ['GET', 'POST'])
 def task4_dt():
-    dorsalImages, palmarImages= t4dt.helper()
+    dorsalImages, palmarImages, accuracy_score = t4dt.helper()
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -157,7 +157,7 @@ def task4_dt():
         palmarImages2.append(getPathForStatic(img))
     dorsalImages = dorsalImages2
     palmarImages = palmarImages2
-    return render_template("task4_dt.html", dorsalImages = dorsalImages, palmarImages = palmarImages)
+    return render_template("task4_dt.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
     return "TASK 4 TO BE DONE"
 
 @app.route("/task4/ppr", methods = ['GET', 'POST'])

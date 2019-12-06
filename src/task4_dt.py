@@ -209,5 +209,6 @@ def helper():
 	#print(dorsal)
 	#print("P:",palmar)
 	# print(dorsal, palmar)
-	return dorsal,palmar
+	return dorsal, palmar, accuracy
 
+helper()
