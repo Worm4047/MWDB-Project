@@ -229,7 +229,7 @@ def helper():
     query_image = ['static/Hands/Hand_0000674.jpg']
     # Number of hashes per layer
     k = 10
-    # Nu5er of layers
+    # Number of layers
     l = 10
     #Similar Imgaes
     t = 20

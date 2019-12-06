@@ -71,6 +71,10 @@
                           <label for="exampleInputEmail1">Unlabelled CVS path</label>
                           <input type="text" class="form-control" id="queryCsvPath" name="queryCsvPath" aria-describedby="queryCsvPath" placeholder="Enter query Csv Path">
                       </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Number of clusters</label>
+                          <input type="text" class="form-control" id="c" name="c" aria-describedby="queryCsvPath" placeholder="Enter number of clusters">
+                      </div>
                       <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
               </div>
@@ -85,7 +89,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Input for task2</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Input for task3</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -110,11 +114,11 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Number of edges</label>
-                            <input type="text" class="form-control" id="capitalK" name="capitalK" aria-describedby="capitalK" placeholder="Enter capitalK">
+                            <input type="text" class="form-control" id="smallK" name="smallK" aria-describedby="smallK" placeholder="Enter small k">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Number of Similar images required</label>
-                            <input type="text" class="form-control" id="smallK" name="smallK" aria-describedby="smallK" placeholder="Enter smallK">
+                            <input type="text" class="form-control" id="capitalK" name="capitalK" aria-describedby="capitalK" placeholder="Enter capital K">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                       </form>
@@ -175,7 +179,6 @@
         <div class="container">
           <img src="{{url_for('static', filename='poodle_banner.png')}}" alt="Poodle Banner">
           <h1 class="display-4">Multimedia and web databases - Phase 3</h1>
-          <p class="lead"> Where multimedia ends and jargon begins !</p>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#task1Modal">Task 1</button>
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#task2Modal">Task 2</button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#task3Modal">Task 3</button>

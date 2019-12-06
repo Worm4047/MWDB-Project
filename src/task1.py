@@ -26,7 +26,7 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
     # testPath = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/input2/'
 
     reductionType = ReductionType.SVD
-    modelType = ModelType.SIFT
+    modelType = ModelType.HOG
     k = 15
     dimRedHelper = LatentSemantic()
     obj = DimRedHelper()
@@ -52,7 +52,6 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
         all_palmar_left_images += all_palmar_right_images
         all_palmar_right_images = None
 
-
     testImages = glob.glob(testPath + "*.jpg")
     print(len(testImages))
 
@@ -61,28 +60,28 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
     dataMatrixPalmarLeft = None
     dataMatrixPalmarRight = None
 
-    if(all_dorsal_left_images != None):
+    if (all_dorsal_left_images != None):
         print("Dorsal Left")
-        dataMatrixDorsalLeft = obj.getDataMatrix(all_dorsal_left_images, ModelType.SIFT)
+        dataMatrixDorsalLeft = obj.getDataMatrix(all_dorsal_left_images, ModelType.HOG)
         # dataMatrixDorsalLeft = np.stack(dataMatrixDorsalLeft, axis=0)
 
     if (all_dorsal_right_images != None):
         print("Dorsal Right")
-        dataMatrixDorsalRight = obj.getDataMatrix(all_dorsal_right_images, ModelType.SIFT)
+        dataMatrixDorsalRight = obj.getDataMatrix(all_dorsal_right_images, ModelType.HOG)
         # dataMatrixDorsalRight = np.stack(dataMatrixDorsalRight, axis=0)
 
     if (all_palmar_left_images != None):
         print("Palmar Left")
-        dataMatrixPalmarLeft = obj.getDataMatrix(all_palmar_left_images, ModelType.SIFT)
+        dataMatrixPalmarLeft = obj.getDataMatrix(all_palmar_left_images, ModelType.HOG)
         # dataMatrixPalmarLeft = np.stack(dataMatrixPalmarLeft, axis=0)
 
     if (all_palmar_right_images != None):
         print("Palmar Right")
-        dataMatrixPalmarRight = obj.getDataMatrix(all_palmar_right_images, ModelType.SIFT)
+        dataMatrixPalmarRight = obj.getDataMatrix(all_palmar_right_images, ModelType.HOG)
         # dataMatrixPalmarRight = np.stack(dataMatrixPalmarRight, axis=0)
 
     print("Input Images")
-    dataMatrixTest = obj.getDataMatrix(testImages, ModelType.SIFT)
+    dataMatrixTest = obj.getDataMatrix(testImages, ModelType.HOG)
     # dataMatrixInput = np.stack(dataMatrixInput, axis=0)
 
     U_dorsal_left = None
@@ -206,17 +205,17 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
         distanceRatios = [dorsal_left_ratio, dorsal_right_ratio, palmar_left_ratio, palmar_right_ratio]
         minRatio = min(distanceRatios)
         if distanceRatios.index(minRatio) is 0:
-            print(testImages[index] + ": DORSAL LEFT :", (' '.join(map(str, distanceRatios))))
-            dorsal_images.append(testImages[index])
-        elif distanceRatios.index(minRatio) is 1:
-            print(testImages[index] + ": DORSAL RIGHT :", (' '.join(map(str, distanceRatios))))
-            dorsal_images.append(testImages[index])
-        elif distanceRatios.index(minRatio) is 2:
             print(testImages[index] + ": PALMAR LEFT :", (' '.join(map(str, distanceRatios))))
             palmar_images.append(testImages[index])
-        elif distanceRatios.index(minRatio) is 3:
+        elif distanceRatios.index(minRatio) is 1:
             print(testImages[index] + ": PALMAR RIGHT :", (' '.join(map(str, distanceRatios))))
             palmar_images.append(testImages[index])
+        elif distanceRatios.index(minRatio) is 2:
+            print(testImages[index] + ": DORSAL LEFT :", (' '.join(map(str, distanceRatios))))
+            dorsal_images.append(testImages[index])
+        elif distanceRatios.index(minRatio) is 3:
+            print(testImages[index] + ": DORSAL RIGHT :", (' '.join(map(str, distanceRatios))))
+            dorsal_images.append(testImages[index])
         index += 1
 
     accuracy = calculateAccuracy(dorsal_images, palmar_images, metaDataTest)
@@ -242,8 +241,6 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
     # print("Dorsal Max:",dorsal_max)
     # print("Palmar Min:",palmar_min)
     # print("Palmar Max:",palmar_max)
-
-
 
     # print("*********** USING SUM *************")
     # # Using SUM
@@ -338,6 +335,7 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
     #
     #     index += 1
 
+
 # This is the main function
 # Input : Datamatrix computed for the images, Image paths (absolute)
 # Function :  Performs clustering of the image then visualizes them
@@ -346,10 +344,10 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
 #           metaDataFile='/Users/studentworker/PycharmProjects/phase_3/HandInfo.csv',
 #           testPath='/Users/studentworker/PycharmProjects/phase_3/test/sample0/test/'):
 
-def task1(imagesFolder='static/Labelled/Set1/',
-          metaDataFile='static/labelled_set1.csv',
-          testPath='static/Unlabelled/Set1/',
-          metaDataTestFile='static/Unlabelled/unlablled_set1.csv'):
+def task1(imagesFolder='static/Labelled/Set2/',
+          metaDataFile='static/labelled_set2.csv',
+          testPath='static/Unlabelled/Set2/',
+          metaDataTestFile='static/HandInfo.csv'):
     dorsalImages, palmarImages, accuracy = classifyImages(imagesFolder, metaDataFile, testPath, metaDataTestFile)
     return dorsalImages, palmarImages, accuracy
 
@@ -376,7 +374,7 @@ def getLabelledPalmarRightImages(csvpath, imagePath):
 
 def getLabelledImages(csvPath, imagePath, dorsal, hand):
     label_df = pd.read_csv(csvPath)
-    print("Dorsal:",dorsal,"left:",hand)
+    print("Dorsal:", dorsal, "left:", hand)
     if dorsal and hand is 0:
         print("11111111")
         label_df = label_df.loc[label_df['aspectOfHand'].str.contains('dorsal left')]
@@ -394,26 +392,29 @@ def getLabelledImages(csvPath, imagePath, dorsal, hand):
         images[i] = imagePath + images[i]
     return images
 
+
 def calculateAccuracy(dorsal_images, palmar_images, csvPath):
     label_df = pd.read_csv(csvPath)
-    accuracy = 0
+    correctImages = 0
     for image in dorsal_images:
         name = path_leaf(image)
         actual_label = label_df.at[label_df['imageName'].eq(name).idxmax(), 'aspectOfHand']
         print(name, " - ", actual_label, ":dorsal")
         if 'dorsal' in actual_label:
-            accuracy += 1
+            correctImages += 1
     for image in palmar_images:
         name = path_leaf(image)
         actual_label = label_df.at[label_df['imageName'].eq(name).idxmax(), 'aspectOfHand']
         print(name, " - ", actual_label, ":palmar")
         if 'palmar' in actual_label:
-            accuracy += 1
-    print("Accuracy:", accuracy/(len(dorsal_images)+len(palmar_images)))
+            correctImages += 1
+    accuracy = correctImages / (len(dorsal_images) + len(palmar_images))
+    print("Accuracy:", accuracy)
+
+    return accuracy
 
 
 def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
-
 # task1()
