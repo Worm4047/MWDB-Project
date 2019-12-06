@@ -52,7 +52,6 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
         all_palmar_left_images += all_palmar_right_images
         all_palmar_right_images = None
 
-
     testImages = glob.glob(testPath + "*.jpg")
     print(len(testImages))
 
@@ -61,7 +60,7 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
     dataMatrixPalmarLeft = None
     dataMatrixPalmarRight = None
 
-    if(all_dorsal_left_images != None):
+    if (all_dorsal_left_images != None):
         print("Dorsal Left")
         dataMatrixDorsalLeft = obj.getDataMatrix(all_dorsal_left_images, ModelType.HOG)
         # dataMatrixDorsalLeft = np.stack(dataMatrixDorsalLeft, axis=0)
@@ -243,8 +242,6 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
     # print("Palmar Min:",palmar_min)
     # print("Palmar Max:",palmar_max)
 
-
-
     # print("*********** USING SUM *************")
     # # Using SUM
     # index = 0
@@ -338,6 +335,7 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
     #
     #     index += 1
 
+
 # This is the main function
 # Input : Datamatrix computed for the images, Image paths (absolute)
 # Function :  Performs clustering of the image then visualizes them
@@ -348,7 +346,7 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
 
 def task1(imagesFolder='static/Labelled/Set2/',
           metaDataFile='static/labelled_set2.csv',
-          testPath='static/Unlabelled/Set1/',
+          testPath='static/Unlabelled/Set2/',
           metaDataTestFile='static/HandInfo.csv'):
     dorsalImages, palmarImages, accuracy = classifyImages(imagesFolder, metaDataFile, testPath, metaDataTestFile)
     return dorsalImages, palmarImages, accuracy
@@ -376,7 +374,7 @@ def getLabelledPalmarRightImages(csvpath, imagePath):
 
 def getLabelledImages(csvPath, imagePath, dorsal, hand):
     label_df = pd.read_csv(csvPath)
-    print("Dorsal:",dorsal,"left:",hand)
+    print("Dorsal:", dorsal, "left:", hand)
     if dorsal and hand is 0:
         print("11111111")
         label_df = label_df.loc[label_df['aspectOfHand'].str.contains('dorsal left')]
@@ -394,26 +392,29 @@ def getLabelledImages(csvPath, imagePath, dorsal, hand):
         images[i] = imagePath + images[i]
     return images
 
+
 def calculateAccuracy(dorsal_images, palmar_images, csvPath):
     label_df = pd.read_csv(csvPath)
-    accuracy = 0
+    correctImages = 0
     for image in dorsal_images:
         name = path_leaf(image)
         actual_label = label_df.at[label_df['imageName'].eq(name).idxmax(), 'aspectOfHand']
         print(name, " - ", actual_label, ":dorsal")
         if 'dorsal' in actual_label:
-            accuracy += 1
+            correctImages += 1
     for image in palmar_images:
         name = path_leaf(image)
         actual_label = label_df.at[label_df['imageName'].eq(name).idxmax(), 'aspectOfHand']
         print(name, " - ", actual_label, ":palmar")
         if 'palmar' in actual_label:
-            accuracy += 1
-    print("Accuracy:", accuracy/(len(dorsal_images)+len(palmar_images)))
+            correctImages += 1
+    accuracy = correctImages / (len(dorsal_images) + len(palmar_images))
+    print("Accuracy:", accuracy)
+
+    return accuracy
 
 
 def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
-
 # task1()

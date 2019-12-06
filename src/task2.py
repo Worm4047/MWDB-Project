@@ -27,7 +27,7 @@ import src.kmeans as kmeans
 # This is a temp function and is used for testing only
 class Task2():
 
-    def __init__(self, dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages):
+    def __init__(self, dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages, C):
         self.palmarImages = palmarImages
         self.queryImages = queryImages
         self.dorsalImages = dorsalImages
@@ -36,9 +36,9 @@ class Task2():
         self.dmqueryImages = dmqueryImages
         
         #Computer Dorsal clusters
-        self.dorsalClusters = self.getClusters(self.dmDorsal, self.dorsalImages, "dorsal")
+        self.dorsalClusters = self.getClusters(self.dmDorsal, self.dorsalImages, "dorsal", C)
         #Computer and save palmar clusters
-        self.palmarClusters = self.getClusters(self.dmPalmar, self.palmarImages, "palmar")
+        self.palmarClusters = self.getClusters(self.dmPalmar, self.palmarImages, "palmar", C)
         #Find labels for query images
         labels = self.getQueryLabels(self.dmqueryImages, self.dorsalClusters, self.palmarClusters)
         self.saveData(labels, self.queryImages, "query")
@@ -116,7 +116,7 @@ class Task2():
             label = labels[i]
             if label not in clust_count:
                 clust_count[label] = 0
-            clust_count[label]+=1;
+            clust_count[label]+=1
             if label not in label_dict:
                 label_dict[label] = [0]*cols
             print(cols, len(label_dict[label]))
@@ -179,12 +179,11 @@ def getUnLabelledImages(csvPath, imagePath):
         imagePaths.append(os.path.join(imagePath, images[i]))
     return imagePaths
 
-def helper(csvpath, imagePath, queryPath, queryCsvPath):
-# def helper():
-#     csvpath = 'static/sample_data/labelled_set1.csv'
-#     imagePath = 'static/sample_data/Labelled/Set1/'
-#     queryPath = 'static/sample_data/Unlabelled/Set1/'
-#     queryCsvPath = 'static/sample_data/unlabelled_set1.csv'
+def helper(csvpath, imagePath, queryPath, queryCsvPath, c=10):
+    # csvpath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/labelled_set1.csv'
+    # imagePath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'
+    # queryPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Unlabelled/Set1/'
+    # queryCsvPath = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/unlabelled_set1.csv'
     
     # queryImage = [queryPath + 'Hand_0007735.jpg']
     dorsalImages = getLabelledDorsalImages(csvpath, imagePath)
@@ -202,7 +201,7 @@ def helper(csvpath, imagePath, queryPath, queryCsvPath):
     dmqueryImages = obj.getDataMatrixForLBP(queryImages, [])
     dmqueryImages = np.stack( dmqueryImages, axis=0 )
 
-    obj = Task2(dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages)
+    obj = Task2(dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages, c)
     
 if __name__ == '__main__':
     # helper()

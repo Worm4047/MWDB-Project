@@ -42,6 +42,7 @@ def task1():
     # inputPath = request.form['inputPath']
     # dorsalImages, palmarImages = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
     dorsalImages, palmarImages, accuracy = t1.task1()
+    print(accuracy)
     return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)
 
 
@@ -86,9 +87,9 @@ def task2():
     imagePath = request.form['imagePath']
     queryPath = request.form['queryPath']
     queryCsvPath = request.form['queryCsvPath']
-
-    t2.helper(csvpath, imagePath, queryPath, queryCsvPath)
-
+    c = int(request.form['c'])
+    print(c)
+    t2.helper(csvpath, imagePath, queryPath, queryCsvPath, c)
 
     dorsalImages = getLabelledImages(True)
     palmarImages = getLabelledImages(False)
@@ -182,7 +183,7 @@ def task4_svm():
 
 @app.route("/task4/dt", methods = ['GET', 'POST'])
 def task4_dt():
-    dorsalImages, palmarImages= t4dt.helper()
+    dorsalImages, palmarImages, accuracy_score = t4dt.helper()
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -190,7 +191,7 @@ def task4_dt():
         palmarImages2.append(getPathForStatic(img))
     dorsalImages = dorsalImages2
     palmarImages = palmarImages2
-    return render_template("task4_dt.html", dorsalImages = dorsalImages, palmarImages = palmarImages)
+    return render_template("task4_dt.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
     return "TASK 4 TO BE DONE"
 
 @app.route("/task4/ppr", methods = ['GET', 'POST'])
