@@ -237,7 +237,6 @@ def helper(path_labelled_images, query_img, l=10, k=10, t=20):
     images = []
     for filename in glob.glob(path_labelled_images + "*.jpg"):
         images.append(filename)
-    
     images.sort()
     # images = images[:1000]
     # for img in images:
@@ -251,6 +250,7 @@ def helper(path_labelled_images, query_img, l=10, k=10, t=20):
     dm = []
     dm = obj.getDataMatrixForHOG(images, [])
     queryDm = obj.getDataMatrixForHOG(query_image, [])
+    print(queryDm)
     w = 400
     # print(queryDm)
     candidate_ids = getCandidateImages(k, l, w, dm, images, queryDm, t)

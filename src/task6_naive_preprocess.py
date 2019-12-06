@@ -98,6 +98,15 @@ def coding(col, codeDict):
         colCoded.replace(key, value, inplace=True)
     return colCoded
 
+def getCandiddateImages():
+    li = []
+    try:
+        with open('store/lsh_candidate_images.pkl', 'rb') as f2:
+            li = pickle.load(f2)
+    except:
+        pass
+    return li
+
 def getdata():
     print("In get data")
     path_labelled_images = '/home/worm/Desktop/ASU/CSE_515/MWDB-Project/src/static/sample_data/Labelled/Set1/'

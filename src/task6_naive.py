@@ -24,6 +24,15 @@ def getImages():
         li = pickle.load(f2)    
     return li
 
+def getCandiddateImages():
+    li = []
+    try:
+        with open('store/lsh_candidate_images.pkl', 'rb') as f2:
+            li = pickle.load(f2)
+    except:
+        pass
+    return li
+
 def mean(numbers):
     """Returns the mean of numbers"""
     return np.mean(numbers)

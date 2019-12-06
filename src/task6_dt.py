@@ -152,6 +152,15 @@ def getImages():
     return li
 
 
+def getCandiddateImages():
+    li = []
+    try:
+        with open('store/lsh_candidate_images.pkl', 'rb') as f2:
+            li = pickle.load(f2)
+    except:
+        pass
+    return li
+
 def helper(d):
     liImages = []
     labels = []

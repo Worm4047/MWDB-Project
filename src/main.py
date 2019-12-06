@@ -139,7 +139,7 @@ def task2():
 
     accuracy = (correct*1.0)/total
     print(accuracy)
-    return render_template('task2.html', dorsalData = dorsalImages, palmarData = palmarImages, queryData = queryImages, accuracy = accuracy)
+    return render_template('task2.html', dorsalData = dorsalImages, palmarData = palmarImages, queryData = queryImages, accuracy = accuracy*100)
 
 @app.route("/task3/", methods = ['GET', 'POST'])
 def task3():
@@ -169,7 +169,7 @@ def task4_svm():
     path_labelled_metadata = request.form['path_labelled_metadata']
     path_unlabelled_images = request.form['path_unlabelled_images']
     path_unlabelled_metadata = request.form['path_unlabelled_metadata']
-    dorsalImages, palmarImages, accuracy_score = t4svm.helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata)
+    palmarImages, dorsalImages, accuracy_score = t4svm.helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata)
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -233,9 +233,9 @@ def task4_ppr():
 def task5():
     path_labelled_images = request.form['path_labelled_images']
     query_img = request.form['query_img']
-    l = request.form['l']
-    k = request.form['k']
-    t = request.form['t']
+    l = int(request.form['l'])
+    k = int(request.form['k'])
+    t = int(request.form['t'])
     queryImage, candidateImages = t5.helper(path_labelled_images, query_img, l, k, t)
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
@@ -251,7 +251,7 @@ def task5():
 
 @app.route("/task6_svm", methods = ['GET', 'POST'])
 def task6_svm():
-    images = t6_svm.getImages()[:10]
+    images = t6_svm.getCandiddateImages()
     print(images)
     images = [getPathForStatic(imagePath) for imagePath in images]
     print(images)
@@ -259,7 +259,7 @@ def task6_svm():
 
 @app.route("/task6_naive", methods = ['GET', 'POST'])
 def task6_naive():
-    images = t6_naive.getImages()[:10]
+    images = t6_naive.getCandiddateImages()
     print(images)
     images = [getPathForStatic(imagePath) for imagePath in images]
     print(images)
@@ -277,7 +277,7 @@ def process_feedback_naive():
 
 @app.route("/task6_dt", methods = ['GET', 'POST'])
 def task6_dt():
-    images = t6_dt.getImages()[:10]
+    images = t6_dt.getCandiddateImages()
     print(images)
     images = [getPathForStatic(imagePath) for imagePath in images]
     print(images)
@@ -285,7 +285,7 @@ def task6_dt():
 
 @app.route("/task6_ppr", methods = ['GET', 'POST'])
 def task6_ppr():
-    images = t6_dt.getImages()[:10]
+    images = t6_dt.getCandiddateImages()
     print(images)
     images = [getPathForStatic(imagePath) for imagePath in images]
     print(images)
