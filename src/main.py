@@ -15,7 +15,8 @@ from src.models.enums.models import ModelType
 from src.tasks.task6PPR import Task6PPR
 from src.tasks.task4pprNoCache import Task4PPRNoCache
 from src.classifiers.pprClassifier import ImageClass
-
+import pandas as pd
+from src.constants import ALL_HANDS_CSV
 
 app = Flask(__name__)
 
@@ -204,14 +205,28 @@ def task4_ppr():
         ImageClass.DORSAL.name: [],
         ImageClass.PALMAR.name: []
     }
-    for imagePath in glob.glob(os.path.join(unlabelledImageDir, "*.jpg")):
+
+    accuracy = 0
+    label_df = pd.read_csv(ALL_HANDS_CSV)
+    if ".jpg" in unlabelledImageDir:
+        imagePaths = [unlabelledImageDir]
+    else: imagePaths = glob.glob(os.path.join(unlabelledImageDir, "*.jpg"))
+
+    for imagePath in imagePaths:
         imageClass = Task4PPRNoCache(imgDir, csvFile, modelTypes=[ModelType.CM]).getClassForImage(imagePath)
+        print(imagePath)
+        label_df_temp = label_df.loc[label_df['imageName'].str.contains(os.path.basename(imagePath))]
+        gtClass = ImageClass.DORSAL if 'dorsal' in list(label_df_temp['aspectOfHand'].values)[0] else ImageClass.PALMAR
+
+        if imageClass == gtClass: accuracy += 1
+
         imageDict[imageClass.name].append(imagePath)
 
-
+    accuracy = (accuracy/len(imagePaths)) * 100
     return render_template("task4_ppr.html",
                            dorsalImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.DORSAL.name]],
-                           palmarImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.PALMAR.name]])
+                           palmarImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.PALMAR.name]],
+                           accuracy=accuracy)
 
 @app.route("/task5/", methods = ['GET', 'POST'])
 def task5():
