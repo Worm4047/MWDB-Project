@@ -19,20 +19,24 @@
             <div class="modal-body">
                 <form method="POST" action="/task1" >
                     <div class="form-group">
-                      <label for="exampleInputEmail1">palmar Path</label>
-                      <input type="text" class="form-control" id="palmarPath" name="palmarPath" aria-describedby="palmarPath" placeholder="Enter palmar Path">
+                      <label for="exampleInputEmail1">Labelled Images Folder</label>
+                      <input type="text" class="form-control" id="trainPath" name="trainPath" aria-describedby="trainPath" placeholder="Enter the training images folder">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Dorsal Path</label>
-                        <input type="text" class="form-control" id="dorsalPath" name="dorsalPath" aria-describedby="Dorsal Path" placeholder="Enter Dorsal Path">
+                        <label for="exampleInputEmail1">Labelled Images CSV</label>
+                        <input type="text" class="form-control" id="trainCSV" name="trainCSV" aria-describedby="trainCSV" placeholder="Enter the training images CSV">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">metaDataFile</label>
-                        <input type="text" class="form-control" id="metaDataFile" name="metaDataFile" aria-describedby="metaDataFile" placeholder="Enter metaDataFile">
+                        <label for="exampleInputEmail1">Unlabelled Images Folder</label>
+                        <input type="text" class="form-control" id="testPath" name="testPath" aria-describedby="testPath" placeholder="Enter the testing images folder">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">inputPath</label>
-                        <input type="text" class="form-control" id="inputPath" name="inputPath" aria-describedby="inputPath" placeholder="Enter inputPath">
+                        <label for="exampleInputEmail1">Unlabelled Images CSV</label>
+                        <input type="text" class="form-control" id="testCSV" name="testCSV" aria-describedby="testCSV" placeholder="Enter the testing images CSV">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">K</label>
+                        <input type="text" class="form-control" id="k" name="k" aria-describedby="k" placeholder="Enter the K value">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </form>

@@ -29,11 +29,12 @@ def index():
 
 @app.route("/task1/", methods = ['GET', 'POST'])
 def task1():
-    palmarPath = request.form['palmarPath']
-    dorsalPath = request.form['dorsalPath']
-    metaDataFile = request.form['metaDataFile']
-    inputPath = request.form['inputPath']
-    dorsalImages, palmarImages, accuracy = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
+    trainPath = request.form['trainPath']
+    trainCSV = request.form['trainCSV']
+    testPath = request.form['testPath']
+    testCSV = request.form['testCSV']
+    k = int(request.form['k'])
+    dorsalImages, palmarImages, accuracy = t1.task1(trainPath, trainCSV, testPath, testCSV, k)
     # dorsalImages, palmarImages, accuracy = t1.task1()
     print(accuracy)
     return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)

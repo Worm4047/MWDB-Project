@@ -17,7 +17,7 @@ from src.common.enums.labels import LabelType
 
 
 # This is a temp function and is used for testing only
-def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
+def classifyImages(imagesFolder, csvPath, testPath, metaDataTest, k):
     # testPath = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/input/'
     # path = '/Users/studentworker/PycharmProjects/phase_3/test/sample/Labelled/Set1/'
     # pathDorsal = '/Users/studentworker/PycharmProjects/phase_3/test/sample0/dorsal/'
@@ -27,7 +27,6 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
 
     reductionType = ReductionType.SVD
     modelType = ModelType.HOG
-    k = 15
     dimRedHelper = LatentSemantic()
     obj = DimRedHelper()
 
@@ -347,8 +346,9 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
 def task1(imagesFolder='static/Labelled/Set2/',
           metaDataFile='static/labelled_set2.csv',
           testPath='static/Unlabelled/Set2/',
-          metaDataTestFile='static/HandInfo.csv'):
-    dorsalImages, palmarImages, accuracy = classifyImages(imagesFolder, metaDataFile, testPath, metaDataTestFile)
+          metaDataTestFile='static/HandInfo.csv',
+          k=15):
+    dorsalImages, palmarImages, accuracy = classifyImages(imagesFolder, metaDataFile, testPath, metaDataTestFile, k)
     return dorsalImages, palmarImages, accuracy
 
 
