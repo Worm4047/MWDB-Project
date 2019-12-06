@@ -224,9 +224,9 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
         pickle.dump(candidate_ids, f)
     return candidate_ids
 
-def helper():
-    path_labelled_images = 'static/Hands/'
-    query_image = ['static/Hands/Hand_0000674.jpg']
+def helper(path_labelled_images, query_img):
+    # path_labelled_images = 'static/Hands/'
+    query_image = [query_img]
     # Number of hashes per layer
     k = 10
     # Number of layers

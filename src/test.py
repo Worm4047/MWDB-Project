@@ -11,63 +11,60 @@ from skimage import feature
 import cv2
 from skimage.measure import block_reduce
 from sklearn.decomposition import PCA
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+import dt_first as decisiont
 
-from src.constants import BLOCK_SIZE
-from src.models.ColorMoments import ColorMoments
+from common.imageHelper import getYUVImage
+from constants import BLOCK_SIZE
+from models.ColorMoments import ColorMoments
 
 from random import seed
 from random import randrange
 from csv import reader
 import random
-from src.common.imageHelper import ImageHelper
-from src.constants import BLOCK_SIZE
-from src.models.ColorMoments import ColorMoments
+import pandas as pd
+import os
+from common.imageHelper import getYUVImage
+from constants import BLOCK_SIZE
+from models.ColorMoments import ColorMoments
 import numpy as np
 import csv
 import cv2
 import matplotlib.pyplot as plt
 
-
 class HistogramOfGradients:
-
-    def __init__(self, numBins, CellSize, BlockSize):
-        self.numBins = numBins
-        self.CellSize = CellSize
-        self.BlockSize = BlockSize
-
-    def Change_Image_Size(self, img):
-        resized_img = block_reduce(img, block_size=(10, 10, 1), func=np.mean)
+    
+    def __init__(self,numBins,CellSize,BlockSize):
+        self.numBins=numBins
+        self.CellSize=CellSize
+        self.BlockSize=BlockSize
+        
+    def Change_Image_Size(self,img):
+        resized_img=block_reduce(img, block_size=(10, 10, 1), func=np.mean)
         return resized_img
-
-    def describe(self, img):
-        feature_vector, hog_image = feature.hog(img, orientations=self.numBins,
-                                                pixels_per_cell=(self.CellSize, self.CellSize),
-                                                cells_per_block=(self.BlockSize, self.BlockSize), block_norm='L2-Hys',
-                                                visualize=True, feature_vector=True, multichannel=True)
-        return feature_vector, hog_image
-
+   
+    def describe(self,img):
+        feature_vector,hog_image=feature.hog(img,orientations=self.numBins,pixels_per_cell=(self.CellSize, self.CellSize), cells_per_block=(self.BlockSize, self.BlockSize),block_norm='L2-Hys',visualize=True,feature_vector=True, multichannel=True)
+        return feature_vector,hog_image
 
 def read_images_store_features(path_labelled_images, path_storing_files):
     files = glob.glob(path_storing_files + "*.txt")
     for f in files:
         os.remove(f)
-    for filename in glob.glob(path_labelled_images + "*.jpg"):
-        # img=cv2.imread(filename,0)##LBP
-        img_name = os.path.basename(filename)
-        feature_vector = ColorMoments(ImageHelper().getYUVImage(filename), BLOCK_SIZE, BLOCK_SIZE).getFeatures()
-
-        # img=cv2.imread(filename)##HOG
+    for filename in glob.glob(path_labelled_images+"*.jpg"):
+        #img=cv2.imread(filename,0)##LBP
+        img_name=os.path.basename(filename)
+        feature_vector = ColorMoments(getYUVImage(filename), BLOCK_SIZE, BLOCK_SIZE).getFeatures()
+        #img=cv2.imread(filename)##HOG
+        
         # HOG_object=HistogramOfGradients(9,8,2)
         # Resized_image=HOG_object.Change_Image_Size(img)
         # feature_vector,image_HOG=HOG_object.describe(Resized_image)
-
-        # np.save("D:/studies/multimedia and web databases/project/feature_vector_"+img_name+".npy", feature_vector)
-        np.savetxt(path_storing_files + img_name + ".txt", feature_vector, fmt='%f', delimiter=',', newline=',',
-                   footer='')
+        #np.save("D:/studies/multimedia and web databases/project/feature_vector_"+img_name+".npy", feature_vector)
+        np.savetxt(path_storing_files+img_name+".txt", feature_vector, fmt='%f',delimiter=',',newline=',',footer='')
     print("Finished executing read_image")
     return
-
-
 def read_features_put_dataframe(path_storing_files, string):
     with open(path_storing_files + "table_for_" + string + "_Hand_features.csv", mode='w+') as table_for_Hand_features:
         table_for_Hand_features_writer = csv.writer(table_for_Hand_features, delimiter=',', quotechar='"',
@@ -79,7 +76,6 @@ def read_features_put_dataframe(path_storing_files, string):
                 table_for_Hand_features_writer.writerows(lines)
     print("Finished executing read_features")
     return
-
 
 def store_image_name(path, string):
     table_name = "table_" + string + "_Hand_names.csv"
@@ -94,7 +90,6 @@ def store_image_name(path, string):
     df_Hand_names.columns = ["imageName"]
     return df_Hand_names
 
-
 def making_two_columns(path):
     df_hands_info = pd.read_csv(path, delimiter=",")
     new = df_hands_info["aspectOfHand"].str.split(" ", n=1, expand=True)
@@ -103,7 +98,6 @@ def making_two_columns(path):
     # df_hands_info.drop(columns =["aspectOfHand"], inplace = True)
     return df_hands_info
 
-
 def coding(col, codeDict):
     colCoded = pd.Series(col, copy=True)
     for key, value in codeDict.items():
@@ -111,25 +105,19 @@ def coding(col, codeDict):
     return colCoded
 
 
-def getdata(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata):
-    # path_labelled_images = input("Enter path to folder with labelled images:")
-    # # 'phase3_sample_data/Labelled/Set2/'
-    # path_labelled_metadata = input("Enter path to metadata with labelled images:")
-    # # 'phase3_sample_data/labelled_set2.csv'
-    # path_unlabelled_images = input("Enter path to folder with unlabelled images:")
-    # # 'phase3_sample_data/Unlabelled/Set2/'
-    # path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
-    # # 'phase3_sample_data/unlabelled_set2.csv'
-    # path_original_metadata = input("Enter path to metadata with original data:")
-    # # 'phase3_sample_data/HandInfo.csv'
-    # path_storing_files = input("Enter path to store feature files:")
-    # path_labelled_images = 'static/Labelled/Set2/'
-    # path_labelled_metadata = 'static/labelled_set2.csv'
-    # path_unlabelled_images = 'static/Unlabelled/Set2/'
-    # path_unlabelled_metadata = 'static/unlabelled_set2.csv'
-    path_original_metadata = 'store/HandInfo.csv'
-    path_storing_files = 'store/'
-    # 'feature/'
+if __name__ == "__main__":
+    path_labelled_images = input("Enter path to folder with labelled images:")
+    #'phase3_sample_data/Labelled/Set2/'
+    path_labelled_metadata = input("Enter path to metadata with labelled images:")
+    #'phase3_sample_data/labelled_set2.csv'
+    path_unlabelled_images = input("Enter path to folder with unlabelled images:")
+    #'phase3_sample_data/Unlabelled/Set 2/'
+    path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
+    #'phase3_sample_data/unlabelled_set2.csv'
+    path_original_metadata = input("Enter path to metadata with original data:")
+    #'phase3_sample_data/HandInfo.csv'
+    path_storing_files = input("Enter path to store feature files:")
+    #'feature/'
 
     """X_train is the data matrix"""
     read_images_store_features(path_labelled_images, path_storing_files)
@@ -141,30 +129,30 @@ def getdata(path_labelled_images, path_labelled_metadata, path_unlabelled_images
 
     """Storing the name of images from labelled folder in a csv file as sequence is not same in folder and metadata"""
     df_labelled_images_name = store_image_name(path_labelled_images, "labelled")
-    # print("labelled images head: ",df_labelled_images_name.head())
+    #print("labelled images head: ",df_labelled_images_name.head())
     df_unlabelled_images_name = store_image_name(path_unlabelled_images, "unlabelled")
 
     # print(df_labelled_images_name.head())
-    # print("Unlabelled images head: ",df_unlabelled_images_name.head())
+    #print("Unlabelled images head: ",df_unlabelled_images_name.head())
 
     """df_labelled_dataInfo datafram after dividing the aspect of hand column"""
     df_labelled_dataInfo = making_two_columns(path_labelled_metadata)
-    # print("labelled dat info head: ",df_labelled_dataInfo.head())
+    #print("labelled dat info head: ",df_labelled_dataInfo.head())
     df_labelled_dataInfo = df_labelled_dataInfo[['imageName', 'SideOfHand']].copy()
-    # print("labelled dat info head2: ",df_labelled_dataInfo.head())
+    #print("labelled dat info head2: ",df_labelled_dataInfo.head())
     """Merging both dataframes.Important because metadata and folder have different sequence of images"""
 
     df_labelled_Info = pd.merge(df_labelled_images_name, df_labelled_dataInfo, on="imageName")
-    # print("After merging:",df_labelled_Info.tail(30))
-    df_labelled_Info["SideOfHand"] = coding(df_labelled_Info["SideOfHand"], {'dorsal': 1, 'palmar': 0})
+    #print("After merging:",df_labelled_Info.tail(30))
+    df_labelled_Info["SideOfHand"] = coding(df_labelled_Info["SideOfHand"], {'dorsal': 1, 'palmar': -1})
     """y_training"""
     y_training = df_labelled_Info["SideOfHand"]
-    # print(y_training)
-    y_train = y_training.to_numpy()
-    # print(y_train)
-    ty = np.column_stack((X_train, y_train))
-    # print(ty)
-    result_file = open('train_data.csv', 'w', newline='')
+    #print(y_training)
+    y_train=y_training.to_numpy()
+    #print(y_train)
+    ty = np.column_stack((X_train , y_train ))
+    #print(ty)
+    result_file= open('output.csv','w', newline='')
     wr = csv.writer(result_file, dialect='excel')
     for row in ty:
         tem_l = row.tolist()
@@ -183,7 +171,7 @@ def getdata(path_labelled_images, path_labelled_metadata, path_unlabelled_images
     # print(X_test.shape)
     # print(v.shape)
     # print(X_test.head())
-    result_file1 = open('test_data.csv', 'w', newline='')
+    result_file1= open('predict_file.csv','w', newline='')
     wr1 = csv.writer(result_file1, dialect='excel')
     for row in X_test:
         tem_l1 = row.tolist()
@@ -198,13 +186,9 @@ def getdata(path_labelled_images, path_labelled_metadata, path_unlabelled_images
     """Merging both dataframes.Important because metadata and folder have different sequence of images"""
 
     df_unlabelled_Info = pd.merge(df_unlabelled_images_name, df_original_dataInfo, on="imageName")
-    df_unlabelled_Info["SideOfHand"] = coding(df_unlabelled_Info["SideOfHand"], {'dorsal': 1, 'palmar': 0})
+    df_unlabelled_Info["SideOfHand"] = coding(df_unlabelled_Info["SideOfHand"], {'dorsal': 1, 'palmar': -1})
     """y_test_actual"""
-
-    colCoded = pd.Series(df_unlabelled_Info["imageName"], copy=True)
-    for i in range(colCoded.size):
-        colCoded[i] = path_unlabelled_images + colCoded[i]
-    df_unlabelled_Info["imageName"] = colCoded
-    # y_test_actual = df_unlabelled_Info["SideOfHand"]
+    y_test_actual = df_unlabelled_Info["SideOfHand"]
     df_unlabelled_Info.to_csv('unlabel.csv')
-
+    
+    

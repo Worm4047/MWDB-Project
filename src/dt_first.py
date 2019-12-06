@@ -6,12 +6,14 @@ from csv import reader
 import random
 import pandas as pd
 import os
+from common.imageHelper import getYUVImage
+from constants import BLOCK_SIZE
+from models.ColorMoments import ColorMoments
 import numpy as np
 import csv
 import cv2
 import matplotlib.pyplot as plt
 import pickle
-from src.preprocess import getdata
  
 # Load a CSV file
 def load_csv(filename):
@@ -166,28 +168,25 @@ def decision_tree(train, test, max_depth, min_size):
 		predictions.append(prediction)
 	return(predictions)
         
-def helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata):
-	getdata(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata)
-	filename = 'train_data.csv'
+if __name__ == "__main__":
+	filename = 'output.csv'
 	dataset = load_csv(filename)
 	random.shuffle(dataset)
 
-	fn='test_data.csv'
+	fn='predict_file.csv'
 	dt_test= load_csv(fn)
 
 	file = open('unlabel.csv', "r")
 	lines = reader(file)
 	test_label = [list(row) for row in lines]
 	actual = []
-	imagenames=[]
 	for i in range(1,len(test_label)):
 		actual.append(test_label[i][2])
-		imagenames.append(test_label[i][1])
 	#print(actual)
 
 	n_folds = 5
-	max_depth = 10
-	min_size = 1
+	max_depth = 5
+	min_size = 10
 	tree = build_tree(dataset,max_depth, min_size)
 	pickle.dump(tree,open('dt_model.sav','wb'))
 	tree = pickle.load(open('dt_model.sav', 'rb'))
@@ -198,17 +197,3 @@ def helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images,
 
 	accuracy = accuracy_metric(actual, predictions)
 	print("Accuracy:", accuracy)
-	dorsal=[]
-	palmar=[]
-	for i in range(len(predictions)):
-		if predictions[i]==1:
-			dorsal.append(imagenames[i])
-		else:
-			palmar.append(imagenames[i])
-	#print("Dorsal")
-	#print(dorsal)
-	#print("P:",palmar)
-	# print(dorsal, palmar)
-	return dorsal, palmar, accuracy
-
-# helper()

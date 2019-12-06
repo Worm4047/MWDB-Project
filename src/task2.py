@@ -22,6 +22,7 @@ from sklearn.neighbors import kneighbors_graph
 from scipy.spatial.distance import pdist, squareform
 from matplotlib.pyplot import figure
 from matplotlib import pyplot as plt
+import src.kmeans as kmeans
 
 # This is a temp function and is used for testing only
 class Task2():
@@ -89,11 +90,7 @@ class Task2():
             json.dump(label_dict, f)
 
         
-
-    # This is the main function
-    # Input : Datamatrix computed for the images, Image paths (absolute)
-    # Function :  Performs clustering of the image then visualizes them
-    def getClusters(self, dmImages, images, name, c=7):
+    def getClusters(self, dmImages, images, name, c=5):
 
         # dmImages = dmImages.as_matrix()
         simMat = self.buildSimmilarityMatrix(dmImages)
@@ -101,10 +98,14 @@ class Task2():
         lapMat = self.unnormalizedLaplacian(simMat, degMat)
         transformedData = self.transformToSpectral(lapMat, c)
 
-        kmeans = KMeans(n_clusters=c, random_state=0, init = 'k-means++').fit(transformedData)
-        out1 = kmeans.predict(transformedData)
-        labels = kmeans.labels_
-        centroids = kmeans.cluster_centers_
+        # kmeans = KMeans(n_clusters=c, random_state=0, init = 'k-means++').fit(transformedData)
+        # out1 = kmeans.predict(transformedData)
+
+        # labels = kmeans.labels_
+        # centroids = kmeans.cluster_centers_
+        print(transformedData.shape)
+        centroids, labels = kmeans.kmeans(transformedData, c)
+
         print("Shape of clusters {}".format(len(centroids[0])))
         print("Shape of labels {}".format(len(labels)))
         label_dict = {}
@@ -203,4 +204,5 @@ def helper(csvpath, imagePath, queryPath, queryCsvPath, c=10):
     obj = Task2(dorsalImages, palmarImages, queryImages, dmDorsal, dmPalmar, dmqueryImages, c)
     
 if __name__ == '__main__':
-    helper()
+    # helper()
+    pass
