@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics import pairwise_distances_argmin
 from sklearn.metrics import pairwise_distances

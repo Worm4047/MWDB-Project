@@ -85,7 +85,7 @@ class GraphArchiverNoCache:
         for index in range(0, self.imagesCount):
             col = matrix[:, index]
             if np.sum(col) == 0:
-                print("Boom | index: {}".format(index))
+                continue
 
             newCol = col/np.sum(col)
             matrix[:, index] = newCol

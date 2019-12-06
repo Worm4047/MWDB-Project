@@ -224,15 +224,15 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
         pickle.dump(candidate_ids, f)
     return candidate_ids
 
-def helper(path_labelled_images, query_img):
+def helper(path_labelled_images, query_img, l=10, k=10, t=20):
     # path_labelled_images = 'static/Hands/'
     query_image = [query_img]
     # Number of hashes per layer
-    k = 10
-    # Number of layers
-    l = 10
-    #Similar Imgaes
-    t = 20
+    # k = 10
+    # # Number of layers
+    # l = 10
+    # #Similar Images
+    # t = 20
     # Datamatrix
     images = []
     for filename in glob.glob(path_labelled_images + "*.jpg"):

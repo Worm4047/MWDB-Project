@@ -15,7 +15,8 @@ from src.models.enums.models import ModelType
 from src.tasks.task6PPR import Task6PPR
 from src.tasks.task4pprNoCache import Task4PPRNoCache
 from src.classifiers.pprClassifier import ImageClass
-
+import pandas as pd
+from src.constants import ALL_HANDS_CSV
 
 app = Flask(__name__)
 
@@ -37,7 +38,7 @@ def task1():
     dorsalImages, palmarImages, accuracy = t1.task1(trainPath, trainCSV, testPath, testCSV, k)
     # dorsalImages, palmarImages, accuracy = t1.task1()
     print(accuracy)
-    return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)
+    return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy*100)
 
 
 def getLabelledImages(dorsal):
@@ -176,7 +177,7 @@ def task4_svm():
         palmarImages2.append(getPathForStatic(img))
     dorsalImages = dorsalImages2
     palmarImages = palmarImages2
-    return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
+    return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score*100)
 
 
 @app.route("/task4/dt", methods = ['GET', 'POST'])
@@ -205,20 +206,37 @@ def task4_ppr():
         ImageClass.DORSAL.name: [],
         ImageClass.PALMAR.name: []
     }
-    for imagePath in glob.glob(os.path.join(unlabelledImageDir, "*.jpg")):
+
+    accuracy = 0
+    label_df = pd.read_csv(ALL_HANDS_CSV)
+    if ".jpg" in unlabelledImageDir:
+        imagePaths = [unlabelledImageDir]
+    else: imagePaths = glob.glob(os.path.join(unlabelledImageDir, "*.jpg"))
+
+    for imagePath in imagePaths:
         imageClass = Task4PPRNoCache(imgDir, csvFile, modelTypes=[ModelType.CM]).getClassForImage(imagePath)
+        print(imagePath)
+        label_df_temp = label_df.loc[label_df['imageName'].str.contains(os.path.basename(imagePath))]
+        gtClass = ImageClass.DORSAL if 'dorsal' in list(label_df_temp['aspectOfHand'].values)[0] else ImageClass.PALMAR
+
+        if imageClass == gtClass: accuracy += 1
+
         imageDict[imageClass.name].append(imagePath)
 
-
+    accuracy = (accuracy/len(imagePaths)) * 100
     return render_template("task4_ppr.html",
                            dorsalImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.DORSAL.name]],
-                           palmarImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.PALMAR.name]])
+                           palmarImages=[os.path.relpath(imagePath, "static/") for imagePath in imageDict[ImageClass.PALMAR.name]],
+                           accuracy=accuracy)
 
 @app.route("/task5/", methods = ['GET', 'POST'])
 def task5():
     path_labelled_images = request.form['path_labelled_images']
     query_img = request.form['query_img']
-    queryImage, candidateImages = t5.helper(path_labelled_images, query_img)
+    l = request.form['l']
+    k = request.form['k']
+    t = request.form['t']
+    queryImage, candidateImages = t5.helper(path_labelled_images, query_img, l, k, t)
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
     candidateImagesNames = []
@@ -267,13 +285,17 @@ def task6_dt():
 
 @app.route("/task6_ppr", methods = ['GET', 'POST'])
 def task6_ppr():
-    images = ['Dataset2/Hand_0006333.jpg',
-              'Dataset2/Hand_0006332.jpg',
-              'Dataset2/Hand_0006331.jpg',
-              'Dataset2/Hand_0000002.jpg',
-              'Dataset2/Hand_0000003.jpg',
-              'Dataset2/Hand_0000005.jpg',
-              'Dataset2/Hand_0000008.jpg']
+    images = t6_dt.getImages()[:10]
+    print(images)
+    images = [getPathForStatic(imagePath) for imagePath in images]
+    print(images)
+    # images = ['Dataset2/Hand_0006333.jpg',
+    #           'Dataset2/Hand_0006332.jpg',
+    #           'Dataset2/Hand_0006331.jpg',
+    #           'Dataset2/Hand_0000002.jpg',
+    #           'Dataset2/Hand_0000003.jpg',
+    #           'Dataset2/Hand_0000005.jpg',
+    #           'Dataset2/Hand_0000008.jpg']
 
     return render_template("task6_ppr.html", images=images)
 

@@ -16,3 +16,4 @@ PALMAR_GRAPH_STORE="store/graphs/palmar"
 
 CLASSIFICATION_IMG_DIR = "/Users/yvtheja/Documents/Dataset2"
 CLASSIFICATION_META_CSV = "/Users/yvtheja/Documents/labelled_set1.csv"
+ALL_HANDS_CSV="store/HandInfo.csv"
