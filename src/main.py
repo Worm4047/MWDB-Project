@@ -37,7 +37,7 @@ def task1():
     dorsalImages, palmarImages, accuracy = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath, k)
     # dorsalImages, palmarImages, accuracy = t1.task1()
     print(accuracy)
-    return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)
+    return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy*100)
 
 
 def getLabelledImages(dorsal):
@@ -176,7 +176,7 @@ def task4_svm():
         palmarImages2.append(getPathForStatic(img))
     dorsalImages = dorsalImages2
     palmarImages = palmarImages2
-    return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
+    return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score*100)
 
 
 @app.route("/task4/dt", methods = ['GET', 'POST'])
@@ -218,7 +218,10 @@ def task4_ppr():
 def task5():
     path_labelled_images = request.form['path_labelled_images']
     query_img = request.form['query_img']
-    queryImage, candidateImages = t5.helper(path_labelled_images, query_img)
+    l = request.form['l']
+    k = request.form['k']
+    t = request.form['t']
+    queryImage, candidateImages = t5.helper(path_labelled_images, query_img, l, k, t)
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
     candidateImagesNames = []
