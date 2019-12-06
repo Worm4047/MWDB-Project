@@ -226,11 +226,11 @@ def getCandidateImages(k, l, w, dm, images, queryDm, t):
 
 def helper():
     path_labelled_images = 'static/Hands/'
-    query_image = ['static/Hands/Hand_0006333.jpg']
+    query_image = ['static/Hands/Hand_0000674.jpg']
     # Number of hashes per layer
-    k = 50
-    # Number of layers
-    l = 150
+    k = 10
+    # Nu5er of layers
+    l = 10
     #Similar Imgaes
     t = 20
     # Datamatrix

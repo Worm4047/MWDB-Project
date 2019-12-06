@@ -229,13 +229,17 @@ def task6_dt():
 
 @app.route("/task6_ppr", methods = ['GET', 'POST'])
 def task6_ppr():
-    images = ['Dataset2/Hand_0006333.jpg',
-              'Dataset2/Hand_0006332.jpg',
-              'Dataset2/Hand_0006331.jpg',
-              'Dataset2/Hand_0000002.jpg',
-              'Dataset2/Hand_0000003.jpg',
-              'Dataset2/Hand_0000005.jpg',
-              'Dataset2/Hand_0000008.jpg']
+    images = t6_dt.getImages()[:10]
+    print(images)
+    images = [getPathForStatic(imagePath) for imagePath in images]
+    print(images)
+    # images = ['Dataset2/Hand_0006333.jpg',
+    #           'Dataset2/Hand_0006332.jpg',
+    #           'Dataset2/Hand_0006331.jpg',
+    #           'Dataset2/Hand_0000002.jpg',
+    #           'Dataset2/Hand_0000003.jpg',
+    #           'Dataset2/Hand_0000005.jpg',
+    #           'Dataset2/Hand_0000008.jpg']
 
     return render_template("task6_ppr.html", images=images)
 
