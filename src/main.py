@@ -33,7 +33,8 @@ def task1():
     dorsalPath = request.form['dorsalPath']
     metaDataFile = request.form['metaDataFile']
     inputPath = request.form['inputPath']
-    dorsalImages, palmarImages, accuracy = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
+    k = int(request.form('K'))
+    dorsalImages, palmarImages, accuracy = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath, k)
     # dorsalImages, palmarImages, accuracy = t1.task1()
     print(accuracy)
     return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)

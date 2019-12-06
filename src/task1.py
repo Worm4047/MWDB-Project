@@ -347,7 +347,8 @@ def classifyImages(imagesFolder, csvPath, testPath, metaDataTest):
 def task1(imagesFolder='static/Labelled/Set2/',
           metaDataFile='static/labelled_set2.csv',
           testPath='static/Unlabelled/Set2/',
-          metaDataTestFile='static/HandInfo.csv'):
+          metaDataTestFile='static/HandInfo.csv',
+          k=10):
     dorsalImages, palmarImages, accuracy = classifyImages(imagesFolder, metaDataFile, testPath, metaDataTestFile)
     return dorsalImages, palmarImages, accuracy
 
