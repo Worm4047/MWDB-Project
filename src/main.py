@@ -21,6 +21,8 @@ from src.models.enums.models import ModelType
 from src.tasks.task6PPR import Task6PPR
 from src.tasks.task4pprNoCache import Task4PPRNoCache
 from src.classifiers.pprClassifier import ImageClass
+from numpy import genfromtxt
+
 
 app = Flask(__name__)
 
@@ -55,6 +57,14 @@ def getLabelledImages(dorsal):
         data = json.load(json_file)
         return data
 
+def get_All_Images():
+    csv = 'HandInfo.csv'
+    import pandas as pd
+    df=pd.read_csv(csv, sep=',')
+    df2 = df[['imageName', 'aspectOfHand']]
+    return df2 
+
+
 def getQueryImageResuls():
     path = 'store/query_labels.json'
     with open(path ) as json_file:
@@ -82,6 +92,11 @@ def task2():
 
     dorsalImages = getLabelledImages(True)
     palmarImages = getLabelledImages(False)
+    df = get_All_Images()
+    correct, total = 0, 0
+
+
+    # print("Accuracy ", accuracy)
     queryImages = getQueryImageResuls()
     queryImages['PALMAR'] = reversed(queryImages['PALMAR'])
 
@@ -108,8 +123,27 @@ def task2():
             imagePath = getPathForStatic(imagePath)
             li.append([imageName, imagePath])
         queryImages[key] = li
+    print(queryImages)
+    for img in queryImages['DORSAL']:
+        imgname = img[0]
+        aspect = df.loc[df['imageName'] == imgname, 'aspectOfHand'].iloc[0]
+        if 'dorsal' in aspect:
+            correct+=1
+        print(imgname, aspect)
+        total += 1
 
-    return render_template('task2.html', dorsalData = dorsalImages, palmarData = palmarImages, queryData = queryImages)
+    for img in queryImages['PALMAR']:
+        imgname = img[0]
+
+        aspect = df.loc[df['imageName'] == imgname, 'aspectOfHand'].iloc[0]
+        print(imgname, aspect)
+        if 'palmar' in aspect:
+            correct+=1
+        total += 1
+
+    accuracy = (correct*1.0)/total
+    print(accuracy)
+    return render_template('task2.html', dorsalData = dorsalImages, palmarData = palmarImages, queryData = queryImages, accuracy = accuracy)
 
 @app.route("/task3/", methods = ['GET', 'POST'])
 def task3():

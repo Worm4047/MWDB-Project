@@ -93,7 +93,7 @@ class Task2():
     # This is the main function
     # Input : Datamatrix computed for the images, Image paths (absolute)
     # Function :  Performs clustering of the image then visualizes them
-    def getClusters(self, dmImages, images, name, c=7):
+    def getClusters(self, dmImages, images, name, c=5):
 
         # dmImages = dmImages.as_matrix()
         simMat = self.buildSimmilarityMatrix(dmImages)
