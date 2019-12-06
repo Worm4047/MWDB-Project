@@ -296,17 +296,17 @@ def read_features_put_dataframe(path_storing_files, string):
     return
 
 
-def helper():
+def helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata):
     # path_labelled_images = input("Enter path to folder with labelled images:")
-    # path_labelled_metadata = input("Enter path to metadata with labelled images:")
+    # path_labelled_metadatadata = input("Enter path to metadata with labelled images:")
     # path_unlabelled_images = input("Enter path to folder with unlabelled images:")
     # path_unlabelled_metadata = input("Enter path to metadata with unlabelled images:")
     # path_original_metadata = input("Enter path to metadata with original data:")
     # path_storing_files = input("Enter path to store feature files:")
-    path_labelled_images = 'static/Labelled/Set2/'
-    path_labelled_metadata = 'static/labelled_set2.csv'
-    path_unlabelled_images = 'static/Unlabelled/Set2/'
-    path_unlabelled_metadata = 'static/unlabelled_set2.csv'
+    # path_labelled_images = 'static/Labelled/Set2/'
+    # path_labelled_metadata = 'static/labelled_set2.csv'
+    # path_unlabelled_images = 'static/Unlabelled/Set2/'
+    # path_unlabelled_metadata = 'static/unlabelled_set2.csv'
     path_original_metadata = 'store/HandInfo.csv'
     path_storing_files = 'store/'
     """X_train is the data matrix"""

@@ -111,7 +111,7 @@ def coding(col, codeDict):
     return colCoded
 
 
-def getdata():
+def getdata(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata):
     # path_labelled_images = input("Enter path to folder with labelled images:")
     # # 'phase3_sample_data/Labelled/Set2/'
     # path_labelled_metadata = input("Enter path to metadata with labelled images:")
@@ -123,10 +123,10 @@ def getdata():
     # path_original_metadata = input("Enter path to metadata with original data:")
     # # 'phase3_sample_data/HandInfo.csv'
     # path_storing_files = input("Enter path to store feature files:")
-    path_labelled_images = 'static/Labelled/Set2/'
-    path_labelled_metadata = 'static/labelled_set2.csv'
-    path_unlabelled_images = 'static/Unlabelled/Set2/'
-    path_unlabelled_metadata = 'static/unlabelled_set2.csv'
+    # path_labelled_images = 'static/Labelled/Set2/'
+    # path_labelled_metadata = 'static/labelled_set2.csv'
+    # path_unlabelled_images = 'static/Unlabelled/Set2/'
+    # path_unlabelled_metadata = 'static/unlabelled_set2.csv'
     path_original_metadata = 'store/HandInfo.csv'
     path_storing_files = 'store/'
     # 'feature/'

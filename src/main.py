@@ -2,18 +2,12 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import src.task2 as t2
 import src.task5 as t5
 import src.task6_svm as t6_svm
-
 import src.task6_naive as t6_naive
-import src.task1 as t1
 import src.task4_svm_run as t4svm
-
 import src.task6_dt as t6_dt
 import src.task1 as t1
-# import src.task4_run as t4svm
 import src.task4_dt as t4dt
-
 import json
-from random import shuffle
 import os
 from src.tasks.task3 import Task3
 import glob
@@ -21,7 +15,6 @@ from src.models.enums.models import ModelType
 from src.tasks.task6PPR import Task6PPR
 from src.tasks.task4pprNoCache import Task4PPRNoCache
 from src.classifiers.pprClassifier import ImageClass
-from numpy import genfromtxt
 
 
 app = Flask(__name__)
@@ -36,12 +29,12 @@ def index():
 
 @app.route("/task1/", methods = ['GET', 'POST'])
 def task1():
-    # palmarPath = request.form['palmarPath']
-    # dorsalPath = request.form['dorsalPath']
-    # metaDataFile = request.form['metaDataFile']
-    # inputPath = request.form['inputPath']
-    # dorsalImages, palmarImages = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
-    dorsalImages, palmarImages, accuracy = t1.task1()
+    palmarPath = request.form['palmarPath']
+    dorsalPath = request.form['dorsalPath']
+    metaDataFile = request.form['metaDataFile']
+    inputPath = request.form['inputPath']
+    dorsalImages, palmarImages, accuracy = t1.task1(palmarPath, dorsalPath, metaDataFile, inputPath)
+    # dorsalImages, palmarImages, accuracy = t1.task1()
     print(accuracy)
     return render_template('task1.html',  dorsalImages = [os.path.relpath(imagePath, "static/") for imagePath in dorsalImages], palmarImages = [os.path.relpath(imagePath, "static/") for imagePath in palmarImages], accuracy = accuracy)
 
@@ -170,7 +163,11 @@ def task3():
 
 @app.route("/task4/svm", methods = ['GET', 'POST'])
 def task4_svm():
-    dorsalImages, palmarImages, accuracy_score = t4svm.helper()
+    path_labelled_images = request.form['path_labelled_images']
+    path_labelled_metadata = request.form['path_labelled_metadata']
+    path_unlabelled_images = request.form['path_unlabelled_images']
+    path_unlabelled_metadata = request.form['path_unlabelled_metadata']
+    dorsalImages, palmarImages, accuracy_score = t4svm.helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata)
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -179,11 +176,15 @@ def task4_svm():
     dorsalImages = dorsalImages2
     palmarImages = palmarImages2
     return render_template("task4_svm.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
-    return "TASK 4 TO BE DONE"
+
 
 @app.route("/task4/dt", methods = ['GET', 'POST'])
 def task4_dt():
-    dorsalImages, palmarImages, accuracy_score = t4dt.helper()
+    path_labelled_images = request.form['path_labelled_images']
+    path_labelled_metadata = request.form['path_labelled_metadata']
+    path_unlabelled_images = request.form['path_unlabelled_images']
+    path_unlabelled_metadata = request.form['path_unlabelled_metadata']
+    dorsalImages, palmarImages, accuracy_score = t4dt.helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata)
     dorsalImages2, palmarImages2 = [], []
     for img in dorsalImages:
         dorsalImages2.append(getPathForStatic(img))
@@ -192,13 +193,12 @@ def task4_dt():
     dorsalImages = dorsalImages2
     palmarImages = palmarImages2
     return render_template("task4_dt.html", dorsalImages = dorsalImages, palmarImages = palmarImages, accuracy_score = accuracy_score)
-    return "TASK 4 TO BE DONE"
 
 @app.route("/task4/ppr", methods = ['GET', 'POST'])
 def task4_ppr():
-    imgDir = "static/Labelled/Set2"
-    csvFile = "static/labelled_set2.csv"
-    unlabelledImageDir = "static/Unlabelled/Set2"
+    imgDir = request.form['imgDir']
+    csvFile = request.form['csvFile']
+    unlabelledImageDir = request.form['unlabelledImageDir']
 
     imageDict = {
         ImageClass.DORSAL.name: [],
@@ -215,7 +215,9 @@ def task4_ppr():
 
 @app.route("/task5/", methods = ['GET', 'POST'])
 def task5():
-    queryImage, candidateImages = t5.helper()
+    path_labelled_images = request.form['path_labelled_images']
+    query_img = request.form['query_img']
+    queryImage, candidateImages = t5.helper(path_labelled_images, query_img)
     queryImageName = imageHelper(queryImage)
     queryImage = getPathForStatic(queryImage)
     candidateImagesNames = []

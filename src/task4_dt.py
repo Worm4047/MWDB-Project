@@ -166,8 +166,8 @@ def decision_tree(train, test, max_depth, min_size):
 		predictions.append(prediction)
 	return(predictions)
         
-def helper():
-	getdata()
+def helper(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata):
+	getdata(path_labelled_images, path_labelled_metadata, path_unlabelled_images, path_unlabelled_metadata)
 	filename = 'train_data.csv'
 	dataset = load_csv(filename)
 	random.shuffle(dataset)
@@ -211,4 +211,4 @@ def helper():
 	# print(dorsal, palmar)
 	return dorsal, palmar, accuracy
 
-helper()
+# helper()
